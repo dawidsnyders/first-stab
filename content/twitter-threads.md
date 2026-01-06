@@ -140,96 +140,31 @@ Fixed rate. Fixed term. Fixed Rates.
 
 ---
 
-## 2. Co-Founder Thread (@y2kappa / Marius)
+## 2. Co-Founder Post (@y2kappa / Marius)
 
 **Posted by:** @y2kappa (Marius)
 **Timing:** Launch Day T+15min
-**Format:** 8 tweets
+**Format:** Single long-form post
 
 ---
 
-### Tweet 1 (Personal Hook)
+Today we're launching Fixed Rates—the single most important piece of credit infrastructure for institutions in DeFi.
 
-Today we're launching Fixed Rates.
+Before crypto, I worked at Bloomberg building financial infrastructure. One thing was always true in TradFi: serious players need predictable cost of capital. Variable rates work for some use cases. They don't work for institutions managing quarterly P&Ls or RWA strategies with fixed yield profiles.
 
-This is the single most important piece of credit infrastructure for institutions in DeFi.
+The fundamental issue with utilization-based rates: when a large borrower takes $30M from a $100M pool, utilization jumps from 50% to 80%. Everyone's rate doubles overnight. Neither borrowers nor lenders control what they'll pay tomorrow. Both are rate takers.
 
-I've spent years thinking about this problem. Here's why we built it and what it means. 🧵
+Fixed Rates inverts this. Borrowers lock their rate for 1, 3, or 6 months. No surprises. No rate spikes at 2am because someone else entered the pool. Predictable cost of capital—the way institutions actually operate.
 
----
+What excites me most: this creates DeFi's first real yield curve. Different rates for different durations. Term structure. Price discovery driven by actual supply and demand, not algorithmic utilization curves. This is how real credit markets work. Now it's onchain.
 
-### Tweet 2 (Background + Problem)
+We built this on the same infrastructure that's processed $100B+ in loans with zero bad debt. Same Kamino Lend smart contracts. Same security model. 18 audits. 3 formal verifications. Open source from day one. New capability, proven foundation.
 
-Before crypto, I worked at Bloomberg building financial infrastructure.
-
-One thing was always true in TradFi: serious players need predictable cost of capital.
-
-Variable rates work for some use cases. They don't work for institutions managing quarterly P&Ls or RWA strategies with fixed yield profiles.
-
----
-
-### Tweet 3 (The Mechanics Problem)
-
-The fundamental issue with utilization-based rates:
-
-When a large borrower takes $30M from a $100M pool, utilization jumps from 50% to 80%. Everyone's rate doubles overnight.
-
-Neither borrowers nor lenders control what they'll pay tomorrow. Both are rate takers.
-
----
-
-### Tweet 4 (What Changes)
-
-Fixed Rates inverts this.
-
-Borrowers lock their rate for 1, 3, or 6 months. No surprises. No rate spikes at 2am because someone else entered the pool.
-
-Predictable cost of capital. The way institutions actually operate.
-
----
-
-### Tweet 5 (The Bigger Vision)
-
-What excites me most: this creates DeFi's first real yield curve.
-
-Different rates for different durations. Term structure. Price discovery driven by actual supply and demand, not algorithmic utilization curves.
-
-This is how real credit markets work. Now it's onchain.
-
----
-
-### Tweet 6 (Security Emphasis)
-
-We built this on the same infrastructure that's processed $100B+ in loans with zero bad debt.
-
-Same Kamino Lend smart contracts. Same security model. 18 audits. 3 formal verifications. Open source from day one.
-
-New capability, proven foundation.
-
----
-
-### Tweet 7 (Roadmap)
-
-This is just the first step.
-
-Borrow Intents is coming next—letting borrowers post their desired terms onchain. A limit order for credit.
-
-Then RWA-specific markets. Then Multiply integration.
-
-The infrastructure for institutional DeFi is being built. On Kamino. On Solana.
-
----
-
-### Tweet 8 (CTA)
+This is just the first step. Borrow Intents is coming next—letting borrowers post their desired terms onchain. A limit order for credit. Then RWA-specific markets. Then Multiply integration. The infrastructure for institutional DeFi is being built. On Kamino. On Solana.
 
 Try Fixed Rates today: [link]
-
 Read the full announcement: [blog link]
-
-If you're an institution looking to borrow against tokenized assets, reach out:
-institutions@kamino.finance
-
-We're building the bridge between DeFi and the next generation of financial assets.
+Institutions: institutions@kamino.finance
 
 ---
 
