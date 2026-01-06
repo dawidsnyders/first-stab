@@ -1,19 +1,19 @@
-# Kamino Fixed Rates - Twitter Content
+# Kamino Fixed Rates - Content Strategy
 
-> **Strategy Note:** Threads are a dying format. Prioritize punchy single posts with video/graphics that drive to long-form content (blog, docs). Video > graphics > text-only.
+> **Philosophy:** Twitter = punchy hooks that drive to long-form. Blog/video = where the depth lives. Thread content becomes articles.
 
 ---
 
-## 1. Main Announcement (@kamino)
+## Twitter Posts (Short-Form)
 
-**Posted by:** @kamino
+### 1. Main Announcement (@kamino)
+
 **Timing:** Launch Day T-0
-**Format:** 2 tweets (post + reply with link)
-**Ideal:** Professional video of Marius announcing
+**Format:** Post + reply with blog link
 
 ---
 
-**Tweet 1:**
+**Tweet:**
 
 Introducing Kamino Fixed Rates.
 
@@ -21,21 +21,20 @@ Fixed-rate, fixed-term borrowing. The foundation for institutional credit on Sol
 
 Live today with @FalconX as our first institutional borrower.
 
-[VIDEO: Marius 60-90sec announcement - or high-quality announcement graphic]
+[VIDEO: Marius 60-90sec announcement]
 
 ---
 
-**Reply (Tweet 2):**
+**Reply:**
 
 Full details: [blog link]
 
 ---
 
-## 2. Co-Founder Post (@y2kappa / Marius)
+### 2. Co-Founder Post (@y2kappa)
 
-**Posted by:** @y2kappa (Marius)
 **Timing:** Launch Day T+15min
-**Format:** Single long-form post
+**Format:** Long-form X post
 
 ---
 
@@ -54,148 +53,237 @@ We built this on the same infrastructure that's processed $100B+ in loans with z
 This is just the first step. Borrow Intents is coming next—letting borrowers post their desired terms onchain. A limit order for credit. Then RWA-specific markets. Then Multiply integration. The infrastructure for institutional DeFi is being built. On Kamino. On Solana.
 
 Try Fixed Rates today: [link]
-Read the full announcement: [blog link]
+Full announcement: [blog link]
 Institutions: institutions@kamino.finance
 
 ---
 
-## 3. Pre-Launch Posts
+### 3. Pre-Launch Teaser Posts
 
-### Post A: "The Variable Rate Problem" (L-14)
+**L-14:**
+DeFi rates can swing 300% in a day. For institutions? Untenable. We're fixing this. [GRAPHIC]
 
-**Format:** Single post + reply with teaser
+**L-10:**
+What institutions need from DeFi credit: predictable costs, duration matching, size without impact, battle-tested security. We listened. [GRAPHIC]
 
----
-
-**Tweet:**
-
-DeFi rates can swing 300% in a day.
-
-A borrower at 5% might pay 15% next week. Neither borrowers nor lenders control their cost of capital.
-
-For institutions? Untenable.
-
-We're fixing this.
-
-[GRAPHIC: Rate volatility visualization]
+**L-3:**
+Fixed rate. Fixed term. January. [VIDEO TEASER]
 
 ---
 
-**Reply:**
+### 4. Post-Launch Hook Posts
 
-Something is coming to Kamino. Fixed rate. Fixed term. More soon.
+**L+1 (FalconX quote):**
+"Kamino is providing the term structure necessary to operationalize our Asset-Liability Management." – Craig Birchall @FalconX [QUOTE CARD]
 
----
+**L+2 (How-to hook):**
+Lock your rate in 3 steps. Full walkthrough: [blog/video link]
 
-### Post B: "What Institutions Need" (L-10)
-
-**Format:** Single post
-
----
-
-**Tweet:**
-
-What institutions told us they need from DeFi credit:
-
-→ Predictable funding costs
-→ Duration matching for ALM
-→ Size without moving the market
-→ Battle-tested security
-
-We listened. Launching soon.
+**Weekly stats:**
+Fixed Rates week [X]: $[X]M borrowed, [X] active loans. [STATS GRAPHIC]
 
 ---
 
-### Post C: Teaser (L-3)
+## Long-Form Content (Blog / Articles)
 
-**Format:** Single post with video teaser
+### Article 1: "The Variable Rate Problem" (L-14)
 
----
-
-**Tweet:**
-
-Fixed rate. Fixed term. January.
-
-[VIDEO: 15-30sec teaser clip]
+**Publish on:** gov.kamino.finance blog
+**Hook post:** Links to this from L-14 teaser
 
 ---
 
-## 4. Post-Launch Content
+**Outline:**
 
-### FalconX Quote Post (L+1)
+1. **The $200B Problem**
+   - Almost all DeFi lending uses utilization-based variable rates
+   - Rates determined by pool utilization, can swing 300% in a day
+   - A borrower at 5% might pay 15% next week
 
-**Format:** Single post with quote card
+2. **Why This Breaks Institutional Use Cases**
+   - Institutions budget quarterly—can't tell CFO cost might double
+   - RWA strategies need predictable spreads
+   - Large borrowers move the market against themselves by entering
 
----
+3. **What Traditional Finance Does Differently**
+   - Repo markets, credit lines, corporate bonds—all fixed rate
+   - Why? Institutions need to forecast costs
+   - Duration matching is fundamental to ALM
 
-**Tweet:**
+4. **Real Examples of What Breaks**
+   - Carry trades invert when borrow rates spike
+   - Institutions can't extend fixed-rate credit lines to clients
+   - RWA issuers can't build fixed-income products
 
-"Kamino is providing the term structure necessary to operationalize our Asset-Liability Management. By locking in fixed rates, we can minimize rate volatility and duration-match in a unique way within the DeFi ecosystem."
-
-– Craig Birchall, Head of Lending @FalconX
-
-[GRAPHIC: Quote card]
-
----
-
-### How-To Post (L+2)
-
-**Format:** Single post linking to video/docs
-
----
-
-**Tweet:**
-
-How to lock in your rate on Kamino Fixed Rates:
-
-1. Deposit collateral
-2. Select rate + duration
-3. Execute
-
-Your rate is locked. Done.
-
-Full walkthrough: [video or docs link]
+5. **The Infrastructure Gap**
+   - The building block doesn't exist in DeFi
+   - Until now—introducing Fixed Rates (teaser)
 
 ---
 
-### Stats Update (Weekly Template)
+### Article 2: "Why Institutions Need Fixed Rates" (L-12)
 
-**Format:** Single post with graphic
-
----
-
-**Template:**
-
-Fixed Rates week [X]:
-
-• $[X]M borrowed at fixed rates
-• [X] active loans
-• Most popular: [X]-month terms
-
-[GRAPHIC: Stats card]
+**Publish on:** gov.kamino.finance blog
+**Audience:** Institutional readers, RWA issuers
 
 ---
 
-## Content Philosophy
+**Outline:**
 
-1. **Video first** - Marius announcement video is the hero asset
-2. **Punchy hooks** - First line must stop the scroll
-3. **Link out** - Blog/docs carry the depth, Twitter carries the hook
-4. **No threads** - Single posts or post + 1 reply max
-5. **Visual always** - Every post needs video or graphic
-6. **Quote cards** - Partner quotes get their own visual treatment
+1. **What We Learned Talking to Institutions**
+   - Spent a year talking to trading desks, funds, brokers
+   - Four consistent needs emerged
+
+2. **Need #1: Predictable Funding Costs**
+   - "Can't tell CFO cost of capital might double"
+   - Quarterly/annual planning cycles don't fit variable rates
+
+3. **Need #2: Duration Matching**
+   - Assets have yield profiles (3-month, 6-month)
+   - Need matching funding costs for ALM
+   - Asset-liability management is fundamental
+
+4. **Need #3: Size Without Impact**
+   - Large borrowers push utilization-based rates up
+   - $20M borrow moves the market against yourself
+   - Fixed rates eliminate this dynamic
+
+5. **Need #4: Track Record and Security**
+   - Audits, formal verification, proven history required
+   - Not optional—table stakes for institutional adoption
+
+6. **How Kamino Addresses All Four**
+   - Fixed Rates product overview
+   - $100B+ loans, $0 bad debt, 18 audits
 
 ---
 
-## Video Content Ideas
+### Article 3: "How Fixed Rates Work" (Launch Day)
+
+**Publish on:** gov.kamino.finance blog
+**Purpose:** Technical deep dive
+
+---
+
+**Outline:**
+
+1. **The Mechanics**
+   - Lock rate for 1, 3, or 6 months
+   - Rate locked from day one through expiry
+   - No changes regardless of utilization
+
+2. **Conditional Liquidity**
+   - Lenders signal availability at specific rates
+   - No opportunity cost while waiting
+   - Funds stay productive until borrowed
+
+3. **Instant Execution**
+   - When terms match, borrow atomically
+   - Single transaction
+   - No negotiation or waiting
+
+4. **Auto-Rollover**
+   - Loans can extend automatically at maturity
+   - If liquidity available at similar terms
+   - Seamless continuous exposure
+
+5. **The Withdrawal Queue**
+   - How lenders exit
+   - Orderly liquidity management
+
+6. **What This Enables: DeFi's First Yield Curve**
+   - Different rates for different durations
+   - Real price discovery for credit
+   - Term structure emerges from supply/demand
+
+---
+
+### Article 4: "Fixed Rates for RWA Issuers" (L+3)
+
+**Publish on:** gov.kamino.finance blog
+**Audience:** RWA protocols, tokenized asset issuers
+
+---
+
+**Outline:**
+
+1. **The RWA Financing Problem**
+   - Tokenized assets often have fixed yield profiles
+   - Variable borrowing costs create spread risk
+   - Can't build fixed-income products on variable funding
+
+2. **Duration Matching for RWAs**
+   - Match 3-month T-bill yield with 3-month fixed borrow
+   - Predictable spreads enable real products
+
+3. **Scaling Without Impact**
+   - Large borrows don't spike rates
+   - Institutional scale is possible
+
+4. **Integration Path**
+   - How RWA issuers can integrate
+   - API access, institutional onboarding
+
+---
+
+### Article 5: "Under the Hood: Fixed Rates Architecture" (L+7)
+
+**Publish on:** gov.kamino.finance blog
+**Audience:** Technical, developers, auditors
+
+---
+
+**Outline:**
+
+1. **Design Philosophy**
+   - Built on proven Kamino Lend infrastructure
+   - Same security model, new capability
+
+2. **Rate Locking Mechanism**
+   - How rates are locked on-chain
+   - Smart contract mechanics
+
+3. **Liquidation Handling**
+   - Same collateral/health factor model
+   - What happens if position becomes unhealthy
+
+4. **Security Posture**
+   - 18 audits, 3 formal verifications
+   - Open source, verifiably built
+
+5. **Roadmap: Borrow Intents**
+   - Limit orders for credit
+   - Post desired terms, lenders fill
+
+---
+
+## Video Content
 
 | Asset | Length | Purpose |
 |-------|--------|---------|
-| Marius announcement | 60-90s | Main launch asset |
-| Product walkthrough | 2-3min | Tutorial for docs/blog |
-| Teaser clip | 15-30s | Pre-launch hype |
-| "Why fixed rates matter" explainer | 2min | Educational, evergreen |
+| Marius announcement | 60-90s | Main launch, tweets from @kamino and @y2kappa |
+| Product walkthrough | 2-3min | Embed in "How Fixed Rates Work" article |
+| Teaser clip | 15-30s | L-3 pre-launch hype |
+| "Variable rate problem" explainer | 2min | Embed in Article 1 |
+| Institutional use case | 2min | For institutional outreach |
 
 ---
 
-*Content v2.0 - Updated for video-first, no-thread strategy*
+## Content Calendar Summary
+
+| Day | Twitter | Long-Form |
+|-----|---------|-----------|
+| L-14 | Teaser post | Article 1: Variable Rate Problem |
+| L-12 | - | Article 2: Why Institutions Need This |
+| L-10 | Teaser post | - |
+| L-3 | Video teaser | - |
+| L-0 | Main announcement + Marius post | Article 3: How Fixed Rates Work |
+| L+1 | FalconX quote | - |
+| L+2 | How-to hook | - |
+| L+3 | - | Article 4: RWA Issuers |
+| L+7 | - | Article 5: Technical Deep Dive |
+| Weekly | Stats posts | - |
+
+---
+
+*Content Strategy v3.0 - Long-form focus*
