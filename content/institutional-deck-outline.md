@@ -1,337 +1,144 @@
-# Kamino Fixed Rates - Institutional Deck Outline
+# Kamino Fixed Rates - Institutional Deck (Condensed)
 
 **Purpose:** BD outreach to institutions, trading desks, funds, RWA issuers
-**Owner:** Adam (design), Content input (you), Usage (Cheryl & Mark)
-**Target Length:** 15-20 slides
+**Owner:** Adam (design), Content (you), Usage (Cheryl & Mark)
+**Target Length:** 10 slides
 
 ---
 
-## Slide-by-Slide Outline
+## SLIDE 1: Cover
 
-### SLIDE 1: Cover
+**Kamino Fixed Rates**
+Fixed-Rate, Fixed-Term Borrowing Infrastructure
 
-**Visual:** Kamino logo, clean professional design
-
-**Text:**
-- Kamino Fixed Rates
-- Fixed-Rate, Fixed-Term Borrowing Infrastructure
-- Solana
-
-**Footer:** [Date] | Confidential
+[Kamino logo | Solana]
 
 ---
 
-### SLIDE 2: Executive Summary
+## SLIDE 2: The Opportunity
 
-**Headline:** The Foundation for Institutional Credit on Solana
+**Headline:** Institutions Need Predictable Borrowing Costs. DeFi Hasn't Delivered.
 
-**3 Bullet Points:**
-- Fixed-rate, fixed-term borrowing enabling predictable cost of capital
-- Built on battle-tested infrastructure: $100B+ loans originated, $0 bad debt
-- Live now with FalconX as our first institutional fixed-rate borrower
+**Left Side - The Problem:**
+- Variable rates swing 300%+ overnight
+- Impossible to budget financing costs
+- $18B+ in RWAs need fixed-rate infrastructure
 
-**Visual:** Key metric callouts (TVL, loans originated, bad debt)
+**Right Side - The Solution:**
+- Lock your rate for 1-3 months
+- Execute atomically, rate guaranteed for full term
+- Built on $100B+ loan infrastructure with $0 bad debt
 
----
-
-### SLIDE 3: The Problem
-
-**Headline:** DeFi Credit Markets Weren't Built for Institutions
-
-**Content:**
-- Almost all DeFi lending uses variable rates based on pool utilization
-- Rates can swing 300%+ in a single day
-- Impossible to forecast funding costs
-- Asset-liability management not supported
-- Institutions cannot budget around unpredictable rates
-
-**Visual:** Chart showing variable rate volatility over time
-
-**Quote Box:** "We can't tell our CFO that our cost of capital might double next week." — Institutional DeFi user
+**Visual:** Split layout - volatility chart (left) vs. flat fixed rate line (right)
 
 ---
 
-### SLIDE 4: The Opportunity
+## SLIDE 3: How It Works
 
-**Headline:** $18B+ in RWAs Need Fixed-Rate Infrastructure
+**Headline:** Four Steps. Predictable Cost of Capital.
 
-**Content:**
-- ~350% YoY growth in tokenized assets on-chain
-- T-bills, money market funds, private credit, receivables
-- These assets have stable yield profiles
-- They need matching stable funding costs
-- Fixed rates are table stakes for institutional adoption
+```
+[1] Deposit Collateral → [2] Select Rate & Term → [3] Execute → [4] Rollover or Repay at Maturity
+    SOL, BTC, ETH           1m, 3m, 6m             Atomic         Auto-rollover available
+```
 
-**Visual:** RWA market growth chart
+**Key Features:**
+- Instant execution | Auto-rollover | Multiple collaterals | Same battle-tested contracts
 
----
-
-### SLIDE 5: Introducing Kamino Fixed Rates
-
-**Headline:** Lock Your Borrowing Cost. Know Your Rate.
-
-**Content:**
-- Select your rate and duration (1m, 3m, 6m)
-- Execute in a single transaction
-- Rate is fixed for the entire term
-- No exposure to utilization-based volatility
-
-**Visual:** Product screenshot or simplified UI mockup
+**Visual:** Simple horizontal flow diagram
 
 ---
 
-### SLIDE 6: How It Works
+## SLIDE 4: Use Cases (Institutions + RWA)
 
-**Headline:** Simple for Borrowers. Sophisticated Underneath.
+| **Institutional Borrowing** | **RWA Strategies** |
+|----------------------------|-------------------|
+| Trading desk needs $20M USDC for 3 months | Strategy earns 6% on tokenized T-bills |
+| **Variable:** Rate could spike from 5% → 12% | **Variable:** Borrow at 4%, rate spikes to 8%, position inverts |
+| **Fixed:** Lock 5.5% for the term. Predictable P&L. | **Fixed:** Lock 4.5%. Spread guaranteed: 1.5% |
 
-**4-Step Flow:**
-1. **Deposit Collateral** — SOL, BTC, ETH, or other supported assets
-2. **Select Terms** — Choose rate and duration from available options
-3. **Execute** — Atomic transaction locks your rate
-4. **At Maturity** — Repay, rollover, or fallback to variable
-
-**Visual:** Flow diagram
+**Visual:** Two-column comparison with checkmarks on Fixed Rates outcomes
 
 ---
 
-### SLIDE 7: Key Features
+## SLIDE 5: Use Cases (Looping + Broker)
 
-**Headline:** Built for Institutional Requirements
+| **Carry Trades / Looping** | **Broker Financing** |
+|---------------------------|---------------------|
+| Loop yield-bearing asset at 8% APY | Offer clients SOL-backed loans at 7% fixed |
+| **Variable:** Rate exceeds yield overnight, forced unwind | **Variable:** Refinancing spikes above 7%, broker loses |
+| **Fixed:** Lock rate below yield. Execute with confidence. | **Fixed:** Lock refinancing at 5.5%. Guaranteed spread. |
 
-| Feature | Benefit |
-|---------|---------|
-| **Fixed Rate** | Predictable cost of capital for budgeting |
-| **Fixed Term** | Duration matching for ALM |
-| **Instant Execution** | No waiting, atomic settlement |
-| **Auto-Rollover** | Continuous fixed-rate exposure |
-| **Multiple Collaterals** | Flexibility in asset deployment |
-| **Same Infrastructure** | Battle-tested security |
+**Visual:** Two-column comparison
 
 ---
 
-### SLIDE 8: Use Case — Institutional Borrowing
-
-**Headline:** Predictable Financing for Trading Desks
-
-**Scenario:**
-A trading desk needs $20M USDC for 3 months to finance client operations.
-
-**Without Fixed Rates:**
-- Borrow at 5% today
-- Rate could spike to 12% next week
-- Margin compression, unpredictable P&L
-
-**With Fixed Rates:**
-- Lock 5.5% for 3 months
-- Rate guaranteed regardless of market
-- Clean budgeting, predictable spread
-
-**Visual:** Side-by-side comparison
-
----
-
-### SLIDE 9: Use Case — RWA Strategies
-
-**Headline:** Fixed-Income Strategies That Actually Work
-
-**Scenario:**
-An RWA strategy earns 6% yield on tokenized T-bills.
-
-**Without Fixed Rates:**
-- Borrow USDC at 4% to lever the position
-- Rate spikes to 8%, position inverts
-- Strategy fails
-
-**With Fixed Rates:**
-- Lock 4.5% for 3 months
-- Spread is guaranteed: 6% - 4.5% = 1.5%
-- Strategy is sustainable
-
-**Visual:** Yield spread diagram
-
----
-
-### SLIDE 10: Use Case — Carry Trades / Looping
-
-**Headline:** Sustainable Leverage Without Rate Risk
-
-**Scenario:**
-A sophisticated user loops a yield-bearing asset at 8% yield.
-
-**The Problem:**
-- Borrow rates can exceed yield at any time
-- Position becomes unprofitable overnight
-- Forced to unwind at the worst time
-
-**The Solution:**
-- Lock borrow rate below yield
-- Spread is guaranteed for the term
-- Execute strategy with confidence
-
----
-
-### SLIDE 11: Use Case — Broker Financing
-
-**Headline:** Offer Fixed Rates to Your Clients
-
-**Scenario:**
-A broker offers clients SOL-collateralized loans at 7% fixed.
-
-**Without Fixed Rates:**
-- Broker refinances at variable DeFi rates
-- If rates spike above 7%, broker loses money
-- Can't offer fixed products
-
-**With Fixed Rates:**
-- Broker locks refinancing at 5.5%
-- Guaranteed 1.5% spread
-- Can confidently offer fixed-rate products
-
----
-
-### SLIDE 12: FalconX Partnership
-
-**Headline:** Trusted by Leading Institutions
+## SLIDE 6: FalconX Partnership
 
 **Quote:**
-"Kamino Lend has evolved into a critical credit instrument for our desk. Now moving beyond short-term liquidity, Kamino is providing the term structure necessary to operationalize our Asset-Liability Management. By locking in fixed rates leveraging Kamino's unique pool of liquidity and broad collateral support, we can minimize rate volatility and duration-match in a unique way within the DeFi ecosystem."
+> "Kamino is providing the term structure necessary to operationalize our Asset-Liability Management. By locking in fixed rates, we can minimize rate volatility and duration-match in a unique way within the DeFi ecosystem."
+>
+> **— Craig Birchall, Head of Lending, FalconX**
 
-— Craig Birchall, Head of Lending, FalconX
-
-**Visual:** FalconX logo
+**Visual:** FalconX logo prominently displayed
 
 ---
 
-### SLIDE 13: Security & Track Record
+## SLIDE 7: Track Record & Security
 
 **Headline:** Battle-Tested Infrastructure
 
 | Metric | Value |
 |--------|-------|
-| Live in Production | >2 years |
-| Loans Originated | $100B+ |
-| Liquidations Processed | $183M |
+| Live in Production | **>2 years** |
+| Loans Originated | **$100B+** |
 | Bad Debt | **$0** |
-| Security Audits | 18 |
-| Formal Verifications | 3 |
-| Codebase | Open Source & Verifiably Built |
+| Security Audits | **18** |
+| Formal Verifications | **3** |
 
-**Key Point:** Fixed Rates runs on the same Kamino Lend smart contracts that have been battle-tested since launch.
+**Key Point:** Fixed Rates runs on the same Kamino Lend contracts. Same security. New capability.
 
----
-
-### SLIDE 14: Technical Architecture (Optional - For Technical Audiences)
-
-**Headline:** Institutional-Grade Infrastructure
-
-**Key Components:**
-- **Markets & Reserves:** Isolated lending environments with multiple fixed-rate reserves per asset
-- **Conditional Liquidity:** Lenders signal availability without opportunity cost
-- **Borrow Orders:** Coming soon—post desired terms, lenders fill
-- **Withdrawal Queue:** FIFO system for lender exits
-- **Rollover Mechanism:** Automatic extension at maturity
-
-**Visual:** Simplified architecture diagram
+**Visual:** Clean metrics table with emphasis on $0 bad debt
 
 ---
 
-### SLIDE 15: What's Next
+## SLIDE 8: Roadmap
 
-**Headline:** The Roadmap
+**Headline:** What's Next
 
-**Near Term:**
-- Borrow Intents — Borrowers post terms, lenders fill. Real price discovery.
-- New Markets — Fixed rates beyond Main Market
-- RWA Integrations — Purpose-built for tokenized assets
+**Now:**
+- Fixed Rates live in Main Market
+- FalconX as pilot borrower
 
-**Medium Term:**
-- Kamino Multiply Integration — One-click leveraged fixed-rate strategies
-- Longer Duration Terms — 6m, 12m options
-- Institutional Dashboard — Dedicated interface for large borrowers
-
----
-
-### SLIDE 16: Why Kamino
-
-**Headline:** The Infrastructure Layer for Institutional DeFi
-
-**3 Pillars:**
-
-1. **Track Record**
-   - Largest non-LST DeFi protocol on Solana
-   - $100B+ loans, $0 bad debt
-   - Trusted by sophisticated users
-
-2. **Security**
-   - 18 audits, 3 formal verifications
-   - Open source, verifiably built
-   - Conservative risk management
-
-3. **Innovation**
-   - First fixed-rate infrastructure on Solana
-   - Price discovery for credit markets
-   - Building DeFi's yield curve
+**Coming Soon:**
+- **Borrow Intents** — Post desired terms on-chain. Lenders fill. Real price discovery.
+- **New Markets** — Fixed rates for RWA-specific collaterals
+- **Multiply Integration** — One-click leveraged fixed-rate strategies
 
 ---
 
-### SLIDE 17: Why Solana
+## SLIDE 9: Why Kamino
 
-**Headline:** The Right Chain for Institutional DeFi
+**Headline:** The Infrastructure Layer for Institutional DeFi on Solana
 
-**Key Advantages:**
-- **Speed:** Sub-second finality for real-time execution
-- **Cost:** Negligible transaction fees at scale
-- **Ecosystem:** Growing institutional presence (FTX legacy capital, Solana Foundation support)
-- **Infrastructure:** Mature DeFi stack with deep liquidity
+| Track Record | Security | Innovation |
+|--------------|----------|------------|
+| Largest non-LST DeFi on Solana | 18 audits, 3 formal verifications | First fixed-rate infrastructure |
+| $100B+ loans, $0 bad debt | Open source, verifiably built | Building DeFi's yield curve |
 
-**Visual:** Solana ecosystem logos (relevant partners)
-
----
-
-### SLIDE 18: Getting Started
-
-**Headline:** Next Steps
-
-**For Institutions:**
-1. Schedule a call with our institutional team
-2. Discuss your specific use case and requirements
-3. Custom market setup available for large borrowers
-4. White-glove onboarding support
-
-**Contact:**
-- Email: institutions@kamino.finance
-- Partnerships: partnerships@kamino.finance
+**Solana advantage:** Sub-second finality, negligible fees, growing institutional ecosystem
 
 ---
 
-### SLIDE 19: Team (Optional)
+## SLIDE 10: Contact
 
-**Headline:** Built by DeFi Veterans
+**Let's Talk**
 
-**Key Team Members:**
-- **Marius Ciubotariu** — Co-Founder (ex-Bloomberg, derivatives & risk)
-- [Other key team members as appropriate]
+📧 **Institutions:** institutions@kamino.finance
+📧 **Partnerships:** partnerships@kamino.finance
 
-**Backing:**
-- [Investors if public]
-- Solana Foundation ecosystem support
-
----
-
-### SLIDE 20: Contact & Resources
-
-**Headline:** Let's Talk
-
-**Contacts:**
-- Institutional: institutions@kamino.finance
-- Partnerships: partnerships@kamino.finance
-- General: [email]
-
-**Resources:**
-- Product: kamino.finance
-- Documentation: docs.kamino.finance
-- Blog: gov.kamino.finance
-- Twitter: @KaminoFinance
+🔗 **Product:** kamino.finance
+📚 **Docs:** docs.kamino.finance
 
 **Visual:** QR code to product
 
@@ -339,38 +146,23 @@ A broker offers clients SOL-collateralized loans at 7% fixed.
 
 ## Design Notes for Adam
 
-### Visual Style
-- Clean, professional, institutional-grade
-- Minimal text per slide
-- Data visualizations where possible
-- Consistent color scheme (Kamino brand)
-- White/light backgrounds for readability
+**Style:**
+- Clean, professional, minimal text
+- Data visualizations > bullet points
+- White/light backgrounds
+- Kamino brand colors
 
-### Required Graphics
-1. Variable rate volatility chart
-2. RWA market growth chart
-3. Product UI screenshot/mockup
-4. How it works flow diagram
-5. Use case comparison diagrams (3)
-6. Architecture diagram (simplified)
-7. Team photos (if including)
-8. Partner logos (FalconX, Solana, etc.)
+**Required Graphics:**
+1. Split visual: rate volatility vs. fixed rate line
+2. 4-step flow diagram
+3. Use case comparison layouts (2)
+4. Metrics table design
+5. FalconX logo placement
+6. QR code
 
-### Format
-- 16:9 aspect ratio
-- PDF export for sharing
-- Also provide editable version for customization
+**Format:** 16:9, PDF export + editable
 
 ---
 
-## Content Sources
-
-- FR PRIVATE document (technical details)
-- Fixed Rates Announcement doc (messaging)
-- Breakpoint 2025 Announcement (vision/roadmap)
-- FalconX quote (approved)
-
----
-
-*Deck Outline v1.0*
-*Ready for Adam to design*
+*Deck Outline v2.0 - Condensed*
+*10 slides, max clarity*
