@@ -1,494 +1,289 @@
-# Kamino Fixed Rates - Twitter Thread Drafts
+# Kamino Fixed Rates - Content Strategy
 
-## 1. Main Announcement Thread (@kamino)
-
-**Posted by:** @kamino (Colyn schedules)
-**Timing:** Launch Day T-0
-**Format:** 10 tweets
+> **Philosophy:** Twitter = punchy hooks that drive to long-form. Blog/video = where the depth lives. Thread content becomes articles.
 
 ---
 
-### Tweet 1 (Hook + Visual)
+## Twitter Posts (Short-Form)
+
+### 1. Main Announcement (@kamino)
+
+**Timing:** Launch Day T-0
+**Format:** Post + reply with blog link
+
+---
+
+**Tweet:**
 
 Introducing Kamino Fixed Rates.
 
-Fixed-rate, fixed-term borrowing infrastructure. The foundation for institutional credit on Solana.
+Fixed-rate, fixed-term borrowing. The foundation for institutional credit on Solana.
 
-Launching today with @FalconX as our first institutional fixed-rate borrower.
+Live today with @FalconX as our first institutional borrower.
 
-🧵👇
-
-[VISUAL: Main announcement graphic - "Kamino Fixed Rates" with key tagline]
+[VIDEO: Marius 60-90sec announcement]
 
 ---
 
-### Tweet 2 (The Problem)
+**Reply:**
 
-The problem with DeFi credit today:
-
-Almost all lending runs on variable rates. Rates are determined by pool utilization and can swing from 3% to 10% overnight.
-
-For institutions planning quarterly budgets? Untenable.
-For RWA strategies needing predictable returns? Impossible.
+Full details: [blog link]
 
 ---
 
-### Tweet 3 (The Solution)
+### 2. Co-Founder Post (@y2kappa)
 
-Fixed Rates changes this.
-
-Lock in your interest rate for a defined term—1 month, 3 months, or longer.
-
-The rate you see is the rate you pay. From day one through expiry. Regardless of market conditions or pool utilization.
-
----
-
-### Tweet 4 (How It Works)
-
-How it works:
-
-1️⃣ Deposit collateral
-2️⃣ Select your rate and duration
-3️⃣ Execute in a single transaction
-4️⃣ Your rate is locked for the entire term
-
-Auto-rollover available at maturity if liquidity permits.
-
-[VISUAL: Simple flow diagram or product screenshot]
-
----
-
-### Tweet 5 (Why It Matters)
-
-Why this matters:
-
-→ Institutions get predictable funding costs
-→ RWA strategies get fixed cost of capital
-→ Loopers get rate certainty for carry trades
-→ Brokers get stable refinancing costs
-
-Fixed rates are table stakes for institutional DeFi. Now they exist on Solana.
-
----
-
-### Tweet 6 (FalconX Quote)
-
-"Kamino Lend has evolved into a critical credit instrument for our desk. Now moving beyond short-term liquidity, Kamino is providing the term structure necessary to operationalize our Asset-Liability Management.
-
-By locking in fixed rates, we can minimize rate volatility and duration-match in a unique way within the DeFi ecosystem."
-
-– Craig Birchall, Head of Lending, @FalconX
-
----
-
-### Tweet 7 (Track Record)
-
-Built on battle-tested infrastructure:
-
-• 2+ years live in production
-• $100B+ loans originated
-• $183M liquidations processed
-• $0 bad debt
-• 18 security audits
-• 3 formal verifications
-• Open source & verifiably built
-
-Same proven foundation. New capability.
-
----
-
-### Tweet 8 (Technical Innovation)
-
-What makes Fixed Rates unique:
-
-→ Conditional Liquidity: Lenders signal availability without opportunity cost
-→ Instant execution: Borrow atomically when terms match
-→ Auto-Rollover: Loans extend automatically at maturity
-→ No idle capital: Lender funds stay productive until borrowed
-
----
-
-### Tweet 9 (What's Next)
-
-What's next:
-
-• Borrow Intents: Post your desired loan terms onchain. Lenders fill your order. Real price discovery for credit.
-
-• Fixed rates in new markets beyond Main Market
-
-• RWA integrations
-
-• Kamino Multiply support
-
-This is just the beginning.
-
----
-
-### Tweet 10 (CTA)
-
-Get started today:
-
-🔗 Product: [kamino.finance link]
-📖 Blog: [gov.kamino.finance link]
-📚 Docs: [docs link]
-
-For institutions & RWA issuers:
-📧 institutions@kamino.finance
-📧 partnerships@kamino.finance
-
-Fixed rate. Fixed term. Fixed Rates.
-
----
-
-## 2. Co-Founder Thread (@y2kappa / Marius)
-
-**Posted by:** @y2kappa (Marius)
 **Timing:** Launch Day T+15min
-**Format:** 8 tweets
+**Format:** Long-form X post
 
 ---
 
-### Tweet 1 (Personal Hook)
+Today we're launching Fixed Rates—the single most important piece of credit infrastructure for institutions in DeFi.
 
-Today we're launching Fixed Rates.
+Before crypto, I worked at Bloomberg building financial infrastructure. One thing was always true in TradFi: serious players need predictable cost of capital. Variable rates work for some use cases. They don't work for institutions managing quarterly P&Ls or RWA strategies with fixed yield profiles.
 
-This is the single most important piece of credit infrastructure for institutions in DeFi.
+The fundamental issue with utilization-based rates: when a large borrower takes $30M from a $100M pool, utilization jumps from 50% to 80%. Everyone's rate doubles overnight. Neither borrowers nor lenders control what they'll pay tomorrow. Both are rate takers.
 
-I've spent years thinking about this problem. Here's why we built it and what it means. 🧵
+Fixed Rates inverts this. Borrowers lock their rate for 1, 3, or 6 months. No surprises. No rate spikes at 2am because someone else entered the pool. Predictable cost of capital—the way institutions actually operate.
 
----
+What excites me most: this creates DeFi's first real yield curve. Different rates for different durations. Term structure. Price discovery driven by actual supply and demand, not algorithmic utilization curves. This is how real credit markets work. Now it's onchain.
 
-### Tweet 2 (Background + Problem)
+We built this on the same infrastructure that's processed $100B+ in loans with zero bad debt. Same Kamino Lend smart contracts. Same security model. 18 audits. 3 formal verifications. Open source from day one. New capability, proven foundation.
 
-Before crypto, I worked at Bloomberg building financial infrastructure.
-
-One thing was always true in TradFi: serious players need predictable cost of capital.
-
-Variable rates work for some use cases. They don't work for institutions managing quarterly P&Ls or RWA strategies with fixed yield profiles.
-
----
-
-### Tweet 3 (The Mechanics Problem)
-
-The fundamental issue with utilization-based rates:
-
-When a large borrower takes $30M from a $100M pool, utilization jumps from 50% to 80%. Everyone's rate doubles overnight.
-
-Neither borrowers nor lenders control what they'll pay tomorrow. Both are rate takers.
-
----
-
-### Tweet 4 (What Changes)
-
-Fixed Rates inverts this.
-
-Borrowers lock their rate for 1, 3, or 6 months. No surprises. No rate spikes at 2am because someone else entered the pool.
-
-Predictable cost of capital. The way institutions actually operate.
-
----
-
-### Tweet 5 (The Bigger Vision)
-
-What excites me most: this creates DeFi's first real yield curve.
-
-Different rates for different durations. Term structure. Price discovery driven by actual supply and demand, not algorithmic utilization curves.
-
-This is how real credit markets work. Now it's onchain.
-
----
-
-### Tweet 6 (Security Emphasis)
-
-We built this on the same infrastructure that's processed $100B+ in loans with zero bad debt.
-
-Same Kamino Lend smart contracts. Same security model. 18 audits. 3 formal verifications. Open source from day one.
-
-New capability, proven foundation.
-
----
-
-### Tweet 7 (Roadmap)
-
-This is just the first step.
-
-Borrow Intents is coming next—letting borrowers post their desired terms onchain. A limit order for credit.
-
-Then RWA-specific markets. Then Multiply integration.
-
-The infrastructure for institutional DeFi is being built. On Kamino. On Solana.
-
----
-
-### Tweet 8 (CTA)
+This is just the first step. Borrow Intents is coming next—letting borrowers post their desired terms onchain. A limit order for credit. Then RWA-specific markets. Then Multiply integration. The infrastructure for institutional DeFi is being built. On Kamino. On Solana.
 
 Try Fixed Rates today: [link]
-
-Read the full announcement: [blog link]
-
-If you're an institution looking to borrow against tokenized assets, reach out:
-institutions@kamino.finance
-
-We're building the bridge between DeFi and the next generation of financial assets.
+Full announcement: [blog link]
+Institutions: institutions@kamino.finance
 
 ---
 
-## 3. Build-Up Threads (Pre-Launch)
+### 3. Pre-Launch Teaser Posts
 
-### Thread A: "The Problem with Variable Rates" (L-14)
+**L-14:**
+DeFi rates can swing 300% in a day. For institutions? Untenable. We're fixing this. [GRAPHIC]
 
-**Posted by:** @kamino
-**Purpose:** Scene-setting, education
+**L-10:**
+What institutions need from DeFi credit: predictable costs, duration matching, size without impact, battle-tested security. We listened. [GRAPHIC]
 
----
-
-**Tweet 1:**
-DeFi has a $200B problem that nobody talks about enough.
-
-Variable interest rates are holding back institutional adoption.
-
-Here's why—and what needs to change. 🧵
+**L-3:**
+Fixed rate. Fixed term. January. [VIDEO TEASER]
 
 ---
 
-**Tweet 2:**
-In traditional finance, most institutional borrowing happens at fixed rates.
+### 4. Post-Launch Hook Posts
 
-Repo markets. Credit lines. Structured products. Corporate bonds.
+**L+1 (FalconX quote):**
+"Kamino is providing the term structure necessary to operationalize our Asset-Liability Management." – Craig Birchall @FalconX [QUOTE CARD]
 
-Why? Because institutions need to forecast their costs.
+**L+2 (How-to hook):**
+Lock your rate in 3 steps. Full walkthrough: [blog/video link]
 
----
-
-**Tweet 3:**
-DeFi does it differently.
-
-Almost every lending protocol uses utilization-based rates. More borrowing = higher rates. Less borrowing = lower rates.
-
-Sounds elegant. But there's a catch.
+**Weekly stats:**
+Fixed Rates week [X]: $[X]M borrowed, [X] active loans. [STATS GRAPHIC]
 
 ---
 
-**Tweet 4:**
-The catch: rates can move 300% in a single day.
+## Long-Form Content (Blog / Articles)
 
-A borrower who enters at 5% might pay 15% next week.
-A lender earning 7% might earn 2% next week.
+### Article 1: "The Variable Rate Problem" (L-14)
 
-Both committed capital based on conditions that no longer exist.
-
----
-
-**Tweet 5:**
-For retail traders comfortable with volatility, this is fine.
-
-For an institution budgeting quarterly financing costs? Unacceptable.
-
-For an RWA strategy that needs predictable spreads? Impossible.
+**Publish on:** gov.kamino.finance blog
+**Hook post:** Links to this from L-14 teaser
 
 ---
 
-**Tweet 6:**
-Real examples of what breaks:
+**Outline:**
 
-→ Carry trades invert when borrow rates spike above yield
-→ Institutions can't extend credit lines at fixed rates to clients
-→ RWA issuers can't build fixed-income products
+1. **The $200B Problem**
+   - Almost all DeFi lending uses utilization-based variable rates
+   - Rates determined by pool utilization, can swing 300% in a day
+   - A borrower at 5% might pay 15% next week
 
-The infrastructure doesn't exist. Until now.
+2. **Why This Breaks Institutional Use Cases**
+   - Institutions budget quarterly—can't tell CFO cost might double
+   - RWA strategies need predictable spreads
+   - Large borrowers move the market against themselves by entering
 
----
+3. **What Traditional Finance Does Differently**
+   - Repo markets, credit lines, corporate bonds—all fixed rate
+   - Why? Institutions need to forecast costs
+   - Duration matching is fundamental to ALM
 
-**Tweet 7:**
-Something is coming to Kamino that solves this.
+4. **Real Examples of What Breaks**
+   - Carry trades invert when borrow rates spike
+   - Institutions can't extend fixed-rate credit lines to clients
+   - RWA issuers can't build fixed-income products
 
-Fixed rate. Fixed term. Predictable cost of capital.
-
-More details soon.
-
----
-
-### Thread B: "Why Institutions Need This" (L-12)
-
-**Posted by:** @kamino
-**Purpose:** Institutional use case education
-
----
-
-**Tweet 1:**
-What do institutions actually need from DeFi credit markets?
-
-We've spent the past year talking to trading desks, funds, and brokers.
-
-Here's what we learned. 🧵
+5. **The Infrastructure Gap**
+   - The building block doesn't exist in DeFi
+   - Until now—introducing Fixed Rates (teaser)
 
 ---
 
-**Tweet 2:**
-Need #1: Predictable funding costs
+### Article 2: "Why Institutions Need Fixed Rates" (L-12)
 
-"We can't tell our CFO that our cost of capital might double next week."
-
-Institutions operate on quarterly and annual planning cycles. Variable rates don't fit that model.
+**Publish on:** gov.kamino.finance blog
+**Audience:** Institutional readers, RWA issuers
 
 ---
 
-**Tweet 3:**
-Need #2: Duration matching
+**Outline:**
 
-"Our assets have 3-month yield profiles. We need 3-month funding costs to match."
+1. **What We Learned Talking to Institutions**
+   - Spent a year talking to trading desks, funds, brokers
+   - Four consistent needs emerged
 
-Asset-liability management is fundamental to institutional finance. DeFi hasn't supported it.
+2. **Need #1: Predictable Funding Costs**
+   - "Can't tell CFO cost of capital might double"
+   - Quarterly/annual planning cycles don't fit variable rates
 
----
+3. **Need #2: Duration Matching**
+   - Assets have yield profiles (3-month, 6-month)
+   - Need matching funding costs for ALM
+   - Asset-liability management is fundamental
 
-**Tweet 4:**
-Need #3: Size without impact
+4. **Need #3: Size Without Impact**
+   - Large borrowers push utilization-based rates up
+   - $20M borrow moves the market against yourself
+   - Fixed rates eliminate this dynamic
 
-"Every time we borrow $20M, we move the market against ourselves."
+5. **Need #4: Track Record and Security**
+   - Audits, formal verification, proven history required
+   - Not optional—table stakes for institutional adoption
 
-Large borrowers in utilization-based pools push rates up just by entering. Fixed rates solve this.
-
----
-
-**Tweet 5:**
-Need #4: Track record and security
-
-"We can't use protocols without audits, formal verification, and proven history."
-
-Battle-tested infrastructure isn't optional. It's table stakes.
-
----
-
-**Tweet 6:**
-These needs aren't going away. They're intensifying as more institutional capital looks at DeFi.
-
-The protocols that solve them will win.
-
-Something is coming. Stay tuned.
+6. **How Kamino Addresses All Four**
+   - Fixed Rates product overview
+   - $100B+ loans, $0 bad debt, 18 audits
 
 ---
 
-## 4. Post-Launch Educational Threads
+### Article 3: "How Fixed Rates Work" (Launch Day)
 
-### Thread C: "How to Use Fixed Rates" (L+1)
-
-**Posted by:** @kamino
-**Purpose:** User education, drive adoption
+**Publish on:** gov.kamino.finance blog
+**Purpose:** Technical deep dive
 
 ---
 
-**Tweet 1:**
-Fixed Rates is live. Here's how to use it.
+**Outline:**
 
-A step-by-step guide to locking in your borrowing cost on Kamino. 🧵
+1. **The Mechanics**
+   - Lock rate for 1, 3, or 6 months
+   - Rate locked from day one through expiry
+   - No changes regardless of utilization
 
----
+2. **Conditional Liquidity**
+   - Lenders signal availability at specific rates
+   - No opportunity cost while waiting
+   - Funds stay productive until borrowed
 
-**Tweet 2:**
-Step 1: Go to Kamino and connect your wallet
+3. **Instant Execution**
+   - When terms match, borrow atomically
+   - Single transaction
+   - No negotiation or waiting
 
-Navigate to the Fixed Rates section in the Lend product.
+4. **Auto-Rollover**
+   - Loans can extend automatically at maturity
+   - If liquidity available at similar terms
+   - Seamless continuous exposure
 
-[SCREENSHOT]
+5. **The Withdrawal Queue**
+   - How lenders exit
+   - Orderly liquidity management
 
----
-
-**Tweet 3:**
-Step 2: Deposit your collateral
-
-Select your collateral asset (SOL, BTC, ETH, etc.) and deposit it into the market.
-
-Your collateral determines your borrowing capacity.
-
-[SCREENSHOT]
-
----
-
-**Tweet 4:**
-Step 3: Choose your loan terms
-
-Select:
-• The asset you want to borrow (e.g., USDC)
-• Your desired rate
-• Your desired duration (1m, 3m, etc.)
-
-See available liquidity at each rate.
-
-[SCREENSHOT]
+6. **What This Enables: DeFi's First Yield Curve**
+   - Different rates for different durations
+   - Real price discovery for credit
+   - Term structure emerges from supply/demand
 
 ---
 
-**Tweet 5:**
-Step 4: Execute your borrow
+### Article 4: "Fixed Rates for RWA Issuers" (L+3)
 
-Click to execute. Your fixed-rate loan originates atomically.
-
-Your rate is now locked for the entire term. No changes regardless of market conditions.
+**Publish on:** gov.kamino.finance blog
+**Audience:** RWA protocols, tokenized asset issuers
 
 ---
 
-**Tweet 6:**
-What happens at maturity?
+**Outline:**
 
-Option 1: Repay the loan
-Option 2: Auto-rollover into a new term (if liquidity available)
-Option 3: Fallback to variable rate pool
+1. **The RWA Financing Problem**
+   - Tokenized assets often have fixed yield profiles
+   - Variable borrowing costs create spread risk
+   - Can't build fixed-income products on variable funding
 
-You're in control.
+2. **Duration Matching for RWAs**
+   - Match 3-month T-bill yield with 3-month fixed borrow
+   - Predictable spreads enable real products
 
----
+3. **Scaling Without Impact**
+   - Large borrows don't spike rates
+   - Institutional scale is possible
 
-**Tweet 7:**
-Pro tips:
-
-→ Check available liquidity at your desired rate before borrowing
-→ Enable auto-rollover if you want continuous fixed-rate exposure
-→ Monitor your health factor like any other loan
-
----
-
-**Tweet 8:**
-Questions? Drop them below.
-
-Full documentation: [docs link]
-Product: [kamino.finance link]
+4. **Integration Path**
+   - How RWA issuers can integrate
+   - API access, institutional onboarding
 
 ---
 
-## 5. Stats Update Template (Weekly)
+### Article 5: "Under the Hood: Fixed Rates Architecture" (L+7)
 
-**Posted by:** @kamino
-**Purpose:** Show traction, build momentum
-
----
-
-**Template:**
-
-Fixed Rates: Week [X] Update
-
-📊 Stats:
-• Total borrowed: $[X]M
-• Active loans: [X]
-• Most popular term: [X] months
-• Average rate locked: [X]%
-
-The foundation for institutional credit on Solana. Growing.
-
-[VISUAL: Stats graphic]
+**Publish on:** gov.kamino.finance blog
+**Audience:** Technical, developers, auditors
 
 ---
 
-## Notes for Colyn
+**Outline:**
 
-1. **Timing matters:** Launch day tweets should be spaced 15-30 min apart
-2. **Engagement:** Reply to your own threads with key points, pin the main thread
-3. **RT strategy:** QT partner posts, don't just RT
-4. **Hashtags:** Use sparingly (#Solana, #DeFi on main announcement only)
-5. **Visuals:** Every thread should have at least one graphic
-6. **Links:** Always include in final tweet, never in first tweet
+1. **Design Philosophy**
+   - Built on proven Kamino Lend infrastructure
+   - Same security model, new capability
+
+2. **Rate Locking Mechanism**
+   - How rates are locked on-chain
+   - Smart contract mechanics
+
+3. **Liquidation Handling**
+   - Same collateral/health factor model
+   - What happens if position becomes unhealthy
+
+4. **Security Posture**
+   - 18 audits, 3 formal verifications
+   - Open source, verifiably built
+
+5. **Roadmap: Borrow Intents**
+   - Limit orders for credit
+   - Post desired terms, lenders fill
 
 ---
 
-*Thread Drafts v1.0*
-*Ready for review*
+## Video Content
+
+| Asset | Length | Purpose |
+|-------|--------|---------|
+| Marius announcement | 60-90s | Main launch, tweets from @kamino and @y2kappa |
+| Product walkthrough | 2-3min | Embed in "How Fixed Rates Work" article |
+| Teaser clip | 15-30s | L-3 pre-launch hype |
+| "Variable rate problem" explainer | 2min | Embed in Article 1 |
+| Institutional use case | 2min | For institutional outreach |
+
+---
+
+## Content Calendar Summary
+
+| Day | Twitter | Long-Form |
+|-----|---------|-----------|
+| L-14 | Teaser post | Article 1: Variable Rate Problem |
+| L-12 | - | Article 2: Why Institutions Need This |
+| L-10 | Teaser post | - |
+| L-3 | Video teaser | - |
+| L-0 | Main announcement + Marius post | Article 3: How Fixed Rates Work |
+| L+1 | FalconX quote | - |
+| L+2 | How-to hook | - |
+| L+3 | - | Article 4: RWA Issuers |
+| L+7 | - | Article 5: Technical Deep Dive |
+| Weekly | Stats posts | - |
+
+---
+
+*Content Strategy v3.0 - Long-form focus*
