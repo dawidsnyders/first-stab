@@ -83,12 +83,12 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
   const color = getColor();
 
   return (
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2, delay: 0.05 }}
-        className="w-full"
-      >
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.2, delay: 0.05 }}
+      className="w-full"
+    >
       <ResponsiveContainer width="100%" height={400}>
         <AreaChart
           data={data}
