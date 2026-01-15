@@ -4,9 +4,9 @@ import { clearExpiredCache } from "@/lib/data/storage";
 
 /**
  * Cron endpoint for scheduled data refresh
- * 
+ *
  * This endpoint should be called by Vercel Cron Jobs or similar scheduler
- * 
+ *
  * Vercel Cron configuration (vercel.json):
  * {
  *   "crons": [{
@@ -18,7 +18,10 @@ import { clearExpiredCache } from "@/lib/data/storage";
 export async function GET(request: NextRequest) {
   // Verify this is a cron request (optional security check)
   const authHeader = request.headers.get("authorization");
-  if (process.env.CRON_SECRET && authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  if (
+    process.env.CRON_SECRET &&
+    authHeader !== `Bearer ${process.env.CRON_SECRET}`
+  ) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -34,7 +37,9 @@ export async function GET(request: NextRequest) {
     // Run scheduled tasks
     const results = await runScheduledTasks();
 
-    console.log(`[Cron] Completed data refresh: ${results.length} areas processed`);
+    console.log(
+      `[Cron] Completed data refresh: ${results.length} areas processed`
+    );
 
     return NextResponse.json({
       success: true,
