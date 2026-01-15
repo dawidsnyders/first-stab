@@ -1,38 +1,41 @@
-'use client';
+"use client";
 
-import { useState, useCallback } from 'react';
-import { motion } from 'framer-motion';
-import { Area } from '@/types';
-import { AreaInfoPanel } from './AreaInfoPanel';
-import { MapboxMap } from './MapboxMap';
-import { getAreasByLevel } from '@/data/areas';
+import { useState, useCallback } from "react";
+import { motion } from "framer-motion";
+import { Area } from "@/types";
+import { AreaInfoPanel } from "./AreaInfoPanel";
+import { MapboxMap } from "./MapboxMap";
+import { getAreasByLevel } from "@/data/areas";
 
 interface MapViewProps {
-  initialLevel?: Area['level'];
+  initialLevel?: Area["level"];
 }
 
-export function MapView({ initialLevel = 'suburb' }: MapViewProps) {
+export function MapView({ initialLevel = "suburb" }: MapViewProps) {
   const [selectedArea, setSelectedArea] = useState<Area | null>(null);
   const [hoveredArea, setHoveredArea] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const areas = getAreasByLevel(initialLevel);
 
-  const handleAreaClick = useCallback((area: Area) => {
-    if (selectedArea?.id === area.id) {
+  const handleAreaClick = useCallback(
+    (area: Area) => {
+      if (selectedArea?.id === area.id) {
+        setSelectedArea(null);
+        return;
+      }
+
+      // Simulate loading for smooth transition
+      setIsLoading(true);
       setSelectedArea(null);
-      return;
-    }
 
-    // Simulate loading for smooth transition
-    setIsLoading(true);
-    setSelectedArea(null);
-
-    setTimeout(() => {
-      setSelectedArea(area);
-      setIsLoading(false);
-    }, 150);
-  }, [selectedArea]);
+      setTimeout(() => {
+        setSelectedArea(area);
+        setIsLoading(false);
+      }, 150);
+    },
+    [selectedArea]
+  );
 
   const handleClose = useCallback(() => {
     setSelectedArea(null);
@@ -114,14 +117,14 @@ function MapAreaCard({
       transition={{ duration: 0.2 }}
       animate={{
         boxShadow: isSelected
-          ? '0 0 0 3px rgb(93 115 80)'
+          ? "0 0 0 3px rgb(93 115 80)"
           : isHovered
-          ? '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
-          : '0 1px 3px rgba(0, 0, 0, 0.1)',
+          ? "0 10px 25px -5px rgba(0, 0, 0, 0.1)"
+          : "0 1px 3px rgba(0, 0, 0, 0.1)",
       }}
       className={`relative p-4 bg-white rounded-xl text-left transition-colors duration-200 ${
-        isSelected ? 'ring-2 ring-sage-500' : ''
-      } ${isHovered && !isSelected ? 'bg-sage-50' : ''}`}
+        isSelected ? "ring-2 ring-sage-500" : ""
+      } ${isHovered && !isSelected ? "bg-sage-50" : ""}`}
     >
       {/* Selected indicator */}
       {isSelected && (
@@ -129,7 +132,12 @@ function MapAreaCard({
           layoutId="selectedIndicator"
           className="absolute -top-1 -right-1 w-4 h-4 bg-sage-500 rounded-full"
           initial={false}
-          transition={{ type: 'spring', stiffness: 500, damping: 30, duration: 0.2 }}
+          transition={{
+            type: "spring",
+            stiffness: 500,
+            damping: 30,
+            duration: 0.2,
+          }}
         />
       )}
 
@@ -139,11 +147,11 @@ function MapAreaCard({
           <span
             className={`text-xs px-1.5 py-0.5 rounded ${
               isPositive
-                ? 'bg-green-100 text-green-700'
-                : 'bg-red-100 text-red-700'
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
             }`}
           >
-            {isPositive ? '+' : ''}
+            {isPositive ? "+" : ""}
             {stats.priceChangeYoY.toFixed(1)}%
           </span>
         )}

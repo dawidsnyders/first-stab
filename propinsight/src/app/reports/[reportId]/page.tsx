@@ -1,8 +1,8 @@
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import { getReport } from '@/lib/report-storage';
-import { APP_NAME } from '@/lib/constants';
-import { marked } from 'marked';
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { getReport } from "@/lib/report-storage";
+import { APP_NAME } from "@/lib/constants";
+import { marked } from "marked";
 
 interface PageProps {
   params: Promise<{ reportId: string }>;
@@ -36,7 +36,9 @@ export default async function ReportPage({ params }: PageProps) {
               {APP_NAME}
             </Link>
             <Link
-              href={`/area/${report.areaName.toLowerCase().replace(/\s+/g, '-')}`}
+              href={`/area/${report.areaName
+                .toLowerCase()
+                .replace(/\s+/g, "-")}`}
               className="text-sage-600 hover:text-sage-700 transition-colors duration-200"
             >
               ← Back to {report.areaName}
@@ -54,10 +56,11 @@ export default async function ReportPage({ params }: PageProps) {
               {report.areaName} Property Market Analysis
             </h1>
             <p className="text-gray-500">
-              Generated on {new Date(report.createdAt).toLocaleDateString('en-ZA', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
+              Generated on{" "}
+              {new Date(report.createdAt).toLocaleDateString("en-ZA", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
               })}
             </p>
           </div>
@@ -115,8 +118,8 @@ export default async function ReportPage({ params }: PageProps) {
       <footer className="bg-white border-t border-gray-200 py-8 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-gray-500 text-sm text-center">
-            This report is for informational purposes only and does not constitute
-            financial advice.
+            This report is for informational purposes only and does not
+            constitute financial advice.
           </p>
         </div>
       </footer>
