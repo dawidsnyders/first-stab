@@ -105,22 +105,55 @@ export default async function AreaPage({ params }: PageProps) {
 
   return (
     <div className="min-h-screen bg-stone-50">
-      {/* Floating Header */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-stone-200/50 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
+      {/* Floating Header - Raycast Style */}
+      <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl">
+        <div className="bg-white/80 backdrop-blur-xl border border-stone-200/60 rounded-2xl shadow-lg">
+          <div className="flex items-center justify-between px-6 py-3">
+            {/* Logo - Left */}
             <Link
               href="/"
-              className="text-2xl font-bold text-stone-900 hover:text-sage-600 transition-colors duration-200"
+              className="flex items-center gap-2.5 group"
             >
-              {APP_NAME}
+              <div className="w-7 h-7 bg-gradient-to-br from-sage-600 to-moss-600 rounded-lg flex items-center justify-center shadow-sm group-hover:shadow-md transition-shadow duration-200">
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                  />
+                </svg>
+              </div>
+              <span className="text-lg font-semibold text-stone-900 group-hover:text-sage-600 transition-colors duration-200">
+                {APP_NAME}
+              </span>
             </Link>
+
+            {/* Breadcrumb - Centered */}
+            <nav className="hidden md:flex items-center gap-2 text-sm absolute left-1/2 -translate-x-1/2">
+              <Link
+                href="/"
+                className="text-stone-500 hover:text-stone-900 transition-colors duration-200"
+              >
+                Home
+              </Link>
+              <span className="text-stone-300">/</span>
+              <span className="text-stone-900 font-medium">{area.name}</span>
+            </nav>
+
+            {/* Spacer for right alignment */}
+            <div className="w-24"></div>
           </div>
         </div>
       </header>
 
-      {/* Breadcrumb */}
-      <div className="bg-white border-b border-stone-100 pt-16">
+      {/* Mobile Breadcrumb */}
+      <div className="md:hidden bg-white border-b border-stone-100 pt-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <nav className="flex items-center gap-2 text-sm">
             <Link
@@ -137,7 +170,7 @@ export default async function AreaPage({ params }: PageProps) {
 
       {/* Hero */}
       <section className="bg-gradient-to-b from-white to-stone-50 pb-12 border-b border-stone-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-8">
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Left: Title and Description */}
             <div className="lg:col-span-2 space-y-4">

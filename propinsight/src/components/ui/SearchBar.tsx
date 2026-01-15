@@ -5,7 +5,11 @@ import { useRouter } from 'next/navigation';
 import { Area } from '@/types';
 import { searchAreas } from '@/data/areas';
 
-export function SearchBar() {
+interface SearchBarProps {
+  onMapClick?: () => void;
+}
+
+export function SearchBar({ onMapClick }: SearchBarProps) {
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<Area[]>([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -75,31 +79,55 @@ export function SearchBar() {
   };
 
   return (
-    <div className="relative w-full max-w-xl">
-      <div className="relative">
-        <input
-          ref={inputRef}
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => query.length >= 2 && setIsOpen(results.length > 0)}
-          onKeyDown={handleKeyDown}
-          placeholder="Search suburbs, cities, or estates..."
-          className="w-full px-4 py-3 pl-12 text-lg border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-400 focus:border-transparent shadow-sm transition-all duration-200 hover:border-stone-400"
-        />
-        <svg
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+    <div className="relative w-full max-w-2xl">
+      <div className="relative flex items-center gap-2">
+        <div className="relative flex-1">
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => query.length >= 2 && setIsOpen(results.length > 0)}
+            onKeyDown={handleKeyDown}
+            placeholder="Search suburbs, cities, or estates..."
+            className="w-full px-4 py-3 pl-12 pr-4 text-lg border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-400 focus:border-transparent shadow-sm transition-all duration-200 hover:border-stone-400"
           />
-        </svg>
+          <svg
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+            />
+          </svg>
+        </div>
+        {onMapClick && (
+          <button
+            onClick={onMapClick}
+            className="flex items-center justify-center w-12 h-12 border border-stone-300 rounded-xl bg-white hover:bg-stone-50 hover:border-sage-400 transition-all duration-200 shadow-sm hover:shadow-md group"
+            aria-label="Open map view"
+            title="Open interactive map"
+          >
+            <svg
+              className="w-5 h-5 text-stone-600 group-hover:text-sage-600 transition-colors duration-200"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+              />
+            </svg>
+          </button>
+        )}
       </div>
 
       {isOpen && (
