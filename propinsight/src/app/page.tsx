@@ -8,7 +8,7 @@ import {
   MapIcon,
   DocumentTextIcon,
   BoltIcon,
-  TargetIcon,
+  CursorArrowRaysIcon,
   MagnifyingGlassIcon,
   HomeIcon,
   MapPinIcon,
@@ -182,6 +182,133 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Product Showcase - Scrollable Cards */}
+      <section className="relative bg-gradient-to-b from-sage-50/50 to-white py-20 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center"
+          >
+            <span className="inline-block px-4 py-1.5 bg-sage-100 text-sage-700 text-sm font-medium rounded-full mb-4">
+              Why PropInsight
+            </span>
+            <h3 className="text-3xl md:text-4xl font-bold text-stone-900 mb-4">
+              Everything you need for smarter property decisions
+            </h3>
+            <p className="text-lg text-stone-600 max-w-2xl mx-auto">
+              From market data to investment analysis, we provide the insights that matter
+            </p>
+          </motion.div>
+        </div>
+        
+        {/* Scrollable product cards container */}
+        <div className="relative">
+          {/* Gradient fade on edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-sage-50/50 to-transparent z-10 pointer-events-none"></div>
+          <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
+          
+          {/* Scrollable container */}
+          <div className="flex overflow-x-auto gap-6 px-4 sm:px-8 pb-8 snap-x snap-mandatory scrollbar-hide scroll-smooth">
+            {/* Spacer for centering on larger screens */}
+            <div className="flex-shrink-0 w-[calc((100vw-1280px)/2-2rem)] hidden xl:block"></div>
+            
+            <ProductShowcaseCard
+              gradient="from-sage-500 to-moss-600"
+              icon={
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                </svg>
+              }
+              title="Real-Time Market Data"
+              description="Access live property prices, sales volumes, and market trends updated daily for every suburb in the Western Cape."
+              highlight="Updated Daily"
+              stats={[
+                { label: "Suburbs Tracked", value: "150+" },
+                { label: "Data Points", value: "1M+" }
+              ]}
+            />
+            
+            <ProductShowcaseCard
+              gradient="from-terracotta-400 to-terracotta-600"
+              icon={
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+              }
+              title="Growth Analytics"
+              description="Track year-over-year growth rates, identify trending areas, and compare performance against national benchmarks."
+              highlight="10-Year History"
+              stats={[
+                { label: "Avg Accuracy", value: "98%" },
+                { label: "Predictions", value: "AI-Powered" }
+              ]}
+            />
+            
+            <ProductShowcaseCard
+              gradient="from-stone-600 to-stone-800"
+              icon={
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              }
+              title="In-Depth Reports"
+              description="Get comprehensive 10-15 page analysis reports with historical data, growth drivers, and investment outlook for any suburb."
+              highlight={REPORT_PRICE_DISPLAY}
+              stats={[
+                { label: "Pages", value: "10-15" },
+                { label: "Delivery", value: "Instant" }
+              ]}
+            />
+            
+            <ProductShowcaseCard
+              gradient="from-moss-500 to-sage-600"
+              icon={
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                </svg>
+              }
+              title="Interactive Maps"
+              description="Explore the Western Cape visually with our interactive map. Click on any region to instantly view detailed market statistics."
+              highlight="Click to Explore"
+              stats={[
+                { label: "Regions", value: "All WC" },
+                { label: "Updates", value: "Real-time" }
+              ]}
+            />
+            
+            <ProductShowcaseCard
+              gradient="from-sand-400 to-sand-500"
+              icon={
+                <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              }
+              title="Investment Intelligence"
+              description="Make data-driven investment decisions with risk assessments, ROI projections, and comparable area analysis."
+              highlight="Smart Insights"
+              stats={[
+                { label: "Risk Analysis", value: "Included" },
+                { label: "ROI Calc", value: "Built-in" }
+              ]}
+            />
+            
+            {/* Spacer for centering on larger screens */}
+            <div className="flex-shrink-0 w-[calc((100vw-1280px)/2-2rem)] hidden xl:block"></div>
+          </div>
+        </div>
+        
+        {/* Scroll indicator */}
+        <div className="flex justify-center items-center gap-2 mt-4">
+          <span className="text-sm text-stone-500">Scroll to explore</span>
+          <svg className="w-4 h-4 text-stone-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          </svg>
+        </div>
+      </section>
+
       {/* Features section */}
       <section
         id="features"
@@ -225,7 +352,7 @@ export default function Home() {
               description="Quick stats and key metrics displayed beautifully. No need to dig through spreadsheets."
             />
             <FeatureCard
-              Icon={TargetIcon}
+              Icon={CursorArrowRaysIcon}
               title="Investment Intelligence"
               description="Understand market dynamics, risk factors, and opportunities to make smarter property investments."
             />
@@ -528,5 +655,68 @@ function ReportFeature({
         </p>
       </div>
     </div>
+  );
+}
+
+interface ProductShowcaseCardProps {
+  gradient: string;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+  highlight: string;
+  stats: { label: string; value: string }[];
+}
+
+function ProductShowcaseCard({
+  gradient,
+  icon,
+  title,
+  description,
+  highlight,
+  stats,
+}: ProductShowcaseCardProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className="flex-shrink-0 w-[320px] md:w-[360px] snap-center"
+    >
+      <div className="relative h-full bg-white rounded-2xl shadow-lg hover:shadow-xl border border-stone-200 overflow-hidden transition-all duration-300 hover:-translate-y-1 group">
+        {/* Gradient header */}
+        <div className={`bg-gradient-to-br ${gradient} p-6 text-white`}>
+          <div className="flex items-center justify-between mb-4">
+            <div className="w-14 h-14 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+              {icon}
+            </div>
+            <span className="px-3 py-1 bg-white/20 backdrop-blur-sm rounded-full text-sm font-medium">
+              {highlight}
+            </span>
+          </div>
+          <h4 className="text-xl font-bold mb-2">{title}</h4>
+        </div>
+        
+        {/* Content */}
+        <div className="p-6">
+          <p className="text-stone-600 text-sm leading-relaxed mb-6">
+            {description}
+          </p>
+          
+          {/* Stats */}
+          <div className="grid grid-cols-2 gap-4">
+            {stats.map((stat, index) => (
+              <div key={index} className="text-center p-3 bg-stone-50 rounded-xl">
+                <div className="text-lg font-bold text-stone-900">{stat.value}</div>
+                <div className="text-xs text-stone-500">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Hover accent */}
+        <div className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
+      </div>
+    </motion.div>
   );
 }
