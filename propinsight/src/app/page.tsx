@@ -8,20 +8,29 @@ export default function Home() {
   const featuredSuburbs = getAreasByLevel('suburb').slice(0, 6);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <header className="bg-white border-b border-gray-200">
+    <div className="min-h-screen bg-stone-50">
+      {/* Floating Header */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-stone-200/50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <h1 className="text-2xl font-bold text-gray-900">{APP_NAME}</h1>
+            <h1 className="text-2xl font-bold text-stone-900">{APP_NAME}</h1>
             <nav className="hidden sm:flex items-center gap-6">
-              <a href="#explore" className="text-gray-600 hover:text-gray-900">
+              <a 
+                href="#explore" 
+                className="text-stone-600 hover:text-sage-600 transition-colors duration-200 font-medium"
+              >
                 Explore
               </a>
-              <a href="#pricing" className="text-gray-600 hover:text-gray-900">
+              <a 
+                href="#pricing" 
+                className="text-stone-600 hover:text-sage-600 transition-colors duration-200 font-medium"
+              >
                 Pricing
               </a>
-              <a href="#about" className="text-gray-600 hover:text-gray-900">
+              <a 
+                href="#about" 
+                className="text-stone-600 hover:text-sage-600 transition-colors duration-200 font-medium"
+              >
                 About
               </a>
             </nav>
@@ -30,20 +39,27 @@ export default function Home() {
       </header>
 
       {/* Hero section */}
-      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
-              Property Intelligence for South Africa
+      <section className="relative bg-gradient-to-br from-sage-100 via-stone-50 to-moss-50 text-stone-900 pt-24 pb-20 md:pt-32 md:pb-28 overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute -top-40 -right-40 w-80 h-80 bg-terracotta-100/30 rounded-full blur-3xl"></div>
+          <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-moss-100/30 rounded-full blur-3xl"></div>
+        </div>
+        
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="max-w-4xl mx-auto text-center">
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 leading-tight">
+              Property Intelligence
+              <span className="block text-sage-600 mt-2">for South Africa</span>
             </h2>
-            <p className="text-xl text-blue-100 mb-8">
-              Get comprehensive market analysis reports for any suburb.
-              Understand prices, trends, and investment potential.
+            <p className="text-xl md:text-2xl text-stone-600 mb-10 font-light leading-relaxed max-w-2xl mx-auto">
+              Discover comprehensive market insights for any suburb. 
+              <span className="block mt-2">Make informed property decisions with data-driven analysis.</span>
             </p>
-            <div className="flex justify-center">
+            <div className="flex justify-center mb-6">
               <SearchBar />
             </div>
-            <p className="text-sm text-blue-200 mt-4">
+            <p className="text-sm text-stone-500">
               Search by suburb name, estate, or city
             </p>
           </div>
@@ -51,12 +67,12 @@ export default function Home() {
       </section>
 
       {/* Map section */}
-      <section id="explore" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <section id="explore" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="mb-8">
-          <h3 className="text-2xl font-bold text-gray-900 mb-2">
+          <h3 className="text-3xl font-bold text-stone-900 mb-3">
             Explore the Western Cape
           </h3>
-          <p className="text-gray-600">
+          <p className="text-stone-600 text-lg">
             Click on an area to see quick stats, or view the full details page
           </p>
         </div>
@@ -102,16 +118,16 @@ export default function Home() {
       </section>
 
       {/* Report preview */}
-      <section id="pricing" className="bg-gray-900 text-white py-16">
+      <section id="pricing" className="bg-stone-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto text-center">
             <h3 className="text-3xl font-bold mb-4">
               Professional Market Analysis
             </h3>
-            <p className="text-gray-400 mb-8">
+            <p className="text-stone-400 mb-8">
               Each report includes 10-15 pages of in-depth analysis
             </p>
-            <div className="bg-gray-800 rounded-2xl p-8 text-left">
+            <div className="bg-stone-800 rounded-2xl p-8 text-left">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <ReportFeature
                   title="10-Year Price Analysis"
@@ -138,9 +154,9 @@ export default function Home() {
                   description="Know what factors could affect values"
                 />
               </div>
-              <div className="mt-8 pt-8 border-t border-gray-700 text-center">
+              <div className="mt-8 pt-8 border-t border-stone-700 text-center">
                 <span className="text-4xl font-bold">{REPORT_PRICE_DISPLAY}</span>
-                <span className="text-gray-400 ml-2">per report</span>
+                <span className="text-stone-400 ml-2">per report</span>
               </div>
             </div>
           </div>
@@ -148,16 +164,16 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-white border-t border-gray-200 py-8">
+      <footer className="bg-white border-t border-stone-200 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-gray-500 text-sm">
+            <p className="text-stone-500 text-sm">
               2026 {APP_NAME}. Data for informational purposes only.
             </p>
-            <div className="flex gap-6 text-sm text-gray-500">
-              <a href="#" className="hover:text-gray-900">Terms</a>
-              <a href="#" className="hover:text-gray-900">Privacy</a>
-              <a href="#" className="hover:text-gray-900">Contact</a>
+            <div className="flex gap-6 text-sm text-stone-500">
+              <a href="#" className="hover:text-sage-600 transition-colors duration-200">Terms</a>
+              <a href="#" className="hover:text-sage-600 transition-colors duration-200">Privacy</a>
+              <a href="#" className="hover:text-sage-600 transition-colors duration-200">Contact</a>
             </div>
           </div>
         </div>
@@ -177,11 +193,11 @@ function StepCard({
 }) {
   return (
     <div className="text-center">
-      <div className="w-12 h-12 bg-blue-100 text-blue-600 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4">
+      <div className="w-12 h-12 bg-sage-100 text-sage-600 rounded-full flex items-center justify-center text-xl font-bold mx-auto mb-4 transition-colors duration-200 hover:bg-sage-200">
         {number}
       </div>
-      <h4 className="text-lg font-semibold text-gray-900 mb-2">{title}</h4>
-      <p className="text-gray-600">{description}</p>
+      <h4 className="text-lg font-semibold text-stone-900 mb-2">{title}</h4>
+      <p className="text-stone-600">{description}</p>
     </div>
   );
 }

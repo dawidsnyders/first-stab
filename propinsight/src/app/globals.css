@@ -3,6 +3,44 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Pastel earthy color palette */
+  --sage-50: #f4f6f3;
+  --sage-100: #e8ede6;
+  --sage-200: #d1d9cc;
+  --sage-300: #a8b89d;
+  --sage-400: #7d9470;
+  --sage-500: #5d7350;
+  --sage-600: #4a5c3f;
+  
+  --terracotta-50: #fef5f3;
+  --terracotta-100: #fde8e3;
+  --terracotta-200: #fbd5cc;
+  --terracotta-300: #f7b4a5;
+  --terracotta-400: #f28d73;
+  --terracotta-500: #ed6b4a;
+  --terracotta-600: #db4f2e;
+  
+  --sand-50: #faf9f6;
+  --sand-100: #f5f3ed;
+  --sand-200: #eae6d8;
+  --sand-300: #d9d1b8;
+  --sand-400: #c4b896;
+  --sand-500: #a8966f;
+  
+  --moss-50: #f6f7f4;
+  --moss-100: #eaede4;
+  --moss-200: #d4dac8;
+  --moss-300: #b3be9f;
+  --moss-400: #8f9d75;
+  --moss-500: #6f7d57;
+  
+  --stone-50: #f8f7f5;
+  --stone-100: #efede8;
+  --stone-200: #ddd9d0;
+  --stone-300: #c4beb0;
+  --stone-400: #a89f8c;
+  --stone-500: #8b7f6a;
 }
 
 @theme inline {
@@ -10,13 +48,55 @@
   --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  
+  /* Sage colors */
+  --color-sage-50: #f4f6f3;
+  --color-sage-100: #e8ede6;
+  --color-sage-200: #d1d9cc;
+  --color-sage-300: #a8b89d;
+  --color-sage-400: #7d9470;
+  --color-sage-500: #5d7350;
+  --color-sage-600: #4a5c3f;
+  --color-sage-700: #3d4d33;
+  
+  /* Terracotta colors */
+  --color-terracotta-50: #fef5f3;
+  --color-terracotta-100: #fde8e3;
+  --color-terracotta-200: #fbd5cc;
+  --color-terracotta-300: #f7b4a5;
+  --color-terracotta-400: #f28d73;
+  --color-terracotta-500: #ed6b4a;
+  --color-terracotta-600: #db4f2e;
+  --color-terracotta-700: #b83e24;
+  
+  /* Sand colors */
+  --color-sand-50: #faf9f6;
+  --color-sand-100: #f5f3ed;
+  --color-sand-200: #eae6d8;
+  --color-sand-300: #d9d1b8;
+  --color-sand-400: #c4b896;
+  --color-sand-500: #a8966f;
+  
+  /* Moss colors */
+  --color-moss-50: #f6f7f4;
+  --color-moss-100: #eaede4;
+  --color-moss-200: #d4dac8;
+  --color-moss-300: #b3be9f;
+  --color-moss-400: #8f9d75;
+  --color-moss-500: #6f7d57;
+  --color-moss-600: #5a6647;
+  
+  /* Stone colors (extend existing gray) */
+  --color-stone-50: #f8f7f5;
+  --color-stone-100: #efede8;
+  --color-stone-200: #ddd9d0;
+  --color-stone-300: #c4beb0;
+  --color-stone-400: #a89f8c;
+  --color-stone-500: #8b7f6a;
+  --color-stone-600: #6f6554;
+  --color-stone-700: #564e42;
+  --color-stone-800: #3d3730;
+  --color-stone-900: #2a2520;
 }
 
 body {

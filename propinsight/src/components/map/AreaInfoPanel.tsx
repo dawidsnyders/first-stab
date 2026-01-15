@@ -25,16 +25,17 @@ export function AreaInfoPanel({ area, isLoading, onClose }: AreaInfoPanelProps) 
             type: 'spring',
             stiffness: 300,
             damping: 30,
+            duration: 0.2,
           }}
           className="absolute top-0 right-0 h-full w-96 bg-white shadow-2xl border-l border-gray-200 overflow-y-auto z-20"
         >
           {/* Close button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors z-10"
+            className="absolute top-4 right-4 p-2 hover:bg-stone-100 rounded-full transition-colors duration-200 z-10"
           >
             <svg
-              className="w-5 h-5 text-gray-500"
+              className="w-5 h-5 text-stone-500"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -71,15 +72,15 @@ function AreaInfoContent({ area }: { area: Area }) {
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.1 }}
-          className="text-2xl font-bold text-gray-900"
+          className="text-2xl font-bold text-stone-900"
         >
           {area.name}
         </motion.h2>
         <motion.span
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.15 }}
-          className="text-sm text-gray-500 capitalize"
+          transition={{ delay: 0.15, duration: 0.2 }}
+          className="text-sm text-stone-500 capitalize"
         >
           {area.level}
         </motion.span>
@@ -92,11 +93,11 @@ function AreaInfoContent({ area }: { area: Area }) {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 }}
-            className="bg-gradient-to-br from-blue-50 to-indigo-50 p-4 rounded-xl"
+            className="bg-gradient-to-br from-sage-50 to-moss-50 p-4 rounded-xl"
           >
-            <div className="text-sm text-gray-600 mb-1">Average Price</div>
+            <div className="text-sm text-stone-600 mb-1">Average Price</div>
             <div className="flex items-end gap-3">
-              <span className="text-3xl font-bold text-gray-900">
+              <span className="text-3xl font-bold text-stone-900">
                 {formatPrice(stats.avgPrice)}
               </span>
               <span
@@ -148,12 +149,12 @@ function AreaInfoContent({ area }: { area: Area }) {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="h-40 bg-gray-50 rounded-lg flex items-center justify-center border border-gray-200"
+            transition={{ delay: 0.5, duration: 0.2 }}
+            className="h-40 bg-stone-50 rounded-lg flex items-center justify-center border border-stone-200"
           >
-            <div className="text-center text-gray-500">
+            <div className="text-center text-stone-500">
               <svg
-                className="w-8 h-8 mx-auto mb-2 text-gray-400"
+                className="w-8 h-8 mx-auto mb-2 text-stone-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -180,13 +181,13 @@ function AreaInfoContent({ area }: { area: Area }) {
       >
         <Link
           href={`/area/${area.slug}`}
-          className="block w-full py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-900 font-medium rounded-xl text-center transition-colors"
+          className="block w-full py-3 px-4 bg-stone-100 hover:bg-stone-200 text-stone-900 font-medium rounded-xl text-center transition-colors duration-200"
         >
           View Full Details
         </Link>
         <Link
           href={`/area/${area.slug}#report`}
-          className="block w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl text-center transition-colors"
+          className="block w-full py-3 px-4 bg-sage-600 hover:bg-sage-700 text-white font-medium rounded-xl text-center transition-colors duration-200"
         >
           Get Full Report - {REPORT_PRICE_DISPLAY}
         </Link>
@@ -197,8 +198,8 @@ function AreaInfoContent({ area }: { area: Area }) {
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.6 }}
-          className="text-xs text-gray-400 text-center"
+          transition={{ delay: 0.6, duration: 0.2 }}
+          className="text-xs text-stone-400 text-center"
         >
           Data last updated: {stats.lastUpdated}
         </motion.p>
@@ -221,10 +222,10 @@ function StatCard({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay }}
-      className="bg-gray-50 p-3 rounded-lg"
+      className="bg-stone-50 p-3 rounded-lg"
     >
-      <div className="text-xs text-gray-500 mb-1">{label}</div>
-      <div className="text-lg font-semibold text-gray-900">{value}</div>
+      <div className="text-xs text-stone-500 mb-1">{label}</div>
+      <div className="text-lg font-semibold text-stone-900">{value}</div>
     </motion.div>
   );
 }
