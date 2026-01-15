@@ -8,7 +8,7 @@ export const REPORT_PRICE_CENTS = 14900; // R149
 export const REPORT_PRICE_DISPLAY = 'R149';
 
 // Map settings
-export const DEFAULT_MAP_CENTER: [number, number] = [-33.9249, 18.4241]; // Cape Town
+export const DEFAULT_MAP_CENTER: [number, number] = [18.4241, -33.9249]; // Cape Town [lng, lat]
 export const DEFAULT_MAP_ZOOM = 10;
 
 // Western Cape bounds for initial MVP

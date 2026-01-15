@@ -5,11 +5,28 @@ interface PageProps {
   searchParams: Promise<{ session_id?: string }>;
 }
 
+async function getReportLink(sessionId: string | undefined): Promise<string | null> {
+  if (!sessionId) return null;
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'}/api/reports/by-session?session_id=${sessionId}`,
+      { cache: 'no-store' }
+    );
+    const data = await response.json();
+    return data.reportUrl || null;
+  } catch (error) {
+    console.error('Error fetching report link:', error);
+    return null;
+  }
+}
+
 export default async function CheckoutSuccessPage({
   searchParams,
 }: PageProps) {
   const params = await searchParams;
   const sessionId = params.session_id;
+  const reportUrl = sessionId ? await getReportLink(sessionId) : null;
 
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
@@ -50,33 +67,54 @@ export default async function CheckoutSuccessPage({
           )}
 
           <div className="space-y-4">
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-left">
-              <h3 className="font-semibold text-blue-900 mb-2">
-                What happens next?
-              </h3>
-              <ul className="text-sm text-blue-800 space-y-2">
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 mt-0.5">✓</span>
-                  <span>
-                    Your report is being generated using AI analysis
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 mt-0.5">✓</span>
-                  <span>
-                    You'll receive an email with a download link within a few
-                    minutes
-                  </span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-blue-600 mt-0.5">✓</span>
-                  <span>
-                    The report will also be available in your account (coming
-                    soon)
-                  </span>
-                </li>
-              </ul>
-            </div>
+            {reportUrl ? (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 text-left">
+                <h3 className="font-semibold text-green-900 mb-2">
+                  Your report is ready!
+                </h3>
+                <p className="text-sm text-green-800 mb-4">
+                  Your comprehensive market analysis report has been generated
+                  and is ready to view.
+                </p>
+                <Link
+                  href={reportUrl}
+                  className="inline-block px-6 py-3 bg-green-600 text-white font-semibold rounded-xl hover:bg-green-700 transition-colors"
+                >
+                  View Your Report →
+                </Link>
+              </div>
+            ) : (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-left">
+                <h3 className="font-semibold text-blue-900 mb-2">
+                  What happens next?
+                </h3>
+                <ul className="text-sm text-blue-800 space-y-2">
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-600 mt-0.5">✓</span>
+                    <span>
+                      Your report is being generated using AI analysis
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-600 mt-0.5">✓</span>
+                    <span>
+                      You'll receive an email with a download link within a few
+                      minutes
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span className="text-blue-600 mt-0.5">✓</span>
+                    <span>
+                      The report will also be available here once ready
+                    </span>
+                  </li>
+                </ul>
+                <p className="text-xs text-blue-600 mt-4">
+                  This page will automatically update when your report is ready.
+                  You can also check your email.
+                </p>
+              </div>
+            )}
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link

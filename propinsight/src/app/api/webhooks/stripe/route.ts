@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { generateReport } from '@/lib/report-generation';
+import { getAreaBySlug } from '@/data/areas';
+import { storeReport, generateReportId } from '@/lib/report-storage';
+import { sendReportEmail } from '@/lib/email';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia',
+  apiVersion: '2024-12-18.acacia' as any,
 });
 
 // This endpoint handles Stripe webhooks for payment events
@@ -43,21 +47,58 @@ export async function POST(request: NextRequest) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session;
       
-      // Payment was successful
-      // Here you would:
-      // 1. Generate the report using Claude API
-      // 2. Store the purchase in your database
-      // 3. Send email with report link
-      
-      console.log('Payment successful:', {
-        sessionId: session.id,
-        customerEmail: session.customer_email,
-        metadata: session.metadata,
-        amountTotal: session.amount_total,
-      });
+      // Payment was successful - generate and deliver report
+      const areaSlug = session.metadata?.areaSlug;
+      const email = session.customer_email || session.metadata?.email;
+      const areaName = session.metadata?.areaName || 'Unknown Area';
 
-      // TODO: Implement report generation and storage
-      // await generateAndStoreReport(session);
+      if (!areaSlug || !email) {
+        console.error('Missing required metadata for report generation:', {
+          areaSlug,
+          email,
+          sessionId: session.id,
+        });
+        break;
+      }
+
+      try {
+        // Get area data
+        const area = getAreaBySlug(areaSlug);
+        if (!area) {
+          console.error('Area not found:', areaSlug);
+          break;
+        }
+
+        // Generate the report
+        console.log(`Generating report for ${areaName}...`);
+        const reportContent = await generateReport(area);
+
+        // Store the report
+        const reportId = generateReportId();
+        const report = {
+          id: reportId,
+          areaId: area.id,
+          areaName: area.name,
+          content: reportContent,
+          createdAt: new Date().toISOString(),
+        };
+        storeReport(report);
+
+        // Send email with report link
+        await sendReportEmail(email, reportId, areaName);
+
+        console.log('Report generated and stored:', {
+          reportId,
+          areaName,
+          email,
+        });
+      } catch (error) {
+        console.error('Error generating report after payment:', error);
+        // In production, you might want to:
+        // - Store the failed payment for retry
+        // - Send an error notification
+        // - Refund the customer
+      }
 
       break;
     }
