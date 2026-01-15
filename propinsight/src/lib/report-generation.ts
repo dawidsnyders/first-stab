@@ -22,8 +22,37 @@ Always include:
 - Forward-looking scenarios with clear assumptions
 - Appropriate disclaimers about data limitations`;
 
-function buildAreaDataContext(area: Area): string {
-  const { stats } = area;
+async function buildAreaDataContext(area: Area): Promise<string> {
+  // Try to get fresh data from pipeline, fallback to area stats
+  let stats = area.stats;
+  let dataSources: string[] = [];
+  let dataQuality: { confidence: number; propertyCount: number } | null = null;
+
+  try {
+    // Attempt to get fresh aggregated data from pipeline
+    const { getAreaData, needsRefresh } = await import('@/lib/data/storage');
+    const { refreshAreaIfNeeded } = await import('@/lib/data/scheduler');
+
+    if (needsRefresh(area.name)) {
+      // Refresh data in background (don't wait)
+      refreshAreaIfNeeded(area.name).catch((err) => {
+        console.error(`[Report Generation] Background refresh failed for ${area.name}:`, err);
+      });
+    }
+
+    const cached = getAreaData(area.name);
+    if (cached) {
+      stats = cached.stats;
+      dataSources = cached.dataQuality.sources;
+      dataQuality = {
+        confidence: cached.dataQuality.confidence,
+        propertyCount: cached.dataQuality.propertyCount,
+      };
+    }
+  } catch (error) {
+    console.warn(`[Report Generation] Could not fetch pipeline data for ${area.name}, using area stats:`, error);
+  }
+
   if (!stats) {
     return `Limited data available for ${area.name}.`;
   }
@@ -50,6 +79,16 @@ function buildAreaDataContext(area: Area): string {
     context.push(`- Land: ${stats.propertyTypeBreakdown.land}%`);
   }
 
+  if (dataSources.length > 0) {
+    context.push('');
+    context.push('### Data Sources');
+    context.push(`- Sources: ${dataSources.join(', ')}`);
+    if (dataQuality) {
+      context.push(`- Data quality confidence: ${dataQuality.confidence}%`);
+      context.push(`- Properties analyzed: ${dataQuality.propertyCount}`);
+    }
+  }
+
   context.push('');
   context.push('### National Benchmarks for Comparison');
   context.push(`- National average property growth: ${NATIONAL_BENCHMARKS.avgPropertyGrowth}% per annum`);
@@ -64,8 +103,8 @@ function buildAreaDataContext(area: Area): string {
   return context.join('\n');
 }
 
-function getUserPrompt(area: Area, city: string, province: string): string {
-  const areaDataContext = buildAreaDataContext(area);
+async function getUserPrompt(area: Area, city: string, province: string): Promise<string> {
+  const areaDataContext = await buildAreaDataContext(area);
 
   return `Generate a comprehensive property market analysis report for ${area.name} in ${city}, ${province}, South Africa.
 
@@ -138,6 +177,8 @@ export async function generateReport(area: Area): Promise<string> {
   const province = 'Western Cape';
 
   try {
+    const userPrompt = await getUserPrompt(area, city, province);
+    
     const response = await anthropic.messages.create({
       model: 'claude-sonnet-4-20250514',
       max_tokens: 16000,
@@ -145,7 +186,7 @@ export async function generateReport(area: Area): Promise<string> {
       messages: [
         {
           role: 'user',
-          content: getUserPrompt(area, city, province),
+          content: userPrompt, // userPrompt is already awaited, so it's a string
         },
       ],
     });

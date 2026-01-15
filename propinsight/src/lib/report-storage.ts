@@ -17,9 +17,11 @@ export function getReportsByArea(areaId: string): Report[] {
 }
 
 export function getReportsByEmail(email: string): Report[] {
-  // For MVP, we'll need to track email associations
-  // This is a simplified version - in production, use a proper join table
-  return Array.from(reports.values());
+  return Array.from(reports.values()).filter((r) => r.email === email);
+}
+
+export function getReportBySessionId(sessionId: string): Report | undefined {
+  return Array.from(reports.values()).find((r) => r.stripeSessionId === sessionId);
 }
 
 // Generate a unique report ID
