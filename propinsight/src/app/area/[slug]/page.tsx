@@ -40,11 +40,11 @@ export default async function AreaPage({ params }: PageProps) {
 
   // Calculate market velocity (sales per month) for interesting info
   const marketVelocity = stats ? Math.round(stats.salesCount / 12) : 0;
-  
+
   // Calculate average days on market (estimated based on sales velocity and market activity)
   const avgDaysOnMarket = stats
     ? marketVelocity > 20
-      ? Math.round(45 - (marketVelocity / 5))
+      ? Math.round(45 - marketVelocity / 5)
       : Math.round(90 - marketVelocity)
     : null;
 
@@ -52,7 +52,7 @@ export default async function AreaPage({ params }: PageProps) {
   const getInterestingInfo = () => {
     if (!stats) return [];
     const info = [];
-    
+
     // Days on market estimate
     if (avgDaysOnMarket) {
       info.push({
@@ -61,7 +61,7 @@ export default async function AreaPage({ params }: PageProps) {
         icon: "📅",
       });
     }
-    
+
     // Sales velocity
     if (marketVelocity > 0) {
       info.push({
@@ -70,7 +70,7 @@ export default async function AreaPage({ params }: PageProps) {
         icon: "⚡",
       });
     }
-    
+
     return info;
   };
 
@@ -79,7 +79,7 @@ export default async function AreaPage({ params }: PageProps) {
   // Generate compelling description based on stats
   const getDescription = () => {
     if (!stats) return "Property market analysis and insights";
-    
+
     const outperformanceText =
       outperformance > 0
         ? `${outperformance.toFixed(1)}% above the national average`
@@ -96,7 +96,9 @@ export default async function AreaPage({ params }: PageProps) {
         ? "maintaining positive momentum"
         : "facing market adjustments";
 
-    return `${area.name} is ${growthContext}, with property values ${formatPriceChange(
+    return `${
+      area.name
+    } is ${growthContext}, with property values ${formatPriceChange(
       stats.priceChangeYoY
     )} year-over-year — ${outperformanceText}. Explore comprehensive market data, trends, and investment insights below.`;
   };
@@ -269,8 +271,8 @@ export default async function AreaPage({ params }: PageProps) {
               Key Market Metrics
             </h2>
             <p className="text-stone-600">
-              Interactive metrics with detailed charts. Click any card to explore
-              historical trends and performance data.
+              Interactive metrics with detailed charts. Click any card to
+              explore historical trends and performance data.
             </p>
           </div>
           <StatsGrid stats={stats} areaName={area.name} />
