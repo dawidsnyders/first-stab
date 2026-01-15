@@ -1,11 +1,24 @@
 "use client";
 
 import { useState, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { motion } from "framer-motion";
 import { Area } from "@/types";
 import { AreaInfoPanel } from "./AreaInfoPanel";
-import { MapboxMap } from "./MapboxMap";
 import { getAreasByLevel } from "@/data/areas";
+
+// Dynamically import MapboxMap to avoid build errors when react-map-gl isn't resolved by Turbopack
+const MapboxMap = dynamic(
+  () => import("./MapboxMap").then((mod) => ({ default: mod.MapboxMap })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-500">
+        Loading map...
+      </div>
+    ),
+  }
+);
 
 interface MapViewProps {
   initialLevel?: Area["level"];

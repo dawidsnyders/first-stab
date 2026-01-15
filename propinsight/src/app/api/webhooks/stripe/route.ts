@@ -5,9 +5,15 @@ import { getAreaBySlug } from '@/data/areas';
 import { storeReport, generateReportId } from '@/lib/report-storage';
 import { sendReportEmail } from '@/lib/email';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia' as any,
-});
+function getStripe() {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error('STRIPE_SECRET_KEY is not configured');
+  }
+  return new Stripe(key, {
+    apiVersion: '2024-12-18.acacia' as any,
+  });
+}
 
 // This endpoint handles Stripe webhooks for payment events
 // In production, you'll need to:
@@ -29,6 +35,7 @@ export async function POST(request: NextRequest) {
   let event: Stripe.Event;
 
   try {
+    const stripe = getStripe();
     event = stripe.webhooks.constructEvent(
       body,
       signature,

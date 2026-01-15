@@ -2,9 +2,15 @@ import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { getReportBySessionId } from '@/lib/report-storage';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-12-18.acacia' as any,
-});
+function getStripe() {
+  const key = process.env.STRIPE_SECRET_KEY;
+  if (!key) {
+    throw new Error('STRIPE_SECRET_KEY is not configured');
+  }
+  return new Stripe(key, {
+    apiVersion: '2024-12-18.acacia' as any,
+  });
+}
 
 export async function GET(request: NextRequest) {
   try {
@@ -19,6 +25,7 @@ export async function GET(request: NextRequest) {
     }
 
     // Retrieve the checkout session from Stripe to verify it exists
+    const stripe = getStripe();
     const session = await stripe.checkout.sessions.retrieve(sessionId);
 
     // Security fix: Look up report by session ID, not by area
