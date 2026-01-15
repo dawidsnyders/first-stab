@@ -61,9 +61,9 @@ export function SearchBar() {
 
   const getLevelBadge = (level: Area['level']) => {
     const styles = {
-      province: 'bg-purple-100 text-purple-800',
-      city: 'bg-blue-100 text-blue-800',
-      suburb: 'bg-green-100 text-green-800',
+      province: 'bg-moss-100 text-moss-700',
+      city: 'bg-sage-100 text-sage-700',
+      suburb: 'bg-terracotta-100 text-terracotta-700',
     };
     return (
       <span
@@ -85,10 +85,10 @@ export function SearchBar() {
           onFocus={() => query.length >= 2 && setIsOpen(results.length > 0)}
           onKeyDown={handleKeyDown}
           placeholder="Search suburbs, cities, or estates..."
-          className="w-full px-4 py-3 pl-12 text-lg border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm"
+          className="w-full px-4 py-3 pl-12 text-lg border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-400 focus:border-transparent shadow-sm transition-all duration-200 hover:border-stone-400"
         />
         <svg
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400"
+          className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -105,17 +105,19 @@ export function SearchBar() {
       {isOpen && (
         <div
           ref={resultsRef}
-          className="absolute z-50 w-full mt-2 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
+          className="absolute z-50 w-full mt-2 bg-white border border-stone-200 rounded-xl shadow-lg overflow-hidden"
         >
           {results.map((area, index) => (
             <button
               key={area.id}
               onClick={() => handleSelect(area)}
-              className={`w-full px-4 py-3 text-left flex items-center justify-between hover:bg-gray-50 transition-colors ${
-                index === selectedIndex ? 'bg-blue-50' : ''
+              className={`w-full px-4 py-3 text-left flex items-center justify-between transition-colors duration-200 ${
+                index === selectedIndex 
+                  ? 'bg-sage-50 hover:bg-sage-100' 
+                  : 'hover:bg-stone-50'
               }`}
             >
-              <span className="font-medium text-gray-900">{area.name}</span>
+              <span className="font-medium text-stone-900">{area.name}</span>
               {getLevelBadge(area.level)}
             </button>
           ))}

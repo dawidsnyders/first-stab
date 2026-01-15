@@ -12,12 +12,12 @@ export function AreaCard({ area }: AreaCardProps) {
   return (
     <Link
       href={`/area/${area.slug}`}
-      className="block p-6 bg-white border border-gray-200 rounded-xl hover:shadow-lg hover:border-blue-300 transition-all"
+      className="block p-6 bg-white border border-stone-200 rounded-xl hover:shadow-lg hover:border-sage-300 transition-all duration-200"
     >
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-lg font-semibold text-gray-900">{area.name}</h3>
-          <span className="text-sm text-gray-500 capitalize">{area.level}</span>
+          <h3 className="text-lg font-semibold text-stone-900">{area.name}</h3>
+          <span className="text-sm text-stone-500 capitalize">{area.level}</span>
         </div>
         {stats && (
           <span
@@ -35,21 +35,21 @@ export function AreaCard({ area }: AreaCardProps) {
       {stats && (
         <div className="space-y-2">
           <div className="flex justify-between">
-            <span className="text-gray-600">Avg Price</span>
-            <span className="font-semibold text-gray-900">
+            <span className="text-stone-600">Avg Price</span>
+            <span className="font-semibold text-stone-900">
               {formatPrice(stats.avgPrice)}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-gray-600">Sales (12mo)</span>
-            <span className="font-semibold text-gray-900">
+            <span className="text-stone-600">Sales (12mo)</span>
+            <span className="font-semibold text-stone-900">
               {stats.salesCount.toLocaleString()}
             </span>
           </div>
           {stats.avgPricePerSqm && (
             <div className="flex justify-between">
-              <span className="text-gray-600">Per m²</span>
-              <span className="font-semibold text-gray-900">
+              <span className="text-stone-600">Per m²</span>
+              <span className="font-semibold text-stone-900">
                 {formatPrice(stats.avgPricePerSqm)}
               </span>
             </div>

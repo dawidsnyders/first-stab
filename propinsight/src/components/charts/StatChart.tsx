@@ -68,27 +68,27 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
   const getColor = () => {
     switch (type) {
       case "medianPrice":
-        return "#3b82f6"; // blue
+        return "#5d7350"; // sage
       case "sales":
-        return "#10b981"; // green
+        return "#6f7d57"; // moss
       case "pricePerSqm":
-        return "#8b5cf6"; // purple
+        return "#ed6b4a"; // terracotta
       case "outperformance":
-        return "#f59e0b"; // amber
+        return "#a8966f"; // sand
       default:
-        return "#3b82f6";
+        return "#5d7350";
     }
   };
 
   const color = getColor();
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3, delay: 0.1 }}
-      className="w-full"
-    >
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.2, delay: 0.05 }}
+        className="w-full"
+      >
       <ResponsiveContainer width="100%" height={400}>
         <AreaChart
           data={data}

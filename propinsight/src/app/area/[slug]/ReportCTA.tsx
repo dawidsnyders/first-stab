@@ -55,13 +55,13 @@ export function ReportCTA({ area }: ReportCTAProps) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl overflow-hidden">
+    <div className="bg-gradient-to-br from-sage-600 to-moss-600 rounded-2xl overflow-hidden">
       <div className="p-8 md:p-12">
         <div className="max-w-2xl">
           <h2 className="text-3xl font-bold text-white mb-4">
             Get the Full {area.name} Report
           </h2>
-          <p className="text-blue-100 text-lg mb-6">
+          <p className="text-sage-50 text-lg mb-6">
             A comprehensive 10-15 page market analysis with historical data,
             growth drivers, investment outlook, and actionable insights.
           </p>
@@ -78,9 +78,9 @@ export function ReportCTA({ area }: ReportCTAProps) {
               'Comparable Areas',
               'PDF Download',
             ].map((feature) => (
-              <div key={feature} className="flex items-center gap-2 text-blue-100">
+              <div key={feature} className="flex items-center gap-2 text-sage-50">
                 <svg
-                  className="w-5 h-5 text-green-400"
+                  className="w-5 h-5 text-terracotta-300"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -99,7 +99,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
           <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <div className="text-white">
               <span className="text-4xl font-bold">{REPORT_PRICE_DISPLAY}</span>
-              <span className="text-blue-200 ml-2">once-off</span>
+              <span className="text-sage-100 ml-2">once-off</span>
             </div>
 
             <AnimatePresence mode="wait">
@@ -109,8 +109,9 @@ export function ReportCTA({ area }: ReportCTAProps) {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
+                  transition={{ duration: 0.2 }}
                   onClick={() => setIsExpanded(true)}
-                  className="px-8 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-colors"
+                  className="px-8 py-3 bg-white text-sage-700 font-semibold rounded-xl hover:bg-stone-50 transition-colors duration-200"
                 >
                   Get Report Now
                 </motion.button>
@@ -120,6 +121,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
                   initial={{ opacity: 0, x: 20 }}
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -20 }}
+                  transition={{ duration: 0.2 }}
                   onSubmit={handlePurchase}
                   className="flex-1 flex flex-col sm:flex-row gap-2 w-full sm:w-auto"
                 >
@@ -129,12 +131,12 @@ export function ReportCTA({ area }: ReportCTAProps) {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
                     required
-                    className="px-4 py-3 rounded-xl text-gray-900 placeholder-gray-400 w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                    className="px-4 py-3 rounded-xl text-stone-900 placeholder-stone-400 w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-sage-300 transition-all duration-200"
                   />
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-xl hover:bg-blue-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                    className="px-6 py-3 bg-white text-sage-700 font-semibold rounded-xl hover:bg-stone-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                   >
                     {isSubmitting ? (
                       <>
@@ -145,7 +147,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
                             repeat: Infinity,
                             ease: 'linear',
                           }}
-                          className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full"
+                          className="w-5 h-5 border-2 border-sage-600 border-t-transparent rounded-full"
                         />
                         Processing...
                       </>
@@ -156,7 +158,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
                   <button
                     type="button"
                     onClick={() => setIsExpanded(false)}
-                    className="px-4 py-3 text-white/70 hover:text-white transition-colors"
+                    className="px-4 py-3 text-white/70 hover:text-white transition-colors duration-200"
                   >
                     Cancel
                   </button>
@@ -169,7 +171,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
 
       {/* Sample report preview */}
       <div className="bg-white/10 px-8 md:px-12 py-4 border-t border-white/10">
-        <p className="text-blue-200 text-sm">
+        <p className="text-sage-100 text-sm">
           Reports are generated instantly using AI analysis of the latest
           available market data. Delivered via email and available for download.
         </p>
