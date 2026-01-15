@@ -18,15 +18,40 @@ export function ReportCTA({ area }: ReportCTAProps) {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // TODO: Implement Stripe checkout
-    // For now, just simulate the flow
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    try {
+      // Create Stripe checkout session
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          areaSlug: area.slug,
+          email,
+        }),
+      });
 
-    alert(
-      `Payment flow would start here for ${area.name} report.\nEmail: ${email}\nPrice: ${REPORT_PRICE_DISPLAY}`
-    );
+      const data = await response.json();
 
-    setIsSubmitting(false);
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create checkout session');
+      }
+
+      // Redirect to Stripe Checkout
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        throw new Error('No checkout URL received');
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      alert(
+        error instanceof Error
+          ? error.message
+          : 'Failed to start checkout. Please try again.'
+      );
+      setIsSubmitting(false);
+    }
   };
 
   return (
