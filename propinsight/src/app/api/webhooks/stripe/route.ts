@@ -73,13 +73,15 @@ export async function POST(request: NextRequest) {
         console.log(`Generating report for ${areaName}...`);
         const reportContent = await generateReport(area);
 
-        // Store the report
+        // Store the report with session ID and email for security
         const reportId = generateReportId();
         const report = {
           id: reportId,
           areaId: area.id,
           areaName: area.name,
           content: reportContent,
+          stripeSessionId: session.id, // Critical: Link report to payment session
+          email: email, // Store customer email
           createdAt: new Date().toISOString(),
         };
         storeReport(report);

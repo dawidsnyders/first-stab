@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Stripe from 'stripe';
-import { getReportsByArea } from '@/lib/report-storage';
-import { getAreaBySlug } from '@/data/areas';
+import { getReportBySessionId } from '@/lib/report-storage';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-12-18.acacia' as any,
@@ -19,41 +18,38 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Retrieve the checkout session from Stripe
+    // Retrieve the checkout session from Stripe to verify it exists
     const session = await stripe.checkout.sessions.retrieve(sessionId);
-    const areaSlug = session.metadata?.areaSlug;
 
-    if (!areaSlug) {
-      return NextResponse.json(
-        { error: 'No area found in session metadata' },
-        { status: 404 }
-      );
-    }
+    // Security fix: Look up report by session ID, not by area
+    // This ensures each customer gets their own report, even if multiple
+    // customers purchase reports for the same area
+    const report = getReportBySessionId(sessionId);
 
-    const area = getAreaBySlug(areaSlug);
-    if (!area) {
-      return NextResponse.json(
-        { error: 'Area not found' },
-        { status: 404 }
-      );
-    }
-
-    // Get the most recent report for this area
-    const reports = getReportsByArea(area.id);
-    const latestReport = reports.sort(
-      (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    )[0];
-
-    if (!latestReport) {
+    if (!report) {
       return NextResponse.json({
         reportId: null,
         message: 'Report is being generated, please check back in a few minutes',
       });
     }
 
+    // Verify the session email matches the report email (additional security check)
+    const sessionEmail = session.customer_email || session.metadata?.email;
+    if (sessionEmail && sessionEmail !== report.email) {
+      console.error('Email mismatch between session and report:', {
+        sessionEmail,
+        reportEmail: report.email,
+        sessionId,
+      });
+      return NextResponse.json(
+        { error: 'Report access denied' },
+        { status: 403 }
+      );
+    }
+
     return NextResponse.json({
-      reportId: latestReport.id,
-      reportUrl: `/reports/${latestReport.id}`,
+      reportId: report.id,
+      reportUrl: `/reports/${report.id}`,
     });
   } catch (error) {
     console.error('Error fetching report:', error);

@@ -27,12 +27,16 @@ export async function POST(request: NextRequest) {
     const reportContent = await generateReport(area);
 
     // Store the report
+    // Note: This endpoint is for manual/admin generation, not tied to a payment
+    // For payment-generated reports, use the webhook handler
     const reportId = generateReportId();
     const report = {
       id: reportId,
       areaId: area.id,
       areaName: area.name,
       content: reportContent,
+      stripeSessionId: `manual_${reportId}`, // Manual generation marker
+      email: 'admin@propinsight.co.za', // Admin email for manual reports
       createdAt: new Date().toISOString(),
     };
 

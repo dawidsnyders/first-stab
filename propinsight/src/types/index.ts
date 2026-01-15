@@ -35,6 +35,8 @@ export interface Report {
   content: string; // Markdown
   htmlContent?: string;
   pdfUrl?: string;
+  stripeSessionId: string; // Stripe checkout session ID - critical for security
+  email: string; // Customer email who purchased this report
   createdAt: string;
 }
 

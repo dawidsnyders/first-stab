@@ -1,36 +1,145 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# PropInsight
+
+Property market intelligence platform for South Africa. Get comprehensive market analysis reports for any suburb.
+
+## Features
+
+- 🗺️ Interactive map with suburb markers
+- 📊 Free tier market statistics
+- 📄 AI-generated comprehensive reports (R149)
+- 💳 Stripe payment integration
+- 📧 Email delivery of reports
+
+## Tech Stack
+
+- **Frontend**: Next.js 16, React 19, TypeScript
+- **Styling**: Tailwind CSS
+- **Maps**: Mapbox GL
+- **Payments**: Stripe
+- **AI**: Anthropic Claude API
+- **Deployment**: Vercel
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+ 
+- npm or yarn
+- Stripe account
+- Anthropic API key (for report generation)
+- Mapbox token (optional, for interactive map)
+
+### Installation
 
 ```bash
+# Clone repository
+git clone <your-repo-url>
+cd propinsight
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+
+# Edit .env.local with your keys
+# See STRIPE_SETUP.md and DEPLOYMENT.md for details
+
+# Run development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Environment Variables
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+See `.env.example` for required variables:
 
-## Learn More
+- `STRIPE_SECRET_KEY` - Stripe secret key
+- `STRIPE_WEBHOOK_SECRET` - Stripe webhook signing secret
+- `ANTHROPIC_API_KEY` - Claude API key
+- `NEXT_PUBLIC_MAPBOX_TOKEN` - Mapbox access token (optional)
+- `NEXT_PUBLIC_APP_URL` - Your app URL
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+propinsight/
+├── src/
+│   ├── app/              # Next.js app router pages
+│   │   ├── api/          # API routes
+│   │   ├── area/         # Area detail pages
+│   │   ├── checkout/      # Payment success/cancel
+│   │   └── reports/      # Report viewing
+│   ├── components/       # React components
+│   ├── lib/              # Utilities and services
+│   │   ├── scrapers/     # Data scraping (placeholder)
+│   │   └── ...
+│   ├── data/             # Sample data (MVP)
+│   └── types/            # TypeScript types
+├── prompts/              # AI prompt templates
+└── public/               # Static assets
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Development
 
-## Deploy on Vercel
+```bash
+# Development server
+npm run dev
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+# Build for production
+npm run build
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Start production server
+npm start
+
+# Type checking
+npx tsc --noEmit
+
+# Linting
+npm run lint
+```
+
+## Deployment
+
+See [DEPLOYMENT.md](./DEPLOYMENT.md) for detailed deployment instructions.
+
+Quick deploy to Vercel:
+
+```bash
+npm i -g vercel
+vercel
+```
+
+## Documentation
+
+- [Stripe Setup](./STRIPE_SETUP.md) - Payment integration setup
+- [Deployment Guide](./DEPLOYMENT.md) - Vercel deployment
+- [Product Spec](./SPEC.md) - Full product specification
+
+## MVP Status
+
+✅ **Completed:**
+- Stripe payment integration
+- Report generation with Claude API
+- Interactive Mapbox map
+- Report viewing and delivery
+- Email service (placeholder)
+
+🚧 **In Progress:**
+- Data scraping (placeholder implementation)
+- Database migration (currently in-memory)
+
+📋 **Planned:**
+- Real Property24 scraping
+- Municipal valuation scraping
+- PDF generation
+- Email service integration
+
+## License
+
+Private - All rights reserved
+
+## Support
+
+For questions or issues, contact support@propinsight.co.za
