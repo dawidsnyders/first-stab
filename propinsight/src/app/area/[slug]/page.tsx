@@ -263,21 +263,38 @@ export default async function AreaPage({ params }: PageProps) {
 
       {/* Stats grid */}
       {stats && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-stone-900 mb-2">
+              Key Market Metrics
+            </h2>
+            <p className="text-stone-600">
+              Interactive metrics with detailed charts. Click any card to explore
+              historical trends and performance data.
+            </p>
+          </div>
           <StatsGrid stats={stats} areaName={area.name} />
         </section>
       )}
 
       {/* Price chart placeholder */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-2xl border border-stone-200 p-6">
-          <h2 className="text-xl font-bold text-stone-900 mb-4">
-            Price Trend (3 Years)
-          </h2>
-          <div className="h-64 bg-stone-50 rounded-lg flex items-center justify-center border border-stone-200">
-            <div className="text-center text-stone-500">
+        <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
+          <div className="mb-6">
+            <h2 className="text-2xl font-bold text-stone-900 mb-2">
+              3-Year Price Trend Analysis
+            </h2>
+            <p className="text-stone-600">
+              Deep dive into price movements, seasonal patterns, and market
+              cycles over the past 36 months with interactive charts and
+              annotations.
+            </p>
+          </div>
+          <div className="h-80 bg-gradient-to-br from-stone-50 to-stone-100 rounded-xl flex items-center justify-center border-2 border-dashed border-stone-300 relative overflow-hidden">
+            <div className="absolute inset-0 bg-grid-stone-200/50 opacity-20" />
+            <div className="text-center text-stone-500 relative z-10">
               <svg
-                className="w-12 h-12 mx-auto mb-3 text-stone-400"
+                className="w-16 h-16 mx-auto mb-4 text-stone-400"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -285,14 +302,32 @@ export default async function AreaPage({ params }: PageProps) {
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
+                  strokeWidth={1.5}
+                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
                 />
               </svg>
-              <p className="text-sm">Interactive price chart</p>
-              <p className="text-xs text-stone-400 mt-1">
-                Available in full report
+              <p className="text-base font-medium text-stone-700 mb-1">
+                Interactive price chart with annotations
               </p>
+              <p className="text-sm text-stone-500">
+                Available in the full market report
+              </p>
+              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-sage-600 font-medium">
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+                Includes 10-year historical data
+              </div>
             </div>
           </div>
         </div>
@@ -301,11 +336,17 @@ export default async function AreaPage({ params }: PageProps) {
       {/* Property type breakdown */}
       {stats?.propertyTypeBreakdown && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-white rounded-2xl border border-stone-200 p-6">
-            <h2 className="text-xl font-bold text-stone-900 mb-4">
-              Property Types
-            </h2>
-            <div className="flex gap-4">
+          <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-stone-900 mb-2">
+                Property Type Distribution
+              </h2>
+              <p className="text-stone-600">
+                Market composition by property type, showing the relative
+                proportion of houses, apartments, and land sales in {area.name}.
+              </p>
+            </div>
+            <div className="flex gap-6">
               <PropertyTypeBar
                 label="Houses"
                 percentage={stats.propertyTypeBreakdown.houses}
@@ -372,13 +413,13 @@ function PropertyTypeBar({
 }) {
   return (
     <div className="flex-1">
-      <div className="flex justify-between text-sm mb-1">
-        <span className="text-stone-600">{label}</span>
-        <span className="font-medium text-stone-900">{percentage}%</span>
+      <div className="flex justify-between items-center mb-2">
+        <span className="text-sm font-medium text-stone-700">{label}</span>
+        <span className="text-lg font-bold text-stone-900">{percentage}%</span>
       </div>
-      <div className="h-3 bg-stone-100 rounded-full overflow-hidden">
+      <div className="h-4 bg-stone-100 rounded-full overflow-hidden shadow-inner">
         <div
-          className={`h-full ${color} rounded-full`}
+          className={`h-full ${color} rounded-full transition-all duration-500 shadow-sm`}
           style={{ width: `${percentage}%` }}
         />
       </div>
