@@ -1,10 +1,15 @@
-import { notFound } from 'next/navigation';
-import Link from 'next/link';
-import { getAreaBySlug, getChildAreas, sampleAreas } from '@/data/areas';
-import { formatPrice, formatPriceChange, formatNumber } from '@/types';
-import { APP_NAME, REPORT_PRICE_DISPLAY, NATIONAL_BENCHMARKS } from '@/lib/constants';
-import { AreaCard } from '@/components/area/AreaCard';
-import { ReportCTA } from './ReportCTA';
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import { getAreaBySlug, getChildAreas, sampleAreas } from "@/data/areas";
+import { formatPrice, formatPriceChange, formatNumber } from "@/types";
+import {
+  APP_NAME,
+  REPORT_PRICE_DISPLAY,
+  NATIONAL_BENCHMARKS,
+} from "@/lib/constants";
+import { AreaCard } from "@/components/area/AreaCard";
+import { ReportCTA } from "./ReportCTA";
+import { StatsGrid } from "@/components/area/StatsGrid";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -85,8 +90,8 @@ export default async function AreaPage({ params }: PageProps) {
                 <div
                   className={`px-4 py-2 rounded-xl text-lg font-semibold ${
                     isPositive
-                      ? 'bg-green-100 text-green-800'
-                      : 'bg-red-100 text-red-800'
+                      ? "bg-green-100 text-green-800"
+                      : "bg-red-100 text-red-800"
                   }`}
                 >
                   {formatPriceChange(stats.priceChangeYoY)} YoY
@@ -100,27 +105,7 @@ export default async function AreaPage({ params }: PageProps) {
       {/* Stats grid */}
       {stats && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <StatCard
-              label="Median Price"
-              value={formatPrice(stats.medianPrice)}
-            />
-            <StatCard
-              label="Sales (12 months)"
-              value={formatNumber(stats.salesCount)}
-            />
-            {stats.avgPricePerSqm && (
-              <StatCard
-                label="Price per m²"
-                value={formatPrice(stats.avgPricePerSqm)}
-              />
-            )}
-            <StatCard
-              label="vs National Avg"
-              value={`${outperformance >= 0 ? '+' : ''}${outperformance.toFixed(1)}%`}
-              highlight={outperformance > 0}
-            />
-          </div>
+          <StatsGrid stats={stats} areaName={area.name} />
         </section>
       )}
 
@@ -197,7 +182,10 @@ export default async function AreaPage({ params }: PageProps) {
       )}
 
       {/* Report CTA */}
-      <section id="report" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <section
+        id="report"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+      >
         <ReportCTA area={area} />
       </section>
 
@@ -205,38 +193,11 @@ export default async function AreaPage({ params }: PageProps) {
       <footer className="bg-white border-t border-gray-200 py-8 mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-gray-500 text-sm text-center">
-            Data last updated: {stats?.lastUpdated || 'N/A'}. For informational
+            Data last updated: {stats?.lastUpdated || "N/A"}. For informational
             purposes only.
           </p>
         </div>
       </footer>
-    </div>
-  );
-}
-
-function StatCard({
-  label,
-  value,
-  highlight,
-}: {
-  label: string;
-  value: string;
-  highlight?: boolean;
-}) {
-  return (
-    <div
-      className={`p-4 rounded-xl ${
-        highlight ? 'bg-green-50 border border-green-200' : 'bg-white border border-gray-200'
-      }`}
-    >
-      <div className="text-sm text-gray-500 mb-1">{label}</div>
-      <div
-        className={`text-2xl font-bold ${
-          highlight ? 'text-green-700' : 'text-gray-900'
-        }`}
-      >
-        {value}
-      </div>
     </div>
   );
 }
