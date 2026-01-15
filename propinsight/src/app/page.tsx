@@ -2,6 +2,17 @@
 
 import { useState } from 'react';
 import { motion } from 'framer-motion';
+import {
+  ChartBarIcon,
+  ArrowTrendingUpIcon,
+  MapIcon,
+  DocumentTextIcon,
+  BoltIcon,
+  TargetIcon,
+  MagnifyingGlassIcon,
+  HomeIcon,
+  MapPinIcon,
+} from '@heroicons/react/24/outline';
 import { SearchBar } from '@/components/ui/SearchBar';
 import { MapView } from '@/components/map/MapView';
 import { MapModal } from '@/components/ui/MapModal';
@@ -91,73 +102,13 @@ export default function Home() {
 
       {/* Hero section - Enhanced */}
       <section className="relative bg-gradient-to-br from-white via-stone-50 to-sage-50 text-stone-900 pt-28 pb-24 md:pt-36 md:pb-32 overflow-hidden">
-        {/* Clean geometric background elements */}
+        {/* Enhanced decorative elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {/* Subtle gradient orbs */}
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-sage-200/25 to-transparent rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-moss-200/25 to-transparent rounded-full blur-3xl"></div>
-          
-          {/* Clean geometric lines and shapes */}
-          <div className="absolute inset-0">
-            {/* Diagonal lines with gradient */}
-            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1440 800" preserveAspectRatio="none">
-              <defs>
-                <linearGradient id="lineGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#5d7350" stopOpacity="0" />
-                  <stop offset="30%" stopColor="#5d7350" stopOpacity="0.1" />
-                  <stop offset="70%" stopColor="#6f7d57" stopOpacity="0.1" />
-                  <stop offset="100%" stopColor="#5d7350" stopOpacity="0" />
-                </linearGradient>
-                <linearGradient id="lineGradient2" x1="100%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#6f7d57" stopOpacity="0" />
-                  <stop offset="40%" stopColor="#6f7d57" stopOpacity="0.12" />
-                  <stop offset="60%" stopColor="#5d7350" stopOpacity="0.12" />
-                  <stop offset="100%" stopColor="#6f7d57" stopOpacity="0" />
-                </linearGradient>
-              </defs>
-              {/* Primary diagonal line */}
-              <line
-                x1="0"
-                y1="180"
-                x2="1440"
-                y2="620"
-                stroke="url(#lineGradient1)"
-                strokeWidth="2"
-                vectorEffect="non-scaling-stroke"
-              />
-              {/* Secondary diagonal line */}
-              <line
-                x1="1440"
-                y1="120"
-                x2="0"
-                y2="720"
-                stroke="url(#lineGradient2)"
-                strokeWidth="1.5"
-                vectorEffect="non-scaling-stroke"
-              />
-              {/* Subtle horizontal accent */}
-              <line
-                x1="0"
-                y1="400"
-                x2="1440"
-                y2="400"
-                stroke="#5d7350"
-                strokeWidth="0.5"
-                strokeDasharray="3 12"
-                strokeOpacity="0.15"
-                vectorEffect="non-scaling-stroke"
-              />
-            </svg>
-            
-            {/* Geometric shapes - clean circles */}
-            <div className="absolute top-24 right-40 w-40 h-40 border border-sage-300/25 rounded-full"></div>
-            <div className="absolute bottom-40 left-32 w-32 h-32 border border-moss-300/25 rounded-full"></div>
-            <div className="absolute top-1/2 right-1/4 w-20 h-20 border border-terracotta-300/20 rounded-full"></div>
-            <div className="absolute top-1/3 left-1/4 w-16 h-16 border border-sage-300/20 rounded-full"></div>
-            
-            {/* Subtle grid pattern */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(93,115,80,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(93,115,80,0.02)_1px,transparent_1px)] bg-[size:48px_48px]"></div>
-          </div>
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-sage-200/40 to-transparent rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-moss-200/40 to-transparent rounded-full blur-3xl"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-terracotta-100/20 rounded-full blur-3xl"></div>
+          {/* Grid pattern overlay */}
+          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-40"></div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -209,22 +160,22 @@ export default function Home() {
               <StatBox
                 value={`${avgPriceGrowth.toFixed(1)}%`}
                 label="Avg Growth YoY"
-                icon="📈"
+                Icon={ArrowTrendingUpIcon}
               />
               <StatBox
                 value={formatNumber(totalSales)}
                 label="Total Sales (12m)"
-                icon="🏠"
+                Icon={HomeIcon}
               />
               <StatBox
                 value={formatNumber(allSuburbs.length)}
                 label="Active Areas"
-                icon="📍"
+                Icon={MapPinIcon}
               />
               <StatBox
                 value={`+${(avgPriceGrowth - NATIONAL_BENCHMARKS.avgPropertyGrowth).toFixed(1)}%`}
                 label="vs National"
-                icon="⚡"
+                Icon={BoltIcon}
               />
             </div>
           </div>
@@ -249,32 +200,32 @@ export default function Home() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <FeatureCard
-              icon="📊"
+              Icon={ChartBarIcon}
               title="Real-Time Market Data"
               description="Access up-to-date property prices, sales volumes, and market trends for any suburb in the Western Cape."
             />
             <FeatureCard
-              icon="📈"
+              Icon={ArrowTrendingUpIcon}
               title="Growth Analytics"
               description="See year-over-year growth rates, price trends, and performance comparisons against national benchmarks."
             />
             <FeatureCard
-              icon="🗺️"
+              Icon={MapIcon}
               title="Interactive Maps"
               description="Explore areas visually with our interactive map. Click on regions to see detailed statistics instantly."
             />
             <FeatureCard
-              icon="📑"
+              Icon={DocumentTextIcon}
               title="Comprehensive Reports"
               description="Get 10-15 page in-depth analysis reports with historical data, growth drivers, and investment outlook."
             />
             <FeatureCard
-              icon="⚡"
+              Icon={BoltIcon}
               title="Instant Insights"
               description="Quick stats and key metrics displayed beautifully. No need to dig through spreadsheets."
             />
             <FeatureCard
-              icon="🎯"
+              Icon={TargetIcon}
               title="Investment Intelligence"
               description="Understand market dynamics, risk factors, and opportunities to make smarter property investments."
             />
@@ -300,19 +251,7 @@ export default function Home() {
               onClick={() => setIsMapModalOpen(true)}
               className="inline-flex items-center gap-2 px-6 py-3 bg-sage-600 text-white font-semibold rounded-xl hover:bg-sage-700 transition-all duration-200 shadow-lg hover:shadow-xl"
             >
-              <svg
-                className="w-5 h-5"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
-                />
-              </svg>
+              <MapIcon className="w-5 h-5" />
               Open Full Map
             </button>
           </div>
@@ -358,19 +297,19 @@ export default function Home() {
               number={1}
               title="Search or Browse"
               description="Find your area of interest using our powerful search or explore the interactive map"
-              icon="🔍"
+              Icon={MagnifyingGlassIcon}
             />
             <StepCard
               number={2}
               title="View Free Insights"
               description="See average prices, trends, sales volume, and key metrics at a glance"
-              icon="📊"
+              Icon={ChartBarIcon}
             />
             <StepCard
               number={3}
               title="Get Full Report"
               description={`Purchase a comprehensive 10-15 page analysis report for just ${REPORT_PRICE_DISPLAY}`}
-              icon="📄"
+              Icon={DocumentTextIcon}
             />
           </div>
         </div>
@@ -501,18 +440,16 @@ export default function Home() {
   );
 }
 
-function StatBox({
-  value,
-  label,
-  icon,
-}: {
+interface StatBoxProps {
   value: string;
   label: string;
-  icon: string;
-}) {
+  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+function StatBox({ value, label, Icon }: StatBoxProps) {
   return (
     <div className="bg-white/80 backdrop-blur-sm border border-stone-200 rounded-xl p-4 md:p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
-      <div className="text-2xl mb-2">{icon}</div>
+      <Icon className="w-6 h-6 text-sage-600 mb-3" />
       <div className="text-2xl md:text-3xl font-bold text-stone-900 mb-1">
         {value}
       </div>
@@ -521,41 +458,38 @@ function StatBox({
   );
 }
 
-function FeatureCard({
-  icon,
-  title,
-  description,
-}: {
-  icon: string;
+interface FeatureCardProps {
+  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   title: string;
   description: string;
-}) {
+}
+
+function FeatureCard({ Icon, title, description }: FeatureCardProps) {
   return (
     <div className="bg-white border border-stone-200 rounded-2xl p-6 md:p-8 hover:shadow-lg hover:border-sage-200 transition-all duration-200">
-      <div className="text-4xl mb-4">{icon}</div>
+      <div className="w-12 h-12 bg-sage-50 rounded-xl flex items-center justify-center mb-4">
+        <Icon className="w-6 h-6 text-sage-600" />
+      </div>
       <h4 className="text-xl font-bold text-stone-900 mb-3">{title}</h4>
       <p className="text-stone-600 leading-relaxed">{description}</p>
     </div>
   );
 }
 
-function StepCard({
-  number,
-  title,
-  description,
-  icon,
-}: {
+interface StepCardProps {
   number: number;
   title: string;
   description: string;
-  icon: string;
-}) {
+  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+}
+
+function StepCard({ number, title, description, Icon }: StepCardProps) {
   return (
     <div className="text-center relative">
       <div className="relative inline-flex items-center justify-center mb-6">
         <div className="absolute inset-0 bg-sage-100 rounded-full blur-xl opacity-50"></div>
-        <div className="relative w-16 h-16 bg-gradient-to-br from-sage-600 to-moss-600 text-white rounded-full flex items-center justify-center text-2xl font-bold shadow-lg">
-          <span className="mr-1">{icon}</span>
+        <div className="relative w-16 h-16 bg-gradient-to-br from-sage-600 to-moss-600 text-white rounded-full flex items-center justify-center shadow-lg">
+          <Icon className="w-7 h-7" />
         </div>
       </div>
       <div className="absolute top-8 left-1/2 -translate-x-1/2 -z-10 text-6xl font-bold text-stone-100">

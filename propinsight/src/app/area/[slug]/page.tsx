@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { CalendarIcon, BoltIcon } from "@heroicons/react/24/outline";
 import { getAreaBySlug, getChildAreas, sampleAreas } from "@/data/areas";
 import { formatPrice, formatPriceChange, formatNumber } from "@/types";
 import {
@@ -58,7 +59,7 @@ export default async function AreaPage({ params }: PageProps) {
       info.push({
         label: "Avg Days on Market",
         value: avgDaysOnMarket.toString(),
-        icon: "📅",
+        Icon: CalendarIcon,
       });
     }
 
@@ -67,7 +68,7 @@ export default async function AreaPage({ params }: PageProps) {
       info.push({
         label: "Sales/Month",
         value: marketVelocity.toString(),
-        icon: "⚡",
+        Icon: BoltIcon,
       });
     }
 
@@ -271,22 +272,25 @@ export default async function AreaPage({ params }: PageProps) {
                       Market Activity
                     </div>
                     <div className="space-y-3">
-                      {interestingInfo.map((info, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-center justify-between"
-                        >
-                          <div className="flex items-center gap-2">
-                            <span className="text-lg">{info.icon}</span>
-                            <span className="text-sm text-stone-600">
-                              {info.label}
+                      {interestingInfo.map((info, idx) => {
+                        const Icon = info.Icon;
+                        return (
+                          <div
+                            key={idx}
+                            className="flex items-center justify-between"
+                          >
+                            <div className="flex items-center gap-2">
+                              <Icon className="w-5 h-5 text-sage-600" />
+                              <span className="text-sm text-stone-600">
+                                {info.label}
+                              </span>
+                            </div>
+                            <span className="text-sm font-semibold text-stone-900">
+                              {info.value}
                             </span>
                           </div>
-                          <span className="text-sm font-semibold text-stone-900">
-                            {info.value}
-                          </span>
-                        </div>
-                      ))}
+                        );
+                      })}
                     </div>
                   </div>
                 )}
