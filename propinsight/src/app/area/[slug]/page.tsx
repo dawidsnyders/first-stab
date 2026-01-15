@@ -44,7 +44,10 @@ export default async function AreaPage({ params }: PageProps) {
       <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-stone-200/50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/" className="text-2xl font-bold text-stone-900 hover:text-sage-600 transition-colors duration-200">
+            <Link
+              href="/"
+              className="text-2xl font-bold text-stone-900 hover:text-sage-600 transition-colors duration-200"
+            >
               {APP_NAME}
             </Link>
           </div>
@@ -55,7 +58,10 @@ export default async function AreaPage({ params }: PageProps) {
       <div className="bg-white border-b border-stone-100 pt-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <nav className="flex items-center gap-2 text-sm">
-            <Link href="/" className="text-stone-500 hover:text-sage-600 transition-colors duration-200">
+            <Link
+              href="/"
+              className="text-stone-500 hover:text-sage-600 transition-colors duration-200"
+            >
               Home
             </Link>
             <span className="text-stone-400">/</span>

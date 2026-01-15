@@ -92,7 +92,7 @@ function AreaInfoContent({ area }: { area: Area }) {
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.2, duration: 0.2 }}
             className="bg-gradient-to-br from-sage-50 to-moss-50 p-4 rounded-xl"
           >
             <div className="text-sm text-stone-600 mb-1">Average Price</div>
@@ -116,7 +116,7 @@ function AreaInfoContent({ area }: { area: Area }) {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ delay: 0.25 }}
+            transition={{ delay: 0.25, duration: 0.2 }}
             className="grid grid-cols-2 gap-4"
           >
             <StatCard
@@ -176,7 +176,7 @@ function AreaInfoContent({ area }: { area: Area }) {
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.55 }}
+        transition={{ delay: 0.55, duration: 0.2 }}
         className="space-y-3"
       >
         <Link
@@ -221,7 +221,7 @@ function StatCard({
     <motion.div
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ delay }}
+      transition={{ delay, duration: 0.2 }}
       className="bg-stone-50 p-3 rounded-lg"
     >
       <div className="text-xs text-stone-500 mb-1">{label}</div>
