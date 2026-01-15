@@ -38,6 +38,69 @@ export default async function AreaPage({ params }: PageProps) {
     ? stats.priceChangeYoY - NATIONAL_BENCHMARKS.avgPropertyGrowth
     : 0;
 
+  // Calculate market velocity (sales per month) for interesting info
+  const marketVelocity = stats ? Math.round(stats.salesCount / 12) : 0;
+  
+  // Calculate average days on market (estimated based on sales velocity and market activity)
+  const avgDaysOnMarket = stats
+    ? marketVelocity > 20
+      ? Math.round(45 - (marketVelocity / 5))
+      : Math.round(90 - marketVelocity)
+    : null;
+
+  // Generate interesting area info based on stats
+  const getInterestingInfo = () => {
+    if (!stats) return [];
+    const info = [];
+    
+    // Days on market estimate
+    if (avgDaysOnMarket) {
+      info.push({
+        label: "Avg Days on Market",
+        value: avgDaysOnMarket.toString(),
+        icon: "📅",
+      });
+    }
+    
+    // Sales velocity
+    if (marketVelocity > 0) {
+      info.push({
+        label: "Sales/Month",
+        value: marketVelocity.toString(),
+        icon: "⚡",
+      });
+    }
+    
+    return info;
+  };
+
+  const interestingInfo = getInterestingInfo();
+
+  // Generate compelling description based on stats
+  const getDescription = () => {
+    if (!stats) return "Property market analysis and insights";
+    
+    const outperformanceText =
+      outperformance > 0
+        ? `${outperformance.toFixed(1)}% above the national average`
+        : outperformance < 0
+        ? `${Math.abs(outperformance).toFixed(1)}% below the national average`
+        : "in line with the national average";
+
+    const growthContext =
+      stats.priceChangeYoY > 7
+        ? "experiencing strong growth"
+        : stats.priceChangeYoY > 4
+        ? "showing steady appreciation"
+        : stats.priceChangeYoY > 0
+        ? "maintaining positive momentum"
+        : "facing market adjustments";
+
+    return `${area.name} is ${growthContext}, with property values ${formatPriceChange(
+      stats.priceChangeYoY
+    )} year-over-year — ${outperformanceText}. Explore comprehensive market data, trends, and investment insights below.`;
+  };
+
   return (
     <div className="min-h-screen bg-stone-50">
       {/* Floating Header */}
@@ -71,37 +134,127 @@ export default async function AreaPage({ params }: PageProps) {
       </div>
 
       {/* Hero */}
-      <section className="bg-white pb-8">
+      <section className="bg-gradient-to-b from-white to-stone-50 pb-12 border-b border-stone-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-            <div>
-              <span className="text-sm text-sage-600 font-medium uppercase tracking-wide">
-                {area.level}
-              </span>
-              <h1 className="text-4xl font-bold text-stone-900 mt-1">
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Left: Title and Description */}
+            <div className="lg:col-span-2 space-y-4">
+              <div className="flex items-center gap-3">
+                <span className="text-xs text-sage-600 font-semibold uppercase tracking-wider bg-sage-50 px-3 py-1.5 rounded-full">
+                  {area.level}
+                </span>
+                {stats && (
+                  <div
+                    className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 ${
+                      isPositive
+                        ? "bg-green-50 text-green-700"
+                        : "bg-red-50 text-red-700"
+                    }`}
+                  >
+                    <svg
+                      className={`w-3.5 h-3.5 ${
+                        isPositive ? "text-green-600" : "text-red-600"
+                      }`}
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      {isPositive ? (
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                        />
+                      ) : (
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
+                        />
+                      )}
+                    </svg>
+                    {formatPriceChange(stats.priceChangeYoY)} YoY
+                  </div>
+                )}
+              </div>
+              <h1 className="text-5xl md:text-6xl font-bold text-stone-900 leading-tight">
                 {area.name}
+                {stats && (
+                  <span
+                    className={`ml-4 text-3xl md:text-4xl font-normal ${
+                      isPositive ? "text-green-600" : "text-red-600"
+                    }`}
+                  >
+                    {formatPriceChange(stats.priceChangeYoY)}
+                  </span>
+                )}
               </h1>
-              <p className="text-stone-500 mt-2">
-                Property market analysis and insights
+              <p className="text-lg text-stone-600 leading-relaxed max-w-2xl">
+                {getDescription()}
               </p>
             </div>
+
+            {/* Right: Key Stats and Interesting Info */}
             {stats && (
-              <div className="flex items-center gap-4">
-                <div className="text-right">
-                  <div className="text-sm text-stone-500">Average Price</div>
-                  <div className="text-3xl font-bold text-stone-900">
-                    {formatPrice(stats.avgPrice)}
+              <div className="lg:col-span-1 space-y-6">
+                {/* Key Stats Card */}
+                <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
+                  <div className="space-y-4">
+                    <div>
+                      <div className="text-xs text-stone-500 uppercase tracking-wide mb-1">
+                        Average Price
+                      </div>
+                      <div className="text-3xl font-bold text-stone-900">
+                        {formatPrice(stats.avgPrice)}
+                      </div>
+                    </div>
+                    <div className="pt-4 border-t border-stone-100">
+                      <div className="text-xs text-stone-500 uppercase tracking-wide mb-1">
+                        Median Price
+                      </div>
+                      <div className="text-2xl font-semibold text-stone-800">
+                        {formatPrice(stats.medianPrice)}
+                      </div>
+                    </div>
+                    <div className="pt-4 border-t border-stone-100">
+                      <div className="text-xs text-stone-500 uppercase tracking-wide mb-1">
+                        Sales (12 months)
+                      </div>
+                      <div className="text-2xl font-semibold text-stone-800">
+                        {formatNumber(stats.salesCount)}
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div
-                  className={`px-4 py-2 rounded-xl text-lg font-semibold ${
-                    isPositive
-                      ? "bg-green-100 text-green-800"
-                      : "bg-red-100 text-red-800"
-                  }`}
-                >
-                  {formatPriceChange(stats.priceChangeYoY)} YoY
-                </div>
+
+                {/* Interesting Info */}
+                {interestingInfo.length > 0 && (
+                  <div className="bg-sage-50/50 rounded-2xl border border-sage-100 p-5">
+                    <div className="text-xs text-sage-700 uppercase tracking-wide font-semibold mb-4">
+                      Market Activity
+                    </div>
+                    <div className="space-y-3">
+                      {interestingInfo.map((info, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center justify-between"
+                        >
+                          <div className="flex items-center gap-2">
+                            <span className="text-lg">{info.icon}</span>
+                            <span className="text-sm text-stone-600">
+                              {info.label}
+                            </span>
+                          </div>
+                          <span className="text-sm font-semibold text-stone-900">
+                            {info.value}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>
