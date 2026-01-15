@@ -91,13 +91,73 @@ export default function Home() {
 
       {/* Hero section - Enhanced */}
       <section className="relative bg-gradient-to-br from-white via-stone-50 to-sage-50 text-stone-900 pt-28 pb-24 md:pt-36 md:pb-32 overflow-hidden">
-        {/* Enhanced decorative elements */}
+        {/* Clean geometric background elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-sage-200/40 to-transparent rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-moss-200/40 to-transparent rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-terracotta-100/20 rounded-full blur-3xl"></div>
-          {/* Grid pattern overlay */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-40"></div>
+          {/* Subtle gradient orbs */}
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-sage-200/25 to-transparent rounded-full blur-3xl"></div>
+          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-moss-200/25 to-transparent rounded-full blur-3xl"></div>
+          
+          {/* Clean geometric lines and shapes */}
+          <div className="absolute inset-0">
+            {/* Diagonal lines with gradient */}
+            <svg className="absolute inset-0 w-full h-full" viewBox="0 0 1440 800" preserveAspectRatio="none">
+              <defs>
+                <linearGradient id="lineGradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stopColor="#5d7350" stopOpacity="0" />
+                  <stop offset="30%" stopColor="#5d7350" stopOpacity="0.1" />
+                  <stop offset="70%" stopColor="#6f7d57" stopOpacity="0.1" />
+                  <stop offset="100%" stopColor="#5d7350" stopOpacity="0" />
+                </linearGradient>
+                <linearGradient id="lineGradient2" x1="100%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#6f7d57" stopOpacity="0" />
+                  <stop offset="40%" stopColor="#6f7d57" stopOpacity="0.12" />
+                  <stop offset="60%" stopColor="#5d7350" stopOpacity="0.12" />
+                  <stop offset="100%" stopColor="#6f7d57" stopOpacity="0" />
+                </linearGradient>
+              </defs>
+              {/* Primary diagonal line */}
+              <line
+                x1="0"
+                y1="180"
+                x2="1440"
+                y2="620"
+                stroke="url(#lineGradient1)"
+                strokeWidth="2"
+                vectorEffect="non-scaling-stroke"
+              />
+              {/* Secondary diagonal line */}
+              <line
+                x1="1440"
+                y1="120"
+                x2="0"
+                y2="720"
+                stroke="url(#lineGradient2)"
+                strokeWidth="1.5"
+                vectorEffect="non-scaling-stroke"
+              />
+              {/* Subtle horizontal accent */}
+              <line
+                x1="0"
+                y1="400"
+                x2="1440"
+                y2="400"
+                stroke="#5d7350"
+                strokeWidth="0.5"
+                strokeDasharray="3 12"
+                strokeOpacity="0.15"
+                vectorEffect="non-scaling-stroke"
+              />
+            </svg>
+            
+            {/* Geometric shapes - clean circles */}
+            <div className="absolute top-24 right-40 w-40 h-40 border border-sage-300/25 rounded-full"></div>
+            <div className="absolute bottom-40 left-32 w-32 h-32 border border-moss-300/25 rounded-full"></div>
+            <div className="absolute top-1/2 right-1/4 w-20 h-20 border border-terracotta-300/20 rounded-full"></div>
+            <div className="absolute top-1/3 left-1/4 w-16 h-16 border border-sage-300/20 rounded-full"></div>
+            
+            {/* Subtle grid pattern */}
+            <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(93,115,80,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(93,115,80,0.02)_1px,transparent_1px)] bg-[size:48px_48px]"></div>
+          </div>
         </div>
 
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
