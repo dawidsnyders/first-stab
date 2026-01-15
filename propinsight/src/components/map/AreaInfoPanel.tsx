@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { Area, formatPrice, formatPriceChange, formatNumber } from '@/types';
 import { AreaInfoPanelSkeleton } from '@/components/ui/Skeleton';
 import { REPORT_PRICE_DISPLAY } from '@/lib/constants';
+import { MiniPriceChart } from '@/components/charts/MiniPriceChart';
 
 interface AreaInfoPanelProps {
   area: Area | null;
@@ -145,28 +146,33 @@ function AreaInfoContent({ area }: { area: Area }) {
             )}
           </motion.div>
 
-          {/* Mini chart placeholder */}
+          {/* Mini price chart */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.2 }}
-            className="h-40 bg-stone-50 rounded-lg flex items-center justify-center border border-stone-200"
+            className="bg-stone-50 rounded-xl p-4 border border-stone-200"
           >
-            <div className="text-center text-stone-500">
-              <svg
-                className="w-8 h-8 mx-auto mb-2 text-stone-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-stone-700">
+                Price Trend (5 years)
+              </span>
+              <span
+                className={`text-xs px-2 py-0.5 rounded-full ${
+                  isPositive
+                    ? 'bg-green-100 text-green-700'
+                    : 'bg-red-100 text-red-700'
+                }`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
-                />
-              </svg>
-              <span className="text-sm">Price trend (3 years)</span>
+                {formatPriceChange(stats.priceChangeYoY)} YoY
+              </span>
+            </div>
+            <div className="h-32">
+              <MiniPriceChart
+                areaId={area.id}
+                currentPrice={stats.avgPrice}
+                priceChangeYoY={stats.priceChangeYoY}
+              />
             </div>
           </motion.div>
         </>

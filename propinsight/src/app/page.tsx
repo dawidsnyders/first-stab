@@ -8,14 +8,30 @@ import {
   MapIcon,
   DocumentTextIcon,
   BoltIcon,
-  TargetIcon,
+  SparklesIcon,
   MagnifyingGlassIcon,
   HomeIcon,
   MapPinIcon,
 } from '@heroicons/react/24/outline';
 import { SearchBar } from '@/components/ui/SearchBar';
-import { MapView } from '@/components/map/MapView';
 import { MapModal } from '@/components/ui/MapModal';
+import dynamic from 'next/dynamic';
+
+// Dynamically import InteractiveMapView
+const InteractiveMapView = dynamic(
+  () => import('@/components/map/InteractiveMapView'),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[600px] bg-stone-100 rounded-2xl flex items-center justify-center">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-3 border-sage-200 border-t-sage-600 rounded-full animate-spin" />
+          <span className="text-stone-500 text-sm">Loading map...</span>
+        </div>
+      </div>
+    ),
+  }
+);
 import { AreaCard } from '@/components/area/AreaCard';
 import { getAreasByLevel } from '@/data/areas';
 import { APP_NAME, REPORT_PRICE_DISPLAY, NATIONAL_BENCHMARKS } from '@/lib/constants';
@@ -225,7 +241,7 @@ export default function Home() {
               description="Quick stats and key metrics displayed beautifully. No need to dig through spreadsheets."
             />
             <FeatureCard
-              Icon={TargetIcon}
+              Icon={SparklesIcon}
               title="Investment Intelligence"
               description="Understand market dynamics, risk factors, and opportunities to make smarter property investments."
             />
@@ -256,7 +272,7 @@ export default function Home() {
             </button>
           </div>
           <div className="bg-white rounded-2xl shadow-xl border border-stone-200 overflow-hidden">
-            <MapView initialLevel="suburb" />
+            <InteractiveMapView initialLevel="suburb" />
           </div>
         </div>
       </section>
@@ -433,9 +449,8 @@ export default function Home() {
       <MapModal
         isOpen={isMapModalOpen}
         onClose={() => setIsMapModalOpen(false)}
-      >
-        <MapView initialLevel="suburb" />
-      </MapModal>
+        useInteractiveMap={true}
+      />
     </div>
   );
 }

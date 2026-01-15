@@ -2,14 +2,32 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { ReactNode, useEffect } from "react";
+import dynamic from "next/dynamic";
+
+// Dynamically import InteractiveMapView for modal use
+const InteractiveMapView = dynamic(
+  () => import("@/components/map/InteractiveMapView"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-full flex items-center justify-center bg-stone-100">
+        <div className="flex flex-col items-center gap-3">
+          <div className="w-10 h-10 border-3 border-sage-200 border-t-sage-600 rounded-full animate-spin" />
+          <span className="text-stone-500 text-sm">Loading map...</span>
+        </div>
+      </div>
+    ),
+  }
+);
 
 interface MapModalProps {
   isOpen: boolean;
   onClose: () => void;
-  children: ReactNode;
+  children?: ReactNode;
+  useInteractiveMap?: boolean;
 }
 
-export function MapModal({ isOpen, onClose, children }: MapModalProps) {
+export function MapModal({ isOpen, onClose, children, useInteractiveMap = true }: MapModalProps) {
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === "Escape" && isOpen) {
@@ -85,7 +103,9 @@ export function MapModal({ isOpen, onClose, children }: MapModalProps) {
 
               {/* Map Content */}
               <div className="flex-1 overflow-hidden relative min-h-0">
-                <div className="absolute inset-0 w-full h-full">{children}</div>
+                <div className="absolute inset-0 w-full h-full">
+                  {useInteractiveMap ? <InteractiveMapView /> : children}
+                </div>
               </div>
             </motion.div>
           </div>
