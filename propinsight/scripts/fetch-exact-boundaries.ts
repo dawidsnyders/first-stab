@@ -299,7 +299,9 @@ async function main() {
     .map(([slug, boundary]) => {
       const area = AREAS.find((a) => a.slug === slug);
       const coords = formatCoordinates(boundary.coordinates[0]);
-      return `  ${slug}: {
+      // Quote the key if it contains hyphens or special characters
+      const key = slug.includes("-") ? `"${slug}"` : slug;
+      return `  ${key}: {
     type: "Polygon",
     coordinates: [
       [
