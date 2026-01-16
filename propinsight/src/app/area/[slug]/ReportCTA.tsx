@@ -286,7 +286,6 @@ export function ReportCTA({ area }: ReportCTAProps) {
                   </motion.form>
                 )}
               </AnimatePresence>
-              </div>
             </div>
 
             {/* Right: Pricing info */}

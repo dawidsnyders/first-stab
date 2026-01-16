@@ -203,74 +203,12 @@ export default function Home() {
       {/* Product Showcase - Ondo-Style Carousel */}
       <section
         id="features"
-        className="relative bg-gradient-to-b from-white to-stone-100 pt-32 md:pt-40 pb-16 md:pb-24 overflow-hidden"
+        className="relative bg-gradient-to-b from-white to-stone-100 pt-8 md:pt-12 pb-12 md:pb-16 overflow-hidden"
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.03)_1px,transparent_0)] bg-[size:32px_32px]"></div>
 
         <div className="relative">
-          {/* Section Header */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5 }}
-              className="flex flex-col md:flex-row md:items-end md:justify-between gap-6"
-            >
-              <div>
-                <h3 className="text-3xl md:text-4xl lg:text-5xl font-bold text-stone-900 mb-3">
-                  Property Intelligence Products
-                </h3>
-                <p className="text-lg text-stone-600 max-w-xl">
-                  Comprehensive tools for investors, agents, and homebuyers
-                </p>
-              </div>
-
-              {/* Navigation Arrows */}
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => scrollCarousel("left")}
-                  className="w-12 h-12 rounded-full bg-white border border-stone-200 flex items-center justify-center hover:bg-stone-50 hover:border-stone-300 transition-all duration-200 shadow-sm hover:shadow group"
-                  aria-label="Previous"
-                >
-                  <svg
-                    className="w-5 h-5 text-stone-600 group-hover:text-stone-900 transition-colors"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => scrollCarousel("right")}
-                  className="w-12 h-12 rounded-full bg-stone-900 flex items-center justify-center hover:bg-stone-800 transition-all duration-200 shadow-sm hover:shadow group"
-                  aria-label="Next"
-                >
-                  <svg
-                    className="w-5 h-5 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </motion.div>
-          </div>
-
           {/* Carousel Container */}
           <div className="relative">
             {/* Edge Gradients */}
@@ -428,21 +366,59 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Custom Scroll Indicator */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
-            <div className="flex items-center gap-4">
+          {/* Controls: Navigation + Progress */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
+            <div className="flex items-center gap-6">
+              {/* Navigation Arrows - Left aligned */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => scrollCarousel("left")}
+                  className="w-10 h-10 rounded-full bg-white border border-stone-200 flex items-center justify-center hover:bg-stone-50 hover:border-stone-300 transition-all duration-200 shadow-sm hover:shadow group"
+                  aria-label="Previous"
+                >
+                  <svg
+                    className="w-4 h-4 text-stone-600 group-hover:text-stone-900 transition-colors"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => scrollCarousel("right")}
+                  className="w-10 h-10 rounded-full bg-stone-900 flex items-center justify-center hover:bg-stone-800 transition-all duration-200 shadow-sm hover:shadow group"
+                  aria-label="Next"
+                >
+                  <svg
+                    className="w-4 h-4 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
+                  </svg>
+                </button>
+              </div>
+              
               {/* Progress bar */}
               <div className="flex-1 h-1 bg-stone-200 rounded-full overflow-hidden">
                 <motion.div
                   className="h-full bg-stone-900 rounded-full"
-                  style={{ width: `${Math.max(20, scrollProgress)}%` }}
+                  style={{ width: `${Math.max(15, scrollProgress)}%` }}
                   transition={{ duration: 0.1, ease: "easeOut" }}
                 />
               </div>
-              {/* Progress text */}
-              <span className="text-sm text-stone-500 font-medium tabular-nums min-w-[3rem] text-right">
-                {Math.round(scrollProgress)}%
-              </span>
             </div>
           </div>
         </div>
