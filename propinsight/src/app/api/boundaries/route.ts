@@ -401,9 +401,9 @@ export async function GET(request: NextRequest) {
                         coords = feature.geometry
                           .coordinates[0] as unknown as number[][];
                       } else {
-                        coords = (
-                          feature.geometry.coordinates[0] as number[][][]
-                        )[0] as number[][];
+                        // MultiPolygon: coordinates[0] is number[][][], coordinates[0][0] is number[][]
+                        const multiPoly = feature.geometry.coordinates[0] as unknown as number[][][];
+                        coords = multiPoly[0] as number[][];
                       }
 
                       if (coords && coords.length > 0) {
@@ -533,9 +533,9 @@ export async function GET(request: NextRequest) {
                 coords = candidate.geometry
                   .coordinates[0] as unknown as number[][];
               } else {
-                coords = (
-                  candidate.geometry.coordinates[0] as number[][][]
-                )[0] as number[][];
+                // MultiPolygon: coordinates[0] is number[][][], coordinates[0][0] is number[][]
+                const multiPoly = candidate.geometry.coordinates[0] as unknown as number[][][];
+                coords = multiPoly[0] as number[][];
               }
 
               if (coords && coords.length > 0) {

@@ -164,10 +164,10 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
   return (
     <div className="flex gap-8">
       {/* Left Sidebar - Clean Visual Progress Indicator */}
-      <div className="w-16 flex-shrink-0 sticky top-24 self-start">
-        <div className="relative h-full flex flex-col items-center">
+      <div className="w-48 flex-shrink-0 sticky top-24 self-start">
+        <div className="relative h-full flex flex-col items-start">
           {/* Progress Track */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-1 h-full bg-stone-200 rounded-full">
+          <div className="absolute top-0 left-2 w-1 h-full bg-stone-200 rounded-full">
             {/* Progress Fill */}
             <div
               className="absolute top-0 left-0 w-full bg-sage-600 rounded-full transition-all duration-100 ease-out"
@@ -178,7 +178,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
           </div>
 
           {/* Area Indicators */}
-          <nav className="relative z-10 flex flex-col items-center gap-2 py-2">
+          <nav className="relative z-10 flex flex-col gap-6 py-2">
             {areas.map((area, index) => {
               const isActive = index === activeIndex;
               const progress = index / (areas.length - 1);
@@ -188,12 +188,11 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                 <button
                   key={area.id}
                   onClick={() => scrollToSection(index)}
-                  className="group relative flex items-center justify-center"
-                  title={area.name}
+                  className="group relative flex items-center gap-3"
                 >
                   {/* Indicator Circle */}
                   <div
-                    className={`w-3 h-3 rounded-full border-2 transition-all duration-200 ${
+                    className={`w-3 h-3 rounded-full border-2 flex-shrink-0 transition-all duration-200 ${
                       isActive
                         ? "bg-sage-600 border-sage-600 scale-125"
                         : isPast
@@ -202,12 +201,16 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                     }`}
                   />
 
-                  {/* Tooltip on hover */}
-                  <div className="absolute left-full ml-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
-                    <div className="bg-stone-900 text-white text-xs px-2 py-1 rounded shadow-lg">
-                      {area.name}
-                    </div>
-                  </div>
+                  {/* Area Name */}
+                  <span
+                    className={`text-sm transition-all duration-200 ${
+                      isActive
+                        ? "text-stone-900 font-medium"
+                        : "text-stone-500 group-hover:text-stone-700"
+                    }`}
+                  >
+                    {area.name}
+                  </span>
                 </button>
               );
             })}
