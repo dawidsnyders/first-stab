@@ -52,23 +52,23 @@ const HARDCODED_BOUNDARIES: Record<
         // 3. Use a tool like https://boundaries.one/ or manually trace the boundary
         // 4. Extract coordinates in [lng, lat] format (GeoJSON standard)
         // 5. Update this array with the exact coordinates
-        
+
         // Current coordinates - approximate based on Google Maps view
         // These should be replaced with exact coordinates extracted from Google Maps
-        [18.9200, -33.7450], // Southwest corner
-        [18.9200, -33.7150], // Northwest corner  
-        [18.9400, -33.7100], // North
-        [18.9600, -33.7120], // Northeast
-        [18.9750, -33.7180], // East
-        [18.9900, -33.7250], // Southeast
-        [19.0000, -33.7350], // South
-        [19.0050, -33.7450], // South-center
-        [19.0000, -33.7550], // Southwest
-        [18.9900, -33.7600], // West-south
-        [18.9700, -33.7620], // West
-        [18.9500, -33.7600], // West-center
-        [18.9300, -33.7550], // West-north
-        [18.9200, -33.7450], // Close polygon (back to start)
+        [18.92, -33.745], // Southwest corner
+        [18.92, -33.715], // Northwest corner
+        [18.94, -33.71], // North
+        [18.96, -33.712], // Northeast
+        [18.975, -33.718], // East
+        [18.99, -33.725], // Southeast
+        [19.0, -33.735], // South
+        [19.005, -33.745], // South-center
+        [19.0, -33.755], // Southwest
+        [18.99, -33.76], // West-south
+        [18.97, -33.762], // West
+        [18.95, -33.76], // West-center
+        [18.93, -33.755], // West-north
+        [18.92, -33.745], // Close polygon (back to start)
       ],
     ],
   },

@@ -6,7 +6,23 @@ import { Area } from "@/types";
 import { AreaInfoPanel } from "./AreaInfoPanel";
 import { getAreasByLevel } from "@/data/areas";
 
-// Dynamically import LeafletMap (primary, always works) and MapboxMap (fallback if token available)
+// Use Google Maps as primary map (most accurate boundaries)
+const GoogleMapsMap = dynamic(
+  () => import("./GoogleMapsMap").then((mod) => ({ default: mod.GoogleMapsMap })),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-500">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sage-600 mx-auto mb-2"></div>
+          <p className="text-sm">Loading Google Maps...</p>
+        </div>
+      </div>
+    ),
+  }
+);
+
+// Fallback to Leaflet if Google Maps API key not available
 const LeafletMap = dynamic(
   () => import("./LeafletMap").then((mod) => ({ default: mod.LeafletMap })),
   {
@@ -17,18 +33,6 @@ const LeafletMap = dynamic(
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-sage-600 mx-auto mb-2"></div>
           <p className="text-sm">Loading map...</p>
         </div>
-      </div>
-    ),
-  }
-);
-
-const MapboxMap = dynamic(
-  () => import("./MapboxMap").then((mod) => ({ default: mod.MapboxMap })),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="absolute inset-0 bg-stone-100 flex items-center justify-center text-stone-500">
-        Loading map...
       </div>
     ),
   }
@@ -104,9 +108,9 @@ export function MapView({ initialLevel = "suburb" }: MapViewProps) {
       className="relative w-full h-full min-h-[600px] bg-stone-100 rounded-2xl overflow-hidden"
       style={{ isolation: "isolate" }}
     >
-      {/* Use LeafletMap as primary (always works), MapboxMap as optional enhancement */}
-      {hasMapboxToken ? (
-        <MapboxMap
+      {/* Use Google Maps as primary (most accurate boundaries), fallback to Leaflet */}
+      {process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY ? (
+        <GoogleMapsMap
           areas={areas}
           selectedArea={selectedArea}
           onAreaClick={handleAreaClick}
