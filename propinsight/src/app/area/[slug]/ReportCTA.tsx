@@ -68,15 +68,15 @@ export function ReportCTA({ area }: ReportCTAProps) {
       {/* Subtle gradient accent */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sage-500 via-moss-500 to-sage-500"></div>
 
-      <div className="p-8 md:p-10 lg:p-12">
+      <div className="p-5 md:p-6">
         <div className="max-w-4xl mx-auto">
-          {/* Header */}
-          <div className="flex items-start justify-between mb-8">
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-10 h-10 rounded-lg bg-sage-100 flex items-center justify-center">
+          {/* Compact Header */}
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-8 h-8 rounded-lg bg-sage-100 flex items-center justify-center flex-shrink-0">
                   <svg
-                    className="w-5 h-5 text-sage-600"
+                    className="w-4 h-4 text-sage-600"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -89,65 +89,59 @@ export function ReportCTA({ area }: ReportCTAProps) {
                     />
                   </svg>
                 </div>
-                <span className="text-xs font-semibold text-sage-600 uppercase tracking-wider">
+                <span className="text-[10px] font-semibold text-sage-600 uppercase tracking-wider">
                   Premium Report
                 </span>
               </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-3 tracking-tight">
+              <h2 className="text-xl md:text-2xl font-bold text-stone-900 mb-1.5 tracking-tight">
                 Full Market Analysis Report
               </h2>
-              <p className="text-stone-600 text-lg leading-relaxed max-w-2xl">
-                Comprehensive 10-15 page analysis with historical data, growth
-                drivers, investment outlook, and actionable insights for{" "}
-                <span className="font-semibold text-stone-900">{area.name}</span>.
+              <p className="text-sm text-stone-600 leading-snug">
+                Comprehensive analysis for{" "}
+                <span className="font-semibold text-stone-900">{area.name}</span>
               </p>
             </div>
           </div>
 
-          {/* Features grid */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
-            {[
-              "10-Year Price Analysis",
-              "CAGR Calculations",
-              "National Benchmarks",
-              "Growth Driver Analysis",
-              "Risk Assessment",
-              "Investment Outlook",
-              "Comparable Areas",
-              "PDF Download",
-            ].map((feature) => (
-              <div
-                key={feature}
-                className="flex items-start gap-2 text-stone-700"
-              >
-                <svg
-                  className="w-4 h-4 text-sage-600 flex-shrink-0 mt-0.5"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <span className="text-sm leading-snug">{feature}</span>
-              </div>
-            ))}
+          {/* Compact Features - Inline */}
+          <div className="mb-4">
+            <div className="flex flex-wrap gap-x-3 gap-y-1.5 text-xs text-stone-600">
+              {[
+                "10-Year Analysis",
+                "CAGR",
+                "Benchmarks",
+                "Risk Assessment",
+                "Investment Outlook",
+                "PDF Download",
+              ].map((feature) => (
+                <div key={feature} className="flex items-center gap-1">
+                  <svg
+                    className="w-3 h-3 text-sage-600 flex-shrink-0"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  <span>{feature}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
           {/* Divider */}
-          <div className="border-t border-stone-200 my-8"></div>
+          <div className="border-t border-stone-200 my-4"></div>
 
-          {/* CTA Section */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+          {/* Compact CTA Section */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             {/* Left: Pricing */}
-            <div className="flex items-baseline gap-4">
-              <div>
-                <div className="text-sm text-stone-500 mb-1">One-time payment</div>
-                <div className="text-4xl md:text-5xl font-bold text-stone-900 tracking-tight">
-                  {REPORT_PRICE_DISPLAY}
-                </div>
+            <div>
+              <div className="text-xs text-stone-500 mb-0.5">One-time payment</div>
+              <div className="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">
+                {REPORT_PRICE_DISPLAY}
               </div>
             </div>
 
@@ -163,7 +157,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
                     onClick={handleBuyClick}
                     whileHover={{ scale: 1.01 }}
                     whileTap={{ scale: 0.99 }}
-                    className="group relative px-8 py-4 bg-stone-900 text-white font-semibold text-base rounded-xl hover:bg-stone-800 transition-all duration-100 shadow-sm hover:shadow-md flex items-center gap-2"
+                    className="group relative px-6 py-3 bg-stone-900 text-white font-semibold text-sm rounded-xl hover:bg-stone-800 transition-all duration-100 shadow-sm hover:shadow-md flex items-center gap-2"
                   >
                     <span>Purchase Report</span>
                     <svg
@@ -187,7 +181,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -5 }}
                     onSubmit={handleBuySubmit}
-                    className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto"
+                    className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto"
                   >
                     <input
                       type="email"
@@ -196,13 +190,13 @@ export function ReportCTA({ area }: ReportCTAProps) {
                       placeholder="your@email.com"
                       required
                       autoFocus
-                      className="px-4 py-3 rounded-xl text-stone-900 placeholder-stone-400 bg-white border border-stone-300 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all duration-100 text-sm min-w-[240px]"
+                      className="px-3 py-2.5 rounded-lg text-stone-900 placeholder-stone-400 bg-white border border-stone-300 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all duration-100 text-sm min-w-[200px]"
                     />
                     <div className="flex gap-2">
                       <button
                         type="submit"
                         disabled={isSubmitting || !email.trim()}
-                        className="px-6 py-3 bg-stone-900 text-white font-semibold rounded-xl hover:bg-stone-800 transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
+                        className="px-5 py-2.5 bg-stone-900 text-white font-semibold rounded-lg hover:bg-stone-800 transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap text-sm"
                       >
                         {isSubmitting ? (
                           <>
@@ -213,7 +207,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
                                 repeat: Infinity,
                                 ease: "linear",
                               }}
-                              className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                              className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full"
                             />
                             <span>Processing...</span>
                           </>
@@ -227,7 +221,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
                           setShowEmailForm(false);
                           setEmail("");
                         }}
-                        className="px-4 py-3 text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded-xl transition-all duration-100 font-medium"
+                        className="px-3 py-2.5 text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded-lg transition-all duration-100 font-medium text-sm"
                       >
                         Cancel
                       </button>
@@ -238,12 +232,12 @@ export function ReportCTA({ area }: ReportCTAProps) {
             </div>
           </div>
 
-          {/* Trust indicators */}
-          <div className="mt-8 pt-6 border-t border-stone-100">
-            <div className="flex flex-wrap items-center gap-6 text-xs text-stone-500">
-              <div className="flex items-center gap-2">
+          {/* Compact Trust indicators */}
+          <div className="mt-4 pt-3 border-t border-stone-100">
+            <div className="flex flex-wrap items-center gap-4 text-[10px] text-stone-500">
+              <div className="flex items-center gap-1.5">
                 <svg
-                  className="w-4 h-4 text-sage-600"
+                  className="w-3 h-3 text-sage-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -257,9 +251,9 @@ export function ReportCTA({ area }: ReportCTAProps) {
                 </svg>
                 <span>Secure payment</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <svg
-                  className="w-4 h-4 text-sage-600"
+                  className="w-3 h-3 text-sage-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -273,9 +267,9 @@ export function ReportCTA({ area }: ReportCTAProps) {
                 </svg>
                 <span>Instant delivery</span>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5">
                 <svg
-                  className="w-4 h-4 text-sage-600"
+                  className="w-3 h-3 text-sage-600"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"
@@ -287,7 +281,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
                     d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
                   />
                 </svg>
-                <span>AI-powered analysis</span>
+                <span>AI-powered</span>
               </div>
             </div>
           </div>
