@@ -173,7 +173,9 @@ export async function GET(request: NextRequest) {
           // Try multiple field names for suburb matching
           const searchName = searchTerms[0] || suburbName;
           const whereClause = `UPPER(SUBURB) = UPPER('${searchName}') OR UPPER(NAME) = UPPER('${searchName}') OR UPPER(SUBURB_NAME) = UPPER('${searchName}')`;
-          console.log(`Querying Western Cape API for "${suburbName}" (search: "${searchName}") with: ${whereClause}`);
+          console.log(
+            `Querying Western Cape API for "${suburbName}" (search: "${searchName}") with: ${whereClause}`
+          );
           url.searchParams.append("where", whereClause);
           url.searchParams.append("outFields", "*");
           url.searchParams.append("returnGeometry", "true");
@@ -423,9 +425,15 @@ export async function GET(request: NextRequest) {
                   minLng >= 16 &&
                   maxLng <= 26;
 
-                if (area < 500 && isInWesternCape && area < smallestArea) {
+                // Use stricter 100 km² limit (was 500 km²) to avoid overly large administrative boundaries
+                const maxArea = 100; // km² - strict limit for suburbs
+                if (area < maxArea && isInWesternCape && area < smallestArea) {
                   matchingFeature = candidate;
                   smallestArea = area;
+                } else if (area >= maxArea) {
+                  console.warn(
+                    `Rejecting overly large polygon for "${suburbName}": ${area.toFixed(2)} km² (max ${maxArea} km²)`
+                  );
                 }
               }
             }
@@ -447,10 +455,14 @@ export async function GET(request: NextRequest) {
             type: "FeatureCollection",
             features: [matchingFeature],
           };
-          console.log(`✓ Successfully fetched boundary for "${suburbName}" from ${endpoint} (${matchingFeature.geometry.type})`);
+          console.log(
+            `✓ Successfully fetched boundary for "${suburbName}" from ${endpoint} (${matchingFeature.geometry.type})`
+          );
           break;
         } else {
-          console.warn(`⚠ No matching feature found for "${suburbName}" from ${endpoint}`);
+          console.warn(
+            `⚠ No matching feature found for "${suburbName}" from ${endpoint}`
+          );
         }
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));

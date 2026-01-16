@@ -13,6 +13,9 @@ import {
   Bar,
   ReferenceLine,
   Legend,
+  Line,
+  LineChart,
+  ComposedChart,
 } from "recharts";
 import { ChartDataPoint } from "@/lib/chartData";
 import { formatPrice, formatNumber } from "@/types";
@@ -196,8 +199,9 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
       // Verify data structure and ensure areaValue and nationalValue exist
       const processed = data.map((point, index) => {
         const areaVal = point.areaValue ?? point.value ?? 0;
-        const nationalVal = point.nationalValue ?? NATIONAL_BENCHMARKS.avgPropertyGrowth;
-        
+        const nationalVal =
+          point.nationalValue ?? NATIONAL_BENCHMARKS.avgPropertyGrowth;
+
         // Debug: Log first point to verify data structure
         if (index === 0) {
           console.log("Outperformance chart data sample:", {
@@ -208,23 +212,26 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
             hasNationalValue: point.nationalValue !== undefined,
           });
         }
-        
+
         return {
           ...point,
           previousValue: index > 0 ? data[index - 1].value : null,
           areaValue: typeof areaVal === "number" ? areaVal : 0,
-          nationalValue: typeof nationalVal === "number" ? nationalVal : NATIONAL_BENCHMARKS.avgPropertyGrowth,
+          nationalValue:
+            typeof nationalVal === "number"
+              ? nationalVal
+              : NATIONAL_BENCHMARKS.avgPropertyGrowth,
         };
       });
-      
+
       // Log all values to verify they're valid
       console.log("Processed chart data:", {
         length: processed.length,
         firstPoint: processed[0],
-        areaValues: processed.map(p => p.areaValue).slice(0, 5),
-        nationalValues: processed.map(p => p.nationalValue).slice(0, 5),
+        areaValues: processed.map((p) => p.areaValue).slice(0, 5),
+        nationalValues: processed.map((p) => p.nationalValue).slice(0, 5),
       });
-      
+
       return processed;
     }
     return dataWithPrev;
