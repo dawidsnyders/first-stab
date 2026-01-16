@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
-import { Area, formatPrice, formatPriceChange, formatNumber } from '@/types';
-import { AreaInfoPanelSkeleton } from '@/components/ui/Skeleton';
-import { REPORT_PRICE_DISPLAY } from '@/lib/constants';
+import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { Area, formatPrice, formatPriceChange, formatNumber } from "@/types";
+import { AreaInfoPanelSkeleton } from "@/components/ui/Skeleton";
+import { REPORT_PRICE_DISPLAY } from "@/lib/constants";
 
 interface AreaInfoPanelProps {
   area: Area | null;
@@ -12,27 +12,34 @@ interface AreaInfoPanelProps {
   onClose: () => void;
 }
 
-export function AreaInfoPanel({ area, isLoading, onClose }: AreaInfoPanelProps) {
+export function AreaInfoPanel({
+  area,
+  isLoading,
+  onClose,
+}: AreaInfoPanelProps) {
   return (
     <AnimatePresence mode="wait">
       {(area || isLoading) && (
         <motion.div
-          key={area?.id || 'loading'}
-          initial={{ x: '100%', opacity: 0 }}
+          key={area?.id || "loading"}
+          initial={{ x: "100%", opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
-          exit={{ x: '100%', opacity: 0 }}
+          exit={{ x: "100%", opacity: 0 }}
           transition={{
-            type: 'spring',
+            type: "spring",
             stiffness: 300,
             damping: 30,
             duration: 0.2,
           }}
-          className="absolute top-0 right-0 h-full w-96 bg-white shadow-2xl border-l border-gray-200 overflow-y-auto z-20"
+          className="absolute top-0 right-0 h-full w-96 max-w-[90vw] bg-white shadow-2xl border-l border-stone-200 overflow-y-auto z-20"
         >
           {/* Close button */}
-          <button
+          <motion.button
             onClick={onClose}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
             className="absolute top-4 right-4 p-2 hover:bg-stone-100 rounded-full transition-colors duration-200 z-10"
+            aria-label="Close panel"
           >
             <svg
               className="w-5 h-5 text-stone-500"
@@ -47,7 +54,7 @@ export function AreaInfoPanel({ area, isLoading, onClose }: AreaInfoPanelProps) 
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-          </button>
+          </motion.button>
 
           {isLoading ? (
             <AreaInfoPanelSkeleton />

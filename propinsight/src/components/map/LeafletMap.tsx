@@ -1,8 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Area, formatPrice, formatPriceChange } from "@/types";
+import { Area } from "@/types";
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/lib/constants";
 import "leaflet/dist/leaflet.css";
 
@@ -29,6 +28,29 @@ const AREA_COORDINATES: Record<string, [number, number]> = {
   "de-zalze": [18.8667, -34.0167],
 };
 
+// Generate approximate polygon boundaries around coordinates
+// In production, these would be real GeoJSON boundaries
+// Creating irregular polygons that look more like real suburb boundaries
+function generateAreaBoundary(
+  center: [number, number],
+  size: number = 0.02
+): [number, number][] {
+  const [lng, lat] = center;
+  // Create an irregular polygon (hexagon-like) for more realistic appearance
+  const points: [number, number][] = [];
+  const sides = 6;
+  for (let i = 0; i <= sides; i++) {
+    const angle = (i * 2 * Math.PI) / sides;
+    // Add some randomness to make it look more natural
+    const radius = size * (0.8 + Math.random() * 0.4);
+    points.push([
+      lng + radius * Math.cos(angle),
+      lat + radius * Math.sin(angle),
+    ]);
+  }
+  return points;
+}
+
 function getAreaCoordinates(area: Area): [number, number] {
   return (
     AREA_COORDINATES[area.slug] || [
@@ -36,6 +58,18 @@ function getAreaCoordinates(area: Area): [number, number] {
       DEFAULT_MAP_CENTER[1],
     ]
   );
+}
+
+function getAreaBoundary(area: Area): [number, number][] {
+  const coords = getAreaCoordinates(area);
+  // Adjust size based on area level
+  const size =
+    area.level === "province"
+      ? 2.0
+      : area.level === "city"
+      ? 0.3
+      : 0.02; // suburb
+  return generateAreaBoundary(coords, size);
 }
 
 interface LeafletMapProps {
@@ -53,7 +87,7 @@ export function LeafletMap({
 }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
-  const markersRef = useRef<Map<string, any>>(new Map());
+  const polygonsRef = useRef<Map<string, any>>(new Map());
   const [hoveredArea, setHoveredArea] = useState<Area | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
 
@@ -62,16 +96,6 @@ export function LeafletMap({
 
     // Dynamically import Leaflet to avoid SSR issues
     import("leaflet").then((L) => {
-      // Fix default marker icon issue
-      delete (L.default as any).Icon.Default.prototype._getIconUrl;
-      (L.default as any).Icon.Default.mergeOptions({
-        iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-        iconRetinaUrl:
-          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-        shadowUrl:
-          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-      });
-
       const map = L.default.map(mapRef.current!, {
         center: [DEFAULT_MAP_CENTER[1], DEFAULT_MAP_CENTER[0]],
         zoom: DEFAULT_MAP_ZOOM,
@@ -79,8 +103,8 @@ export function LeafletMap({
         attributionControl: true,
       });
 
-      // Add OpenStreetMap tile layer
-      L.default
+      // Add greyed-out OpenStreetMap tile layer
+      const tileLayer = L.default
         .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -88,106 +112,67 @@ export function LeafletMap({
         })
         .addTo(map);
 
+      // Apply grey filter to map for desaturated look
+      const mapContainer = mapRef.current!;
+      mapContainer.style.filter = "grayscale(100%) brightness(0.9) contrast(0.95)";
+
       mapInstanceRef.current = map;
       setIsMapReady(true);
 
-      // Add markers
+      // Add area polygons
       areas.forEach((area) => {
-        const coords = getAreaCoordinates(area);
-        const { stats } = area;
-        const isPositive = stats && stats.priceChangeYoY >= 0;
+        const boundary = getAreaBoundary(area);
+        const isSelected = selectedArea?.id === area.id;
+        const isHovered = hoveredArea?.id === area.id;
 
-        // Create custom marker HTML
-        const markerDiv = document.createElement("div");
-        markerDiv.className = "custom-marker";
-        markerDiv.innerHTML = `
-          <div class="marker-pin ${
-            selectedArea?.id === area.id ? "selected" : ""
-          } ${stats ? (isPositive ? "positive" : "negative") : "neutral"}">
-            <div class="marker-dot"></div>
-          </div>
-        `;
+        // Determine polygon style - darker grey boundaries for visibility
+        let fillColor = "rgba(120, 113, 108, 0.05)"; // stone-400 with very low opacity
+        let borderColor = "#57534e"; // stone-600 - darker grey for clear boundaries
+        let borderWidth = 2;
+        let fillOpacity = 0.05;
 
-        const customIcon = L.default.divIcon({
-          html: markerDiv.outerHTML,
-          className: "custom-marker-container",
-          iconSize: [32, 32],
-          iconAnchor: [16, 32],
-        });
-
-        const marker = L.default
-          .marker([coords[1], coords[0]], { icon: customIcon })
-          .addTo(map);
-
-        // Create popup with area info
-        const popupContent = document.createElement("div");
-        popupContent.innerHTML = `
-          <div style="padding: 12px;">
-            <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #171717;">${
-              area.name
-            }</h3>
-            ${
-              stats
-                ? `
-              <div style="margin-bottom: 8px;">
-                <div style="font-size: 20px; font-weight: 700; color: #171717; margin-bottom: 4px;">
-                  ${formatPrice(stats.avgPrice)}
-                </div>
-                <div style="font-size: 12px; color: #78716c;">
-                  ${formatPriceChange(stats.priceChangeYoY)} YoY
-                </div>
-              </div>
-              <button class="view-details-btn" data-area-id="${area.id}" style="
-                width: 100%;
-                padding: 8px 12px;
-                background: #5d7350;
-                color: white;
-                border: none;
-                border-radius: 8px;
-                font-size: 14px;
-                font-weight: 600;
-                cursor: pointer;
-                transition: background 0.2s;
-              ">View Details</button>
-            `
-                : ""
-            }
-          </div>
-        `;
-
-        // Add click handler to button
-        const button = popupContent.querySelector(".view-details-btn");
-        if (button) {
-          button.addEventListener("click", (e) => {
-            e.stopPropagation();
-            onAreaClick(area);
-            marker.closePopup();
-          });
+        if (isSelected) {
+          fillColor = "rgba(93, 115, 80, 0.3)"; // sage-600
+          borderColor = "#5d7350"; // sage-600
+          borderWidth = 3;
+          fillOpacity = 0.3;
+        } else if (isHovered) {
+          fillColor = "rgba(93, 115, 80, 0.2)"; // sage-600 lighter
+          borderColor = "#7d9470"; // sage-500
+          borderWidth = 2.5;
+          fillOpacity = 0.2;
         }
 
-        marker.bindPopup(popupContent, {
-          className: "custom-popup",
-          maxWidth: 250,
-          closeButton: true,
-        });
+        const polygon = L.default.polygon(boundary, {
+          color: borderColor,
+          weight: borderWidth,
+          fillColor: fillColor,
+          fillOpacity: fillOpacity,
+          className: `area-polygon area-${area.id}`,
+        }).addTo(map);
 
         // Add click handler
-        marker.on("click", () => {
+        polygon.on("click", () => {
           onAreaClick(area);
         });
 
         // Add hover handlers
-        marker.on("mouseover", () => {
+        polygon.on("mouseover", () => {
           setHoveredArea(area);
           onAreaHover?.(area);
         });
 
-        marker.on("mouseout", () => {
+        polygon.on("mouseout", () => {
           setHoveredArea(null);
           onAreaHover?.(null);
         });
 
-        markersRef.current.set(area.id, marker);
+        // Change cursor on hover
+        polygon.on("mouseover", function () {
+          this.setStyle({ cursor: "pointer" });
+        });
+
+        polygonsRef.current.set(area.id, polygon);
       });
 
       // Auto-focus on selected area
@@ -205,46 +190,50 @@ export function LeafletMap({
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
       }
-      markersRef.current.clear();
+      polygonsRef.current.clear();
     };
   }, []);
 
-  // Update markers when selected area changes
+  // Update polygons when selected/hovered area changes
   useEffect(() => {
     if (!mapInstanceRef.current || !isMapReady) return;
 
     import("leaflet").then((L) => {
-      markersRef.current.forEach((marker, areaId) => {
+      polygonsRef.current.forEach((polygon, areaId) => {
         const area = areas.find((a) => a.id === areaId);
         if (!area) return;
 
-        const coords = getAreaCoordinates(area);
-        const { stats } = area;
-        const isPositive = stats && stats.priceChangeYoY >= 0;
         const isSelected = selectedArea?.id === area.id;
+        const isHovered = hoveredArea?.id === area.id;
 
-        // Update marker icon
-        const markerDiv = document.createElement("div");
-        markerDiv.className = "custom-marker";
-        markerDiv.innerHTML = `
-          <div class="marker-pin ${isSelected ? "selected" : ""} ${
-          stats ? (isPositive ? "positive" : "negative") : "neutral"
-        }">
-            <div class="marker-dot"></div>
-          </div>
-        `;
+        // Determine polygon style - darker grey boundaries for visibility
+        let fillColor = "rgba(120, 113, 108, 0.05)";
+        let borderColor = "#57534e"; // stone-600 - darker grey
+        let borderWidth = 2;
+        let fillOpacity = 0.05;
 
-        const customIcon = L.default.divIcon({
-          html: markerDiv.outerHTML,
-          className: "custom-marker-container",
-          iconSize: [32, 32],
-          iconAnchor: [16, 32],
+        if (isSelected) {
+          fillColor = "rgba(93, 115, 80, 0.3)";
+          borderColor = "#5d7350";
+          borderWidth = 3;
+          fillOpacity = 0.3;
+        } else if (isHovered) {
+          fillColor = "rgba(93, 115, 80, 0.2)";
+          borderColor = "#7d9470";
+          borderWidth = 2.5;
+          fillOpacity = 0.2;
+        }
+
+        polygon.setStyle({
+          color: borderColor,
+          weight: borderWidth,
+          fillColor: fillColor,
+          fillOpacity: fillOpacity,
         });
-
-        marker.setIcon(customIcon);
 
         // Focus on selected area
         if (isSelected) {
+          const coords = getAreaCoordinates(area);
           mapInstanceRef.current.setView([coords[1], coords[0]], 12, {
             animate: true,
             duration: 0.3,
@@ -252,78 +241,31 @@ export function LeafletMap({
         }
       });
     });
-  }, [selectedArea, isMapReady, areas]);
+  }, [selectedArea, hoveredArea, isMapReady, areas]);
 
   return (
     <div className="relative w-full h-full">
       <div ref={mapRef} className="w-full h-full rounded-2xl" />
 
-      {/* Custom CSS for markers */}
+      {/* Custom CSS for map styling */}
       <style jsx global>{`
-        .custom-marker-container {
-          background: transparent !important;
-          border: none !important;
+        .leaflet-container {
+          font-family: inherit;
+          background: #f5f5f4;
         }
 
-        .marker-pin {
-          width: 32px;
-          height: 32px;
-          border-radius: 50%;
-          border: 3px solid white;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-          display: flex;
-          align-items: center;
-          justify-content: center;
+        .area-polygon {
+          cursor: pointer;
           transition: all 0.2s ease;
+        }
+
+        .area-polygon:hover {
           cursor: pointer;
         }
 
-        .marker-pin.positive {
-          background: #10b981;
-        }
-
-        .marker-pin.negative {
-          background: #ef4444;
-        }
-
-        .marker-pin.neutral {
-          background: #78716c;
-        }
-
-        .marker-pin.selected {
-          background: #5d7350;
-          transform: scale(1.3);
-          z-index: 1000;
-        }
-
-        .marker-dot {
-          width: 14px;
-          height: 14px;
-          background: white;
-          border-radius: 50%;
-        }
-
-        .leaflet-container {
-          font-family: inherit;
-        }
-
-        .custom-popup .leaflet-popup-content-wrapper {
-          border-radius: 12px;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-        }
-
-        .view-details-btn:hover {
-          background: #4a5c3f !important;
-        }
-
-        .leaflet-popup-close-button {
-          color: #78716c !important;
-          font-size: 20px !important;
-          padding: 8px !important;
-        }
-
-        .leaflet-popup-close-button:hover {
-          color: #171717 !important;
+        /* Ensure boundaries are visible */
+        .leaflet-interactive {
+          pointer-events: auto !important;
         }
       `}</style>
 

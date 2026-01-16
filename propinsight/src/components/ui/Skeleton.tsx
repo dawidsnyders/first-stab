@@ -9,9 +9,9 @@ interface SkeletonProps {
 export function Skeleton({ className = '' }: SkeletonProps) {
   return (
     <motion.div
-      className={`bg-gray-200 rounded ${className}`}
+      className={`bg-stone-200 rounded ${className}`}
       animate={{
-        opacity: [0.5, 1, 0.5],
+        opacity: [0.4, 0.8, 0.4],
       }}
       transition={{
         duration: 1.5,
@@ -24,7 +24,7 @@ export function Skeleton({ className = '' }: SkeletonProps) {
 
 export function AreaCardSkeleton() {
   return (
-    <div className="p-6 bg-white border border-gray-200 rounded-xl">
+    <div className="p-6 bg-white border border-stone-200 rounded-xl">
       <div className="flex items-start justify-between mb-4">
         <div className="space-y-2">
           <Skeleton className="h-6 w-32" />
