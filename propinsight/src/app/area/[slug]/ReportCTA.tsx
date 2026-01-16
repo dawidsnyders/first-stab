@@ -1,54 +1,18 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Area } from "@/types";
 import { REPORT_PRICE_DISPLAY } from "@/lib/constants";
-import { searchAreas } from "@/data/areas";
 
 interface ReportCTAProps {
   area: Area;
 }
 
 export function ReportCTA({ area }: ReportCTAProps) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [searchResults, setSearchResults] = useState<Area[]>([]);
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [selectedArea, setSelectedArea] = useState<Area>(area);
   const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [buyingArea, setBuyingArea] = useState<Area | null>(null);
-  const searchInputRef = useRef<HTMLInputElement>(null);
-  const searchResultsRef = useRef<HTMLDivElement>(null);
-
-  // Update search results when query changes
-  useEffect(() => {
-    if (searchQuery.length >= 2) {
-      const matches = searchAreas(searchQuery).slice(0, 8);
-      setSearchResults(matches);
-      setIsSearchOpen(matches.length > 0);
-    } else {
-      setSearchResults([]);
-      setIsSearchOpen(false);
-    }
-  }, [searchQuery]);
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        searchResultsRef.current &&
-        !searchResultsRef.current.contains(event.target as Node) &&
-        searchInputRef.current &&
-        !searchInputRef.current.contains(event.target as Node)
-      ) {
-        setIsSearchOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const [showEmailForm, setShowEmailForm] = useState(false);
 
   const handlePurchase = async (areaSlug: string, email: string) => {
     setIsSubmitting(true);
@@ -89,30 +53,14 @@ export function ReportCTA({ area }: ReportCTAProps) {
     }
   };
 
-  const handleBuyReport = (area: Area) => {
-    setBuyingArea(area);
-    setSelectedArea(area);
-    setSearchQuery(area.name);
-    setIsSearchOpen(false);
+  const handleBuyClick = () => {
+    setShowEmailForm(true);
   };
 
   const handleBuySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!buyingArea || !email.trim()) return;
-    await handlePurchase(buyingArea.slug, email.trim());
-  };
-
-  const getLevelBadge = (level: Area["level"]) => {
-    const styles = {
-      province: "bg-moss-100 text-moss-700",
-      city: "bg-sage-100 text-sage-700",
-      suburb: "bg-terracotta-100 text-terracotta-700",
-    };
-    return (
-      <span className={`text-xs px-2 py-0.5 rounded-full ${styles[level]}`}>
-        {level}
-      </span>
-    );
+    if (!email.trim()) return;
+    await handlePurchase(area.slug, email.trim());
   };
 
   return (
@@ -159,141 +107,92 @@ export function ReportCTA({ area }: ReportCTAProps) {
             ))}
           </div>
 
-          {/* Search and Pricing - Two column layout */}
-          <div className="grid md:grid-cols-2 gap-6 items-end">
-            {/* Left: Search bar */}
-            <div className="relative">
-              <label className="block text-sage-50 text-sm font-medium mb-2">
-                Search for an area
-              </label>
-              <div className="relative">
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() =>
-                    searchQuery.length >= 2 &&
-                    setIsSearchOpen(searchResults.length > 0)
-                  }
-                  placeholder="Type area name..."
-                  className="w-full px-4 py-3 pl-12 pr-4 text-base border border-white/20 bg-white/10 backdrop-blur-sm rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/40 transition-all duration-200"
-                />
-                <svg
-                  className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-white/70"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  />
-                </svg>
-
-                {/* Search results dropdown */}
-                <AnimatePresence>
-                  {isSearchOpen && searchResults.length > 0 && (
-                    <motion.div
-                      ref={searchResultsRef}
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.2 }}
-                      className="absolute z-50 w-full mt-2 bg-white border border-stone-200 rounded-xl shadow-2xl overflow-hidden"
-                    >
-                      {searchResults.map((resultArea) => (
-                        <div
-                          key={resultArea.id}
-                          className="flex items-center justify-between px-4 py-3 hover:bg-stone-50 transition-colors duration-200 border-b border-stone-100 last:border-b-0"
-                        >
-                          <div className="flex items-center gap-3 flex-1 min-w-0">
-                            <span className="font-medium text-stone-900 truncate">
-                              {resultArea.name}
-                            </span>
-                            {getLevelBadge(resultArea.level)}
-                          </div>
-                          <button
-                            onClick={() => handleBuyReport(resultArea)}
-                            disabled={isSubmitting}
-                            className="px-4 py-1.5 bg-sage-600 text-white text-sm font-semibold rounded-lg hover:bg-sage-700 active:bg-sage-800 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed whitespace-nowrap ml-4 flex-shrink-0"
-                          >
-                            Buy Report
-                          </button>
-                        </div>
-                      ))}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+          {/* Area name and Buy button */}
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            {/* Left: Area name */}
+            <div>
+              <div className="text-sage-50 text-sm font-medium mb-1">
+                Report for
               </div>
-
-              {/* Email input form when buying */}
-              <AnimatePresence>
-                {buyingArea && (
-                  <motion.form
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.2 }}
-                    onSubmit={handleBuySubmit}
-                    className="mt-4 flex flex-col sm:flex-row gap-2"
-                  >
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
-                      required
-                      autoFocus
-                      className="flex-1 px-4 py-2.5 rounded-xl text-stone-900 placeholder-stone-400 bg-white/95 backdrop-blur-sm border border-white/40 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/60 transition-all duration-200 text-sm"
-                    />
-                    <button
-                      type="submit"
-                      disabled={isSubmitting || !email.trim()}
-                      className="px-6 py-2.5 bg-white text-sage-700 font-semibold rounded-xl hover:bg-stone-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-sm whitespace-nowrap"
-                    >
-                      {isSubmitting ? (
-                        <>
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{
-                              duration: 1,
-                              repeat: Infinity,
-                              ease: "linear",
-                            }}
-                            className="w-4 h-4 border-2 border-sage-600 border-t-transparent rounded-full"
-                          />
-                          Processing...
-                        </>
-                      ) : (
-                        `Pay ${REPORT_PRICE_DISPLAY}`
-                      )}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setBuyingArea(null);
-                        setEmail("");
-                      }}
-                      className="px-4 py-2.5 text-white/70 hover:text-white transition-colors duration-200 text-sm"
-                    >
-                      Cancel
-                    </button>
-                  </motion.form>
-                )}
-              </AnimatePresence>
+              <div className="text-2xl md:text-3xl font-bold text-white">
+                {area.name}
+              </div>
             </div>
 
-            {/* Right: Pricing info */}
-            <div className="text-right">
-              <div className="text-white">
-                <div className="text-4xl md:text-5xl font-bold mb-1">
+            {/* Right: Pricing and Buy button */}
+            <div className="flex flex-col md:items-end gap-3">
+              <div className="text-white text-right">
+                <div className="text-3xl md:text-4xl font-bold mb-1">
                   {REPORT_PRICE_DISPLAY}
                 </div>
                 <div className="text-sage-100 text-sm">once-off payment</div>
               </div>
+              
+              <AnimatePresence mode="wait">
+                {!showEmailForm ? (
+                  <motion.button
+                    key="buy-button"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    onClick={handleBuyClick}
+                    className="px-8 py-4 bg-white text-sage-700 font-bold text-lg rounded-xl hover:bg-stone-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+                  >
+                    Buy Full Report
+                  </motion.button>
+                ) : (
+                  <motion.form
+                    key="email-form"
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    onSubmit={handleBuySubmit}
+                    className="flex flex-col sm:flex-row gap-2 w-full md:w-auto"
+                  >
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    required
+                    autoFocus
+                    className="flex-1 px-4 py-3 rounded-xl text-stone-900 placeholder-stone-400 bg-white border border-white/40 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/60 transition-all duration-200"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSubmitting || !email.trim()}
+                    className="px-6 py-3 bg-white text-sage-700 font-semibold rounded-xl hover:bg-stone-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{
+                            duration: 1,
+                            repeat: Infinity,
+                            ease: "linear",
+                          }}
+                          className="w-4 h-4 border-2 border-sage-600 border-t-transparent rounded-full"
+                        />
+                        Processing...
+                      </>
+                    ) : (
+                      `Pay ${REPORT_PRICE_DISPLAY}`
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowEmailForm(false);
+                      setEmail("");
+                    }}
+                    className="px-4 py-3 text-white/70 hover:text-white transition-colors duration-200"
+                  >
+                    Cancel
+                  </button>
+                  </motion.form>
+                )}
+              </AnimatePresence>
             </div>
           </div>
         </div>

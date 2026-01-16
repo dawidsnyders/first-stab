@@ -163,7 +163,9 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
 
   // Calculate dynamic Y-axis domain to ensure data spans at least 50% of Y-axis
   const calculateYAxisDomain = () => {
-    const values = data.map((d) => d.value).filter((v) => typeof v === "number" && !isNaN(v));
+    const values = data
+      .map((d) => d.value)
+      .filter((v) => typeof v === "number" && !isNaN(v));
     if (values.length === 0) return [0, 100];
 
     const minValue = Math.min(...values);
@@ -183,10 +185,7 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
     }
 
     // For other types, ensure minimum is not negative (unless data is negative)
-    return [
-      Math.max(0, minDomain),
-      maxDomain,
-    ];
+    return [Math.max(0, minDomain), maxDomain];
   };
 
   const yAxisDomain = calculateYAxisDomain();
@@ -205,7 +204,13 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
             margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
           >
             <defs>
-              <linearGradient id={`bar-gradient-${type}`} x1="0" y1="0" x2="0" y2="1">
+              <linearGradient
+                id={`bar-gradient-${type}`}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
                 <stop offset="5%" stopColor={colors.main} stopOpacity={0.8} />
                 <stop offset="95%" stopColor={colors.main} stopOpacity={0.4} />
               </linearGradient>
@@ -248,87 +253,19 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
               animationBegin={0}
             />
           </BarChart>
-          <defs>
-            <linearGradient id={`gradient-${type}`} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="5%" stopColor={colors.main} stopOpacity={0.4} />
-              <stop offset="50%" stopColor={colors.main} stopOpacity={0.15} />
-              <stop offset="95%" stopColor={colors.main} stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke="#e7e5e4"
-            vertical={false}
-            opacity={0.5}
-          />
-          <XAxis
-            dataKey="label"
-            stroke="#78716c"
-            fontSize={11}
-            tick={{ fill: "#78716c" }}
-            angle={-45}
-            textAnchor="end"
-            height={80}
-            interval="preserveStartEnd"
-            tickMargin={10}
-          />
-          <YAxis
-            stroke="#78716c"
-            fontSize={11}
-            tick={{ fill: "#78716c" }}
-            tickFormatter={getYAxisFormatter()}
-            width={80}
-            tickMargin={8}
-            domain={yAxisDomain}
-          />
-          <Tooltip
-            content={<CustomTooltip type={type} />}
-            cursor={{
-              stroke: colors.main,
-              strokeWidth: 1,
-              strokeDasharray: "5 5",
-              opacity: 0.3,
-            }}
-          />
-          {showReferenceLine && (
-            <ReferenceLine
-              y={0}
-              stroke="#78716c"
-              strokeDasharray="5 5"
-              strokeWidth={2}
-              label={{
-                value: "National Avg",
-                position: "insideTopRight",
-                fill: "#78716c",
-                fontSize: 11,
-              }}
-            />
-          )}
-          <Area
-            type="monotone"
-            dataKey="value"
-            stroke={colors.main}
-            strokeWidth={3}
-            fill={`url(#gradient-${type})`}
-            dot={false}
-            activeDot={{
-              r: 6,
-              fill: colors.main,
-              strokeWidth: 3,
-              stroke: "#fff",
-              style: { filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" },
-            }}
-            animationDuration={1000}
-            animationBegin={0}
-          />
-        </AreaChart>
         ) : (
           <AreaChart
             data={dataWithPrev}
             margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
           >
             <defs>
-              <linearGradient id={`gradient-${type}`} x1="0" y1="0" x2="0" y2="1">
+              <linearGradient
+                id={`gradient-${type}`}
+                x1="0"
+                y1="0"
+                x2="0"
+                y2="1"
+              >
                 <stop offset="5%" stopColor={colors.main} stopOpacity={0.4} />
                 <stop offset="50%" stopColor={colors.main} stopOpacity={0.15} />
                 <stop offset="95%" stopColor={colors.main} stopOpacity={0} />

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { Development } from "@/types";
 import { formatPrice } from "@/types";
 import {
@@ -61,6 +62,35 @@ interface DevelopmentCardProps {
   development: Development;
 }
 
+function DeveloperLogo({ developer }: { developer: Development["developer"] }) {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
+  // Show text fallback if no logo, logo is invalid, or image fails to load
+  const showTextFallback =
+    !developer.logo || imageError || !developer.logo.startsWith("http");
+
+  return (
+    <div className="h-8 flex items-center min-w-0 flex-1 pr-2">
+      {!showTextFallback ? (
+        <img
+          src={developer.logo}
+          alt={developer.name}
+          className={`h-full w-auto object-contain max-w-[120px] ${
+            imageLoaded ? "opacity-100" : "opacity-0"
+          } transition-opacity duration-200`}
+          onLoad={() => setImageLoaded(true)}
+          onError={() => setImageError(true)}
+        />
+      ) : (
+        <span className="text-sm font-semibold text-stone-700">
+          {developer.name}
+        </span>
+      )}
+    </div>
+  );
+}
+
 function DevelopmentCard({ development }: DevelopmentCardProps) {
   const completionDate = new Date(development.estimatedCompletion);
   const isPastDue = completionDate < new Date();
@@ -88,34 +118,24 @@ function DevelopmentCard({ development }: DevelopmentCardProps) {
       href={development.website}
       target="_blank"
       rel="noopener noreferrer"
-      className="group bg-white border border-stone-200 rounded-xl p-5 hover:shadow-lg hover:border-sage-300 transition-all duration-200 flex flex-col"
+      className="group bg-white border border-stone-200 rounded-xl p-5 hover:shadow-lg hover:border-sage-300 transition-all duration-200 flex flex-col max-h-[300px] overflow-hidden"
     >
       {/* Developer Logo & Status */}
-      <div className="flex items-start justify-between mb-4">
-        {development.developer.logo ? (
-          <img
-            src={development.developer.logo}
-            alt={development.developer.name}
-            className="h-8 object-contain"
-          />
-        ) : (
-          <span className="text-sm font-semibold text-stone-700">
-            {development.developer.name}
-          </span>
-        )}
-        {getStatusBadge()}
+      <div className="flex items-start justify-between mb-3 flex-shrink-0">
+        <DeveloperLogo developer={development.developer} />
+        <div className="flex-shrink-0">{getStatusBadge()}</div>
       </div>
 
       {/* Development Name */}
-      <h4 className="text-lg font-bold text-stone-900 mb-3 group-hover:text-sage-600 transition-colors duration-200">
+      <h4 className="text-base font-bold text-stone-900 mb-2 group-hover:text-sage-600 transition-colors duration-200 line-clamp-2 flex-shrink-0">
         {development.name}
       </h4>
 
       {/* Details */}
-      <div className="space-y-2 mb-4 flex-grow">
-        <div className="flex items-center gap-2 text-sm text-stone-600">
-          <CalendarIcon className="w-4 h-4" />
-          <span>
+      <div className="space-y-2 mb-3 flex-grow min-h-0 overflow-hidden">
+        <div className="flex items-center gap-2 text-xs text-stone-600">
+          <CalendarIcon className="w-3.5 h-3.5 flex-shrink-0" />
+          <span className="truncate">
             {isPastDue
               ? "Est. completion: Past due"
               : daysUntilCompletion <= 90
@@ -127,17 +147,19 @@ function DevelopmentCard({ development }: DevelopmentCardProps) {
           </span>
         </div>
         <div className="pt-2 border-t border-stone-100">
-          <p className="text-xs text-stone-500 mb-1">Average Apartment Price</p>
-          <p className="text-xl font-bold text-stone-900">
+          <p className="text-xs text-stone-500 mb-0.5">
+            Average Apartment Price
+          </p>
+          <p className="text-lg font-bold text-stone-900">
             {formatPrice(development.averageApartmentPrice)}
           </p>
         </div>
       </div>
 
       {/* View Link */}
-      <div className="flex items-center gap-2 text-sm text-sage-600 font-medium pt-3 border-t border-stone-100 group-hover:gap-3 transition-all duration-200">
+      <div className="flex items-center gap-2 text-xs text-sage-600 font-medium pt-2 border-t border-stone-100 group-hover:gap-3 transition-all duration-200 flex-shrink-0">
         <span>View Development</span>
-        <ArrowTopRightOnSquareIcon className="w-4 h-4" />
+        <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
       </div>
     </Link>
   );

@@ -17,6 +17,7 @@ import { PropertyTypeBreakdown } from "@/components/area/PropertyTypeBreakdown";
 import { DevelopmentsSection } from "@/components/area/DevelopmentsSection";
 import { generateMedianPriceData } from "@/lib/chartData";
 import { AreaLocationMap } from "@/components/map/AreaLocationMap";
+import { StickyReportCTA } from "@/components/area/StickyReportCTA";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -418,8 +419,11 @@ export default async function AreaPage({ params }: PageProps) {
         <ReportCTA area={area} />
       </section>
 
-      {/* Footer */}
-      <footer className="bg-white border-t border-stone-200 py-8 mt-12">
+      {/* Premium Sticky Buy Report CTA */}
+      <StickyReportCTA area={area} />
+
+      {/* Footer - Add padding bottom to account for sticky button */}
+      <footer className="bg-white border-t border-stone-200 py-8 mt-12 pb-24">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-stone-500 text-sm text-center">
             Data last updated: {stats?.lastUpdated || "N/A"}. For informational

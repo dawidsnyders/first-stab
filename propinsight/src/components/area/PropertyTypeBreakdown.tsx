@@ -24,6 +24,49 @@ export function PropertyTypeBreakdown({
 
   return (
     <div className="space-y-8">
+      {/* Market Composition Comparison - Single 100% Stacked Bar */}
+      <div className="bg-stone-50 rounded-2xl p-6 border border-stone-200">
+        <h4 className="text-sm font-semibold text-stone-700 uppercase tracking-wide mb-4">
+          Market Composition Comparison
+        </h4>
+        <div className="space-y-2">
+          {/* Single 100% stacked bar */}
+          <div className="h-8 bg-stone-200 rounded-full overflow-hidden flex">
+            <div
+              className="h-full bg-sage-500 flex items-center justify-center transition-all duration-500"
+              style={{ width: `${housesPercentage}%` }}
+            >
+              {housesPercentage > 10 && (
+                <span className="text-xs font-semibold text-white">
+                  {housesPercentage.toFixed(1)}%
+                </span>
+              )}
+            </div>
+            <div
+              className="h-full bg-terracotta-500 flex items-center justify-center transition-all duration-500"
+              style={{ width: `${apartmentsPercentage}%` }}
+            >
+              {apartmentsPercentage > 10 && (
+                <span className="text-xs font-semibold text-white">
+                  {apartmentsPercentage.toFixed(1)}%
+                </span>
+              )}
+            </div>
+          </div>
+          {/* Labels below bar */}
+          <div className="flex justify-between text-xs text-stone-600 mt-2">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded bg-sage-500"></div>
+              <span>Houses: {housesPercentage.toFixed(1)}%</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 rounded bg-terracotta-500"></div>
+              <span>Apartments: {apartmentsPercentage.toFixed(1)}%</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Overview */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Houses Card */}
@@ -130,39 +173,6 @@ export function PropertyTypeBreakdown({
               <span className="text-lg font-semibold text-stone-900">
                 {formatPrice(details.apartments.volume)}
               </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Comparison Bar */}
-      <div className="bg-stone-50 rounded-2xl p-6 border border-stone-200">
-        <h4 className="text-sm font-semibold text-stone-700 uppercase tracking-wide mb-4">
-          Market Composition Comparison
-        </h4>
-        <div className="space-y-3">
-          <div>
-            <div className="flex justify-between text-sm text-stone-600 mb-2">
-              <span>Houses</span>
-              <span>{housesPercentage.toFixed(1)}%</span>
-            </div>
-            <div className="h-3 bg-stone-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-sage-500 rounded-full transition-all duration-500"
-                style={{ width: `${housesPercentage}%` }}
-              />
-            </div>
-          </div>
-          <div>
-            <div className="flex justify-between text-sm text-stone-600 mb-2">
-              <span>Apartments</span>
-              <span>{apartmentsPercentage.toFixed(1)}%</span>
-            </div>
-            <div className="h-3 bg-stone-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-terracotta-500 rounded-full transition-all duration-500"
-                style={{ width: `${apartmentsPercentage}%` }}
-              />
             </div>
           </div>
         </div>
