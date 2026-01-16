@@ -109,9 +109,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
       suburb: "bg-terracotta-100 text-terracotta-700",
     };
     return (
-      <span
-        className={`text-xs px-2 py-0.5 rounded-full ${styles[level]}`}
-      >
+      <span className={`text-xs px-2 py-0.5 rounded-full ${styles[level]}`}>
         {level}
       </span>
     );
