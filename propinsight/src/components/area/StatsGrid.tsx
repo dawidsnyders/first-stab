@@ -47,15 +47,31 @@ export function StatsGrid({ stats, areaName }: StatsGridProps) {
     if (!type) return [];
     switch (type) {
       case "medianPrice":
-        return generateMedianPriceData(stats.medianPrice, stats.priceChangeYoY, period);
+        return generateMedianPriceData(
+          stats.medianPrice,
+          stats.priceChangeYoY,
+          period
+        );
       case "sales":
-        return generateSalesData(stats.salesCount, stats.priceChangeYoY, period);
+        return generateSalesData(
+          stats.salesCount,
+          stats.priceChangeYoY,
+          period
+        );
       case "pricePerSqm":
         return stats.avgPricePerSqm
-          ? generatePricePerSqmData(stats.avgPricePerSqm, stats.priceChangeYoY, period)
+          ? generatePricePerSqmData(
+              stats.avgPricePerSqm,
+              stats.priceChangeYoY,
+              period
+            )
           : [];
       case "outperformance":
-        return generateOutperformanceData(outperformance, stats.priceChangeYoY, period);
+        return generateOutperformanceData(
+          outperformance,
+          stats.priceChangeYoY,
+          period
+        );
       default:
         return [];
     }
