@@ -48,16 +48,18 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
         const distanceFromCenter = Math.abs(sectionCenter - viewportCenter);
         if (
           index === 0 ||
-          distanceFromCenter <
-            Math.abs(
-              sectionRefs.current[newActiveIndex]?.getBoundingClientRect()
-                .top! +
+          (() => {
+            const newRef = sectionRefs.current[newActiveIndex];
+            if (!newRef) return false;
+            const newRect = newRef.getBoundingClientRect();
+            return distanceFromCenter <
+              Math.abs(
+                newRect.top +
                 window.scrollY +
-                sectionRefs.current[newActiveIndex]?.getBoundingClientRect()
-                  .height! /
-                  2 -
+                newRect.height / 2 -
                 viewportCenter
-            )
+              );
+          })()
         ) {
           newActiveIndex = index;
         }
@@ -129,9 +131,9 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
 
     if (!firstSection || !lastSection) return 0;
 
-    const firstTop = firstSection.getBoundingClientRect().top + window.scrollY;
+    const firstTop = firstSection.getBoundingClientRect().top + (window.scrollY || 0);
     const lastBottom =
-      lastSection.getBoundingClientRect().bottom + window.scrollY;
+      lastSection.getBoundingClientRect().bottom + (window.scrollY || 0);
     const totalHeight = lastBottom - firstTop;
     const scrollPosition = window.scrollY + window.innerHeight / 2;
     const scrolled = scrollPosition - firstTop;
@@ -488,6 +490,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                   <div className="w-full h-full">
                     <AreaLocationMap area={area} />
                   </div>
+                </div>
                 </div>
               </Link>
             </section>

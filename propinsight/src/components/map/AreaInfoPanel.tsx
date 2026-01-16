@@ -115,7 +115,7 @@ const AreaInfoContent = memo(
         stats.priceChangeYoY,
         3
       );
-    }, [area.id, stats?.medianPrice, stats?.priceChangeYoY]);
+    }, [stats?.medianPrice, stats?.priceChangeYoY]);
 
     const yAxisDomain = useMemo(() => {
       if (!chartData.length || !stats) return [0, (stats?.medianPrice || 0) * 2];
