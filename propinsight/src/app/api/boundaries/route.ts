@@ -51,7 +51,7 @@ const API_ENDPOINTS = {
  * Hardcoded boundaries from OpenStreetMap (EXACT coordinates)
  * These boundaries are automatically extracted from OpenStreetMap Overpass API
  * Format: [lng, lat] coordinates in GeoJSON format
- * 
+ *
  * Last updated: 2026-01-16T20:15:50.466Z
  * Total areas: 18
  */

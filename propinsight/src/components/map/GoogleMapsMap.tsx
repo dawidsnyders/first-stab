@@ -207,6 +207,20 @@ export function GoogleMapsMap({
     [viewportBounds, selectedArea]
   );
 
+  // Helper function to calculate approximate polygon area (for z-index prioritization)
+  const calculatePolygonArea = useCallback((boundary: google.maps.LatLngLiteral[]): number => {
+    if (boundary.length < 3) return 0;
+    
+    // Calculate bounding box area as approximation
+    const lats = boundary.map(p => p.lat);
+    const lngs = boundary.map(p => p.lng);
+    const latRange = Math.max(...lats) - Math.min(...lats);
+    const lngRange = Math.max(...lngs) - Math.min(...lngs);
+    
+    // Approximate area in square degrees (smaller = more specific area)
+    return latRange * lngRange;
+  }, []);
+
   // Update polygons when boundaries are loaded or viewport changes
   useEffect(() => {
     if (!isMapReady || !mapRef.current || boundaries.size === 0) return;
@@ -217,18 +231,33 @@ export function GoogleMapsMap({
     });
     polygonsRef.current.clear();
 
-    // Add polygons for each area (only if visible)
-    areas.forEach((area) => {
-      const boundary = boundaries.get(area.slug);
-      if (!boundary || boundary.length === 0) return;
+    // Filter and sort visible areas by size (smallest first = render last = on top)
+    const visibleAreas = areas
+      .map(area => {
+        const boundary = boundaries.get(area.slug);
+        if (!boundary || boundary.length === 0) return null;
+        if (!isPolygonVisible(area)) return null;
+        
+        const areaSize = calculatePolygonArea(boundary);
+        return { area, boundary, areaSize };
+      })
+      .filter((item): item is { area: Area; boundary: google.maps.LatLngLiteral[]; areaSize: number } => item !== null)
+      .sort((a, b) => a.areaSize - b.areaSize); // Smallest first
 
-      // Check if polygon should be visible
-      if (!isPolygonVisible(area)) {
-        return; // Skip rendering this polygon
-      }
-
+    // Add polygons - smaller areas rendered last (on top)
+    visibleAreas.forEach(({ area, boundary, areaSize }) => {
       const isSelected = selectedArea?.slug === area.slug;
       const isHovered = hoveredArea?.slug === area.slug;
+
+      // Calculate z-index: smaller areas get higher z-index
+      // Base z-index inversely proportional to area size
+      // Selected: 10000+, Hovered: 5000+, Default: 100-1000 (smaller areas = higher)
+      const baseZIndex = Math.max(100, Math.min(1000, Math.round(1000 - (areaSize * 1000))));
+      const zIndex = isSelected 
+        ? 10000 + baseZIndex 
+        : isHovered 
+        ? 5000 + baseZIndex 
+        : baseZIndex;
 
       const polygon = new google.maps.Polygon({
         paths: boundary,
@@ -238,7 +267,7 @@ export function GoogleMapsMap({
         fillColor: isSelected ? "#e8ede6" : isHovered ? "#f0f4ed" : "#f5f7f3",
         fillOpacity: isSelected ? 0.7 : isHovered ? 0.5 : 0.4,
         clickable: true,
-        zIndex: isSelected ? 1000 : isHovered ? 500 : 1,
+        zIndex,
       });
 
       polygon.setMap(mapRef.current);
@@ -272,6 +301,7 @@ export function GoogleMapsMap({
     onAreaClick,
     onAreaHover,
     isPolygonVisible,
+    calculatePolygonArea,
   ]);
 
   // Auto-focus on selected area
