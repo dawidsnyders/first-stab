@@ -4,6 +4,8 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Area, formatPrice, formatPriceChange, formatNumber } from "@/types";
 import { AreaLocationMap } from "@/components/map/AreaLocationMap";
+import { generateMedianPriceData } from "@/lib/chartData";
+import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
 
 interface AreaCarouselProps {
   areas: Area[];
