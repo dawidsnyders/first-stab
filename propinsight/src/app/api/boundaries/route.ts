@@ -100,19 +100,33 @@ export async function GET(request: NextRequest) {
     const suburbName = areaInfo.name;
     const source = areaInfo.source;
 
-    // Try each endpoint until one works
+    // Try endpoints based on source
     let data: GeoJSONResponse | null = null;
     let lastError: Error | null = null;
+    const endpoints = API_ENDPOINTS[source] || API_ENDPOINTS.capeTown;
 
-    for (const endpoint of CAPE_TOWN_API_ENDPOINTS) {
+    for (const endpoint of endpoints) {
       try {
         const url = new URL(endpoint);
-        url.searchParams.append("where", `OFC_SBRB_NAME = '${suburbName}'`);
-        url.searchParams.append("outFields", "OFC_SBRB_NAME");
+        
+        // Build query based on source type
+        if (source === "capeTown") {
+          url.searchParams.append("where", `OFC_SBRB_NAME = '${suburbName}'`);
+          url.searchParams.append("outFields", "OFC_SBRB_NAME");
+        } else if (source === "stellenbosch") {
+          // Stellenbosch uses different field names - try common ones
+          url.searchParams.append("where", `1=1`); // Get all, filter in code
+          url.searchParams.append("outFields", "*");
+        } else if (source === "national") {
+          url.searchParams.append("where", `NAME = '${suburbName}'`);
+          url.searchParams.append("outFields", "NAME");
+        }
+        
         url.searchParams.append("returnGeometry", "true");
         url.searchParams.append("f", "geojson");
         url.searchParams.append("outSR", "4326"); // WGS84
         url.searchParams.append("returnExceededLimitFeatures", "true");
+        url.searchParams.append("geometryPrecision", "8"); // Maximum precision
 
         const response = await fetch(url.toString(), {
           method: "GET",
@@ -132,12 +146,24 @@ export async function GET(request: NextRequest) {
 
         const responseData: GeoJSONResponse = await response.json();
 
-        if (
-          responseData.features &&
-          responseData.features.length > 0 &&
-          responseData.features[0].geometry
-        ) {
-          data = responseData;
+        // For Stellenbosch/national, filter features by name match
+        let matchingFeature = null;
+        if (source === "stellenbosch" || source === "national") {
+          matchingFeature = responseData.features?.find((f) => {
+            const props = f.properties;
+            const nameField = props.NAME || props.OFC_SBRB_NAME || props.name || "";
+            return nameField.toLowerCase().includes(suburbName.toLowerCase()) ||
+                   suburbName.toLowerCase().includes(nameField.toLowerCase());
+          });
+        } else {
+          matchingFeature = responseData.features?.[0];
+        }
+
+        if (matchingFeature && matchingFeature.geometry) {
+          data = {
+            type: "FeatureCollection",
+            features: [matchingFeature],
+          };
           console.log(`Successfully fetched boundary from ${endpoint}`);
           break;
         }
