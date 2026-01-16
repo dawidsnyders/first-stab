@@ -26,6 +26,7 @@ import { formatNumber } from "@/types";
 
 export default function Home() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
   const featuredSuburbs = getAreasByLevel("suburb").slice(0, 6);
 
@@ -36,6 +37,15 @@ export default function Home() {
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
       });
+    }
+  };
+
+  const handleCarouselScroll = () => {
+    if (carouselRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+      const maxScroll = scrollWidth - clientWidth;
+      const progress = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0;
+      setScrollProgress(progress);
     }
   };
   const allSuburbs = getAreasByLevel("suburb");
@@ -270,6 +280,7 @@ export default function Home() {
             {/* Scrollable Cards */}
             <div
               ref={carouselRef}
+              onScroll={handleCarouselScroll}
               className="flex items-stretch gap-4 overflow-x-auto scrollbar-hide scroll-smooth px-4 md:px-6 lg:px-12 pb-4"
             >
               {/* Card 1: Market Data */}
@@ -414,6 +425,24 @@ export default function Home() {
 
               {/* End spacer */}
               <div className="flex-shrink-0 w-4 md:w-8"></div>
+            </div>
+          </div>
+          
+          {/* Custom Scroll Indicator */}
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8">
+            <div className="flex items-center gap-4">
+              {/* Progress bar */}
+              <div className="flex-1 h-1 bg-stone-200 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full bg-stone-900 rounded-full"
+                  style={{ width: `${Math.max(20, scrollProgress)}%` }}
+                  transition={{ duration: 0.1, ease: "easeOut" }}
+                />
+              </div>
+              {/* Progress text */}
+              <span className="text-sm text-stone-500 font-medium tabular-nums min-w-[3rem] text-right">
+                {Math.round(scrollProgress)}%
+              </span>
             </div>
           </div>
         </div>
