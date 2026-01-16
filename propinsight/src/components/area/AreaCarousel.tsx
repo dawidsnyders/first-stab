@@ -179,9 +179,10 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
               ref={(el) => {
                 sectionRefs.current[index] = el as HTMLDivElement | null;
               }}
-              className="h-[300px] mb-3 last:mb-0"
+              className="mb-3 last:mb-0"
+              style={{ height: '450px' }}
             >
-              <div className="w-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
+              <div className="w-full h-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden flex flex-col">
                 {/* Area Name Header - Large, Dark Gray */}
                 <div className="px-6 py-4 border-b border-stone-200 flex-shrink-0">
                   <h2 className="text-2xl font-bold text-stone-900 mb-1">
