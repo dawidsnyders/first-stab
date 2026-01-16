@@ -124,7 +124,7 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
         // Map is now colored - no grayscale filter
 
         // Add area polygon with new styling (matching main map)
-        L.default
+        const polygon = L.default
           .polygon(boundary, {
             color: "#4a5c3f", // sage-600 - solid green border (brand)
             weight: 3.5,
@@ -134,6 +134,15 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
             interactive: false, // Non-interactive for preview
           })
           .addTo(map);
+
+        // Fit map bounds to polygon with padding
+        if (boundary && boundary.length > 0) {
+          const bounds = polygon.getBounds();
+          map.fitBounds(bounds, {
+            padding: [20, 20], // Add padding around the polygon
+            maxZoom: area.level === "province" ? 9 : area.level === "city" ? 12 : 15,
+          });
+        }
 
         mapInstanceRef.current = map;
       }
