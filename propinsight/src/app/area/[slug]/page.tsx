@@ -149,58 +149,17 @@ export default async function AreaPage({ params }: PageProps) {
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Left: Title, Description, and Key Stats */}
             <div className="lg:col-span-2 space-y-4">
-              <div className="flex items-center gap-3">
-                <span className="text-xs text-sage-600 font-semibold uppercase tracking-wider bg-sage-50 px-3 py-1.5 rounded-full">
+              <h1 className="text-5xl md:text-6xl font-bold text-stone-900 leading-tight mb-3">
+                {area.name}
+              </h1>
+              <div className="flex items-center gap-2 flex-wrap mb-4">
+                <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-terracotta-50 text-terracotta-700 border border-terracotta-200 capitalize">
                   {area.level}
                 </span>
-                {stats && (
-                  <div
-                    className={`px-3 py-1.5 rounded-full text-xs font-semibold flex items-center gap-1.5 ${
-                      isPositive
-                        ? "bg-green-50 text-green-700"
-                        : "bg-red-50 text-red-700"
-                    }`}
-                  >
-                    <svg
-                      className={`w-3.5 h-3.5 ${
-                        isPositive ? "text-green-600" : "text-red-600"
-                      }`}
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      {isPositive ? (
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                        />
-                      ) : (
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"
-                        />
-                      )}
-                    </svg>
-                    {formatPriceChange(stats.priceChangeYoY)} YoY
-                  </div>
-                )}
+                <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-semibold bg-sage-50 text-sage-700 border border-sage-200">
+                  Western Cape
+                </span>
               </div>
-              <h1 className="text-5xl md:text-6xl font-bold text-stone-900 leading-tight">
-                {area.name}
-                {stats && (
-                  <span
-                    className={`ml-4 text-3xl md:text-4xl font-normal ${
-                      isPositive ? "text-green-600" : "text-red-600"
-                    }`}
-                  >
-                    {formatPriceChange(stats.priceChangeYoY)}
-                  </span>
-                )}
-              </h1>
               <p className="text-lg text-stone-600 leading-relaxed max-w-2xl">
                 {getDescription()}
               </p>

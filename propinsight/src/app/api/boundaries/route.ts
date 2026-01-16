@@ -336,7 +336,10 @@ export async function GET(request: NextRequest) {
           // Western Cape Spatial Data Warehouse - Most accurate source
           // Try multiple field names for suburb matching
           const searchName = searchTerms[0] || suburbName;
-          url.searchParams.append("where", `UPPER(SUBURB) = UPPER('${searchName}') OR UPPER(NAME) = UPPER('${searchName}') OR UPPER(SUBURB_NAME) = UPPER('${searchName}')`);
+          url.searchParams.append(
+            "where",
+            `UPPER(SUBURB) = UPPER('${searchName}') OR UPPER(NAME) = UPPER('${searchName}') OR UPPER(SUBURB_NAME) = UPPER('${searchName}')`
+          );
           url.searchParams.append("outFields", "*");
           url.searchParams.append("returnGeometry", "true");
           url.searchParams.append("f", "geojson");
@@ -516,14 +519,23 @@ export async function GET(request: NextRequest) {
 
         // For Western Cape/S Stellenbosch/national, filter features by name match using all search terms
         let matchingFeature = null;
-        if (source === "westernCape" || source === "stellenbosch" || source === "national") {
+        if (
+          source === "westernCape" ||
+          source === "stellenbosch" ||
+          source === "national"
+        ) {
           // Try to find matching features and pick the smallest one
           const candidates =
             responseData.features?.filter((f) => {
               const props = f.properties;
               // Western Cape Spatial Data Warehouse uses SUBURB, NAME, or SUBURB_NAME fields
               const nameField = String(
-                props.SUBURB || props.NAME || props.SUBURB_NAME || props.OFC_SBRB_NAME || props.name || ""
+                props.SUBURB ||
+                  props.NAME ||
+                  props.SUBURB_NAME ||
+                  props.OFC_SBRB_NAME ||
+                  props.name ||
+                  ""
               );
               const nameLower = nameField.toLowerCase();
               // Try matching against all search terms
