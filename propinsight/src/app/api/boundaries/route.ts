@@ -244,7 +244,16 @@ export async function GET(request: NextRequest) {
               ", "
             )})`
           );
-          url.searchParams.append("where", "1=1"); // Get all, filter in code
+          // For Paarl, also try searching for Drakenstein directly in WHERE clause
+          if (suburbName === "Paarl") {
+            // Try searching for Drakenstein in common field names
+            url.searchParams.append(
+              "where",
+              "UPPER(MUNIC_NAME) LIKE '%DRAKENSTEIN%' OR UPPER(NAME) LIKE '%DRAKENSTEIN%' OR UPPER(ADMIN_NAME) LIKE '%DRAKENSTEIN%'"
+            );
+          } else {
+            url.searchParams.append("where", "1=1"); // Get all, filter in code
+          }
           url.searchParams.append("outFields", "*");
           url.searchParams.append("returnGeometry", "true");
           url.searchParams.append("f", "geojson");
