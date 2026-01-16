@@ -178,7 +178,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
             <section
               key={area.id}
               ref={(el) => {
-                sectionRefs.current[index] = el;
+                sectionRefs.current[index] = el as HTMLDivElement | null;
               }}
               className="h-[600px] flex items-center"
             >
