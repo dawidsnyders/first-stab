@@ -143,7 +143,7 @@ export default async function AreaPage({ params }: PageProps) {
 
   const interestingInfo = getInterestingInfo();
 
-  // Generate compelling description based on stats
+  // Generate richer market summary text
   const getDescription = () => {
     if (!stats) return "Property market analysis and insights";
 
@@ -163,11 +163,32 @@ export default async function AreaPage({ params }: PageProps) {
         ? "maintaining positive momentum"
         : "facing market adjustments";
 
-    return `${
-      area.name
-    } is ${growthContext}, with property values ${formatPriceChange(
-      stats.priceChangeYoY
-    )} year-over-year — ${outperformanceText}. Explore comprehensive market data, trends, and investment insights below.`;
+    // Add more context based on market velocity and price per sqm
+    const marketActivity = marketVelocity > 30 
+      ? "highly active market" 
+      : marketVelocity > 15 
+      ? "active market" 
+      : "steady market";
+
+    const priceTier = stats.avgPricePerSqm 
+      ? stats.avgPricePerSqm > 20000 
+        ? "premium price point" 
+        : stats.avgPricePerSqm > 12000 
+        ? "mid-market positioning"
+        : "accessible pricing"
+      : "";
+
+    let description = `${area.name} is ${growthContext}, with property values ${formatPriceChange(stats.priceChangeYoY)} year-over-year — ${outperformanceText}.`;
+    
+    if (marketVelocity > 0) {
+      description += ` The area represents a ${marketActivity}, with an average of ${marketVelocity} properties sold per month.`;
+    }
+    
+    if (priceTier) {
+      description += ` Positioned at a ${priceTier}, this market offers ${stats.priceChangeYoY > 4 ? "strong" : "solid"} investment potential.`;
+    }
+    
+    return description;
   };
 
   return (
@@ -208,18 +229,60 @@ export default async function AreaPage({ params }: PageProps) {
                   Western Cape
                 </span>
               </div>
-              {/* Quick Insight Box */}
-              <div className="bg-gradient-to-br from-sage-50/50 to-moss-50/30 border border-sage-200/60 rounded-xl p-5 flex gap-4 max-w-2xl">
-                <div className="flex-shrink-0 mt-0.5">
-                  <div className="w-8 h-8 rounded-lg bg-sage-100 flex items-center justify-center">
-                    <SparklesIcon className="w-5 h-5 text-sage-600" />
+              {/* Market Insights */}
+              {stats && interestingInfo.length > 0 && (
+                <div className="bg-gradient-to-br from-sage-50/50 to-moss-50/30 rounded-2xl border border-sage-100/60 p-6">
+                  <div className="flex items-center gap-2 mb-5">
+                    <ChartBarIcon className="w-4 h-4 text-sage-600" />
+                    <h3 className="text-xs text-sage-700 uppercase tracking-wide font-semibold">
+                      Market Insights
+                    </h3>
+                  </div>
+                  <div className="grid grid-cols-3 gap-3">
+                    {interestingInfo.map((info, idx) => {
+                      const Icon = info.Icon;
+                      const colorClasses = {
+                        green: "bg-green-100 text-green-700",
+                        sage: "bg-sage-100 text-sage-700",
+                        stone: "bg-stone-100 text-stone-700",
+                        terracotta: "bg-terracotta-100 text-terracotta-700",
+                        moss: "bg-moss-100 text-moss-700",
+                        red: "bg-red-100 text-red-700",
+                      };
+                      const colorClass = colorClasses[info.color as keyof typeof colorClasses] || colorClasses.stone;
+                      
+                      return (
+                        <div
+                          key={idx}
+                          className="bg-white/60 backdrop-blur-sm rounded-lg border border-sage-100/60 p-3 hover:bg-white/80 hover:border-sage-200 transition-all duration-200"
+                        >
+                          <div className="flex items-start justify-between gap-3">
+                            <div className="flex items-start gap-2.5 flex-1 min-w-0">
+                              <div className={`flex-shrink-0 w-8 h-8 rounded-lg ${colorClass} flex items-center justify-center mt-0.5`}>
+                                <Icon className="w-4 h-4" />
+                              </div>
+                              <div className="flex-1 min-w-0">
+                                <div className="text-xs text-stone-500 mb-0.5">
+                                  {info.label}
+                                </div>
+                                <div className="text-sm font-semibold text-stone-900 mb-0.5">
+                                  {info.value}
+                                </div>
+                                {info.subtitle && (
+                                  <div className="text-[10px] text-stone-500 font-medium">
+                                    {info.subtitle}
+                                  </div>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 </div>
-                <p className="text-lg text-stone-700 leading-relaxed flex-1">
-                  {getDescription()}
-                </p>
-              </div>
-              
+              )}
+
               {/* Key Market Metrics */}
               {stats && (
                 <div className="pt-6">
@@ -237,65 +300,30 @@ export default async function AreaPage({ params }: PageProps) {
               )}
             </div>
 
-            {/* Right: Map and Market Activity */}
+            {/* Right: Map and Market Summary */}
             {stats && (
               <div className="lg:col-span-1 space-y-6">
                 {/* Location Map */}
                 <AreaMapWithButton area={area} />
 
-                {/* Market Insights */}
-                {interestingInfo.length > 0 && (
-                  <div className="bg-gradient-to-br from-sage-50/50 to-moss-50/30 rounded-2xl border border-sage-100/60 p-6">
-                    <div className="flex items-center gap-2 mb-5">
-                      <ChartBarIcon className="w-4 h-4 text-sage-600" />
-                      <h3 className="text-xs text-sage-700 uppercase tracking-wide font-semibold">
-                        Market Insights
-                      </h3>
+                {/* Market Summary */}
+                <div className="bg-gradient-to-br from-sage-50/50 to-moss-50/30 border border-sage-200/60 rounded-xl p-5">
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <div className="w-8 h-8 rounded-lg bg-sage-100 flex items-center justify-center">
+                        <SparklesIcon className="w-5 h-5 text-sage-600" />
+                      </div>
                     </div>
-                    <div className="space-y-3">
-                      {interestingInfo.map((info, idx) => {
-                        const Icon = info.Icon;
-                        const colorClasses = {
-                          green: "bg-green-100 text-green-700",
-                          sage: "bg-sage-100 text-sage-700",
-                          stone: "bg-stone-100 text-stone-700",
-                          terracotta: "bg-terracotta-100 text-terracotta-700",
-                          moss: "bg-moss-100 text-moss-700",
-                          red: "bg-red-100 text-red-700",
-                        };
-                        const colorClass = colorClasses[info.color as keyof typeof colorClasses] || colorClasses.stone;
-                        
-                        return (
-                          <div
-                            key={idx}
-                            className="bg-white/60 backdrop-blur-sm rounded-lg border border-sage-100/60 p-3 hover:bg-white/80 hover:border-sage-200 transition-all duration-200"
-                          >
-                            <div className="flex items-start justify-between gap-3">
-                              <div className="flex items-start gap-2.5 flex-1 min-w-0">
-                                <div className={`flex-shrink-0 w-8 h-8 rounded-lg ${colorClass} flex items-center justify-center mt-0.5`}>
-                                  <Icon className="w-4 h-4" />
-                                </div>
-                                <div className="flex-1 min-w-0">
-                                  <div className="text-xs text-stone-500 mb-0.5">
-                                    {info.label}
-                                  </div>
-                                  <div className="text-sm font-semibold text-stone-900 mb-0.5">
-                                    {info.value}
-                                  </div>
-                                  {info.subtitle && (
-                                    <div className="text-[10px] text-stone-500 font-medium">
-                                      {info.subtitle}
-                                    </div>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs text-sage-700 uppercase tracking-wide font-semibold mb-2">
+                        Market Overview
+                      </div>
+                      <p className="text-xs text-stone-700 leading-relaxed">
+                        {getDescription()}
+                      </p>
                     </div>
                   </div>
-                )}
+                </div>
               </div>
             )}
           </div>

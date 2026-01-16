@@ -287,9 +287,9 @@ export async function GET(request: NextRequest) {
                         const area =
                           (maxLng - minLng) * (maxLat - minLat) * 111 * 111; // km²
 
-                        // Reject polygons larger than 10 km² (suburbs should be much smaller)
-                        // Most suburbs should be < 5 km²
-                        const maxArea = 10; // km² - very strict limit for suburbs/estates
+                        // Reject polygons larger than 5 km² (suburbs should be much smaller)
+                        // Most suburbs should be < 3 km²
+                        const maxArea = 5; // km² - very strict limit for suburbs/estates
                         // Also ensure it's in the right geographic area (Western Cape)
                         const isInWesternCape =
                           minLat >= -36 &&
@@ -468,13 +468,14 @@ export async function GET(request: NextRequest) {
                   maxLng <= 26;
 
                 // Use different area limits for cities vs suburbs/estates
-                // Cities can be larger (up to 50 km²), suburbs/estates should be < 10 km²
+                // Cities can be larger (up to 30 km²), suburbs/estates should be < 5 km²
+                // These are very strict limits to ensure only precise, granular boundaries
                 const isCity =
                   suburbName === "Paarl" ||
                   suburbName === "Stellenbosch" ||
                   suburbName === "Franschhoek" ||
                   suburbName === "Cape Town";
-                const maxArea = isCity ? 50 : 10; // km² - much stricter limits for precision
+                const maxArea = isCity ? 30 : 5; // km² - very strict limits for precision
                 if (area < maxArea && isInWesternCape && area < smallestArea) {
                   matchingFeature = candidate;
                   smallestArea = area;
@@ -492,11 +493,67 @@ export async function GET(request: NextRequest) {
           }
 
           // Fallback to first match if no size validation passed
+          // But log all candidate sizes for debugging
           if (!matchingFeature && candidates.length > 0) {
-            matchingFeature = candidates[0];
+            // Log all candidate sizes to help debug
             console.warn(
-              `Using first polygon match for ${suburbName} without size validation (${candidates.length} candidates available)`
+              `No polygon passed size validation for "${suburbName}". Candidate sizes:`,
+              candidates.slice(0, 5).map((c) => {
+                if (c.geometry && (c.geometry.type === "Polygon" || c.geometry.type === "MultiPolygon")) {
+                  let coords: number[][] = [];
+                  if (c.geometry.type === "Polygon") {
+                    coords = c.geometry.coordinates[0] as unknown as number[][];
+                  } else {
+                    const multiPoly = c.geometry.coordinates[0] as unknown as number[][][];
+                    coords = multiPoly[0] as number[][];
+                  }
+                  if (coords && coords.length > 0) {
+                    const lngs = coords.map((coord) => coord[0]);
+                    const lats = coords.map((coord) => coord[1]);
+                    const area = (Math.max(...lngs) - Math.min(...lngs)) * (Math.max(...lats) - Math.min(...lats)) * 111 * 111;
+                    return `${area.toFixed(2)} km²`;
+                  }
+                }
+                return "unknown";
+              })
             );
+            // Use smallest candidate even if it's slightly over limit (within 2x)
+            const isCity = suburbName === "Paarl" || suburbName === "Stellenbosch" || suburbName === "Franschhoek" || suburbName === "Cape Town";
+            const maxArea = isCity ? 30 : 5;
+            let bestCandidate = null;
+            let smallestCandidateArea = Infinity;
+            for (const candidate of candidates) {
+              if (candidate.geometry && (candidate.geometry.type === "Polygon" || candidate.geometry.type === "MultiPolygon")) {
+                let coords: number[][] = [];
+                if (candidate.geometry.type === "Polygon") {
+                  coords = candidate.geometry.coordinates[0] as unknown as number[][];
+                } else {
+                  const multiPoly = candidate.geometry.coordinates[0] as unknown as number[][][];
+                  coords = multiPoly[0] as number[][];
+                }
+                if (coords && coords.length > 0) {
+                  const lngs = coords.map((c) => c[0]);
+                  const lats = coords.map((c) => c[1]);
+                  const area = (Math.max(...lngs) - Math.min(...lngs)) * (Math.max(...lats) - Math.min(...lats)) * 111 * 111;
+                  // Accept if within 2x the limit (more lenient fallback)
+                  if (area < maxArea * 2 && area < smallestCandidateArea) {
+                    bestCandidate = candidate;
+                    smallestCandidateArea = area;
+                  }
+                }
+              }
+            }
+            if (bestCandidate) {
+              matchingFeature = bestCandidate;
+              console.warn(
+                `Using fallback polygon for ${suburbName} (${smallestCandidateArea.toFixed(2)} km²) - slightly over limit but closest match`
+              );
+            } else {
+              matchingFeature = candidates[0];
+              console.warn(
+                `Using first polygon match for ${suburbName} without size validation (${candidates.length} candidates available)`
+              );
+            }
           } else if (!matchingFeature && candidates.length === 0) {
             console.warn(
               `No polygon features found for "${suburbName}" - only Point/LineString geometries may be available`
@@ -541,16 +598,17 @@ export async function GET(request: NextRequest) {
 
     if (!data) {
       console.error(
-        `All endpoints failed for ${suburbName}. Last error:`,
+        `All endpoints failed for ${suburbName} (source: ${source}). Last error:`,
         lastError?.message
       );
+      // Return 404 instead of 500 - boundary not found is not a server error
       return NextResponse.json(
         {
-          error:
-            "Failed to fetch boundary from all City of Cape Town API endpoints",
+          error: `Boundary not found for "${suburbName}"`,
           details: lastError?.message,
+          source: source,
         },
-        { status: 500 }
+        { status: 404 }
       );
     }
 
