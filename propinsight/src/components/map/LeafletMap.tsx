@@ -274,35 +274,22 @@ export function LeafletMap({
         return (viewportBounds as any).intersects(polygonBounds);
       };
 
-      // Helper function to calculate approximate polygon area (for z-index prioritization)
-      const calculatePolygonArea = (boundary: [number, number][]): number => {
-        if (boundary.length < 3) return Infinity; // Invalid polygon = lowest priority
-        
-        // Calculate bounding box area as approximation
-        const lats = boundary.map(([lat]) => lat);
-        const lngs = boundary.map(([, lng]) => lng);
-        const latRange = Math.max(...lats) - Math.min(...lats);
-        const lngRange = Math.max(...lngs) - Math.min(...lngs);
-        
-        // Approximate area in square degrees (smaller = more specific area)
-        return latRange * lngRange;
-      };
+      // Add area polygons with real boundaries
+      areas.forEach((area, index) => {
+        const boundary = boundaries[index]; // Returns [lat, lng] format
 
-      // Filter and sort visible areas by size (smallest first = render last = on top)
-      const visibleAreasWithBoundaries = areas
-        .map((area, index) => {
-          const boundary = boundaries[index]; // Returns [lat, lng] format
-          if (!boundary || !Array.isArray(boundary) || boundary.length === 0) return null;
-          if (!isPolygonVisible(area)) return null;
-          
-          const areaSize = calculatePolygonArea(boundary);
-          return { area, boundary, areaSize };
-        })
-        .filter((item): item is { area: Area; boundary: [number, number][]; areaSize: number } => item !== null)
-        .sort((a, b) => a.areaSize - b.areaSize); // Smallest first
+        // Skip areas with empty or invalid boundaries
+        if (!boundary || !Array.isArray(boundary) || boundary.length === 0) {
+          console.error(
+            `✗ SKIPPING ${area.name} (${area.slug}): boundary is empty or invalid - area will NOT be visible on map`
+          );
+          return;
+        }
 
-      // Add area polygons with real boundaries - smaller areas rendered last (on top)
-      visibleAreasWithBoundaries.forEach(({ area, boundary, areaSize }) => {
+        // Skip areas not visible in viewport
+        if (!isPolygonVisible(area)) {
+          return; // Don't render this polygon
+        }
 
         // Special logging for Stellenbosch to debug
         if (area.slug === "stellenbosch") {
@@ -379,18 +366,11 @@ export function LeafletMap({
           })
           .addTo(mapInstanceRef.current);
 
-        // Bring smaller polygons to front (higher z-index) so they're clickable above larger ones
-        // Smaller areas (lower areaSize) should be on top
-        polygon.bringToFront();
-
         // Ensure polygon is in the correct pane and has proper z-index
         const polygonElement = polygon.getElement();
         if (polygonElement) {
           polygonElement.style.pointerEvents = "auto";
           polygonElement.style.cursor = "pointer";
-          // Set explicit z-index based on area size (smaller = higher z-index)
-          const zIndex = Math.max(100, Math.min(1000, Math.round(1000 - (areaSize * 1000))));
-          polygonElement.style.zIndex = isSelected ? `${10000 + zIndex}` : isHovered ? `${5000 + zIndex}` : `${zIndex}`;
         }
 
         // Store polygon reference for debugging
