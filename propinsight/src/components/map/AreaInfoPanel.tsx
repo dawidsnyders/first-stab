@@ -6,6 +6,8 @@ import Link from "next/link";
 import { Area, formatPrice, formatPriceChange, formatNumber } from "@/types";
 import { AreaInfoPanelSkeleton } from "@/components/ui/Skeleton";
 import { REPORT_PRICE_DISPLAY } from "@/lib/constants";
+import { generateMedianPriceData } from "@/lib/chartData";
+import { AreaChart, Area as RechartsArea, XAxis, YAxis, Tooltip, ResponsiveContainer } from "recharts";
 
 interface AreaInfoPanelProps {
   area: Area | null;
@@ -32,7 +34,7 @@ export function AreaInfoPanel({
             duration: 0.2, // 200ms animation
             ease: [0.4, 0, 0.2, 1], // Smooth easing
           }}
-          className="absolute top-0 right-0 h-full w-96 max-w-[90vw] bg-white shadow-2xl border-l border-stone-200 overflow-y-auto z-[5000]"
+          className="absolute top-4 right-4 bottom-4 w-96 max-w-[90vw] bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl border border-stone-200 overflow-y-auto z-[5000]"
           style={{ 
             pointerEvents: 'auto',
             touchAction: 'pan-y',
@@ -176,29 +178,45 @@ function AreaInfoContent({ area }: { area: Area }) {
             )}
           </motion.div>
 
-          {/* Mini chart placeholder */}
+          {/* Mini chart */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.2 }}
-            className="h-40 bg-stone-50 rounded-lg flex items-center justify-center border border-stone-200"
+            className="h-40 bg-stone-50 rounded-lg border border-stone-200 p-3"
           >
-            <div className="text-center text-stone-500">
-              <svg
-                className="w-8 h-8 mx-auto mb-2 text-stone-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+            <div className="text-xs text-stone-500 mb-2 font-medium">Price trend (3 years)</div>
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart
+                data={generateMedianPriceData(stats.medianPrice, stats.priceChangeYoY, 3)}
+                margin={{ top: 5, right: 5, left: 0, bottom: 0 }}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                <defs>
+                  <linearGradient id="miniPriceGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#5d7350" stopOpacity={0.3} />
+                    <stop offset="95%" stopColor="#5d7350" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <RechartsArea
+                  type="monotone"
+                  dataKey="value"
+                  stroke="#5d7350"
                   strokeWidth={2}
-                  d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z"
+                  fill="url(#miniPriceGradient)"
+                  dot={false}
                 />
-              </svg>
-              <span className="text-sm">Price trend (3 years)</span>
-            </div>
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "white",
+                    border: "1px solid #e7e5e4",
+                    borderRadius: "8px",
+                    padding: "8px 12px",
+                    fontSize: "12px",
+                  }}
+                  formatter={(value: number) => formatPrice(value)}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
           </motion.div>
         </>
       )}
