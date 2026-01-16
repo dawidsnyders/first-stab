@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { Area } from "@/types";
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/lib/constants";
 import { getAreaBoundaryPolygon } from "@/data/areaBoundaries";
+import { getBoundaryForArea, prefetchBoundaries } from "@/lib/geojson-boundaries";
 import "leaflet/dist/leaflet.css";
 
 // Coordinates for all Western Cape areas [lng, lat] format
@@ -38,14 +39,25 @@ function getAreaCoordinates(area: Area): [number, number] {
   );
 }
 
-function getAreaBoundary(area: Area): [number, number][] {
-  // First try to get real boundary from boundaries data
-  const realBoundary = getAreaBoundaryPolygon(area.slug);
-  if (realBoundary) {
-    return realBoundary;
+// This function will be async - boundaries are loaded dynamically
+async function getAreaBoundaryAsync(
+  area: Area
+): Promise<[number, number][]> {
+  // First try to get real boundary from City of Cape Town GeoJSON API
+  if (area.level === "suburb") {
+    const geoJSONBoundary = await getBoundaryForArea(area.slug);
+    if (geoJSONBoundary) {
+      return geoJSONBoundary;
+    }
   }
 
-  // Fallback: Generate approximate polygon if no real boundary exists
+  // Fallback: Try static boundary data
+  const staticBoundary = getAreaBoundaryPolygon(area.slug);
+  if (staticBoundary) {
+    return staticBoundary;
+  }
+
+  // Last resort: Generate approximate polygon if no real boundary exists
   const coords = getAreaCoordinates(area); // Returns [lng, lat]
   const [lng, lat] = coords;
   
@@ -151,6 +163,11 @@ export function LeafletMap({
     };
   }, []); // Only run once for map initialization
 
+  // Pre-fetch boundaries when component mounts
+  useEffect(() => {
+    prefetchBoundaries();
+  }, []);
+
   // Add/update polygons when map is ready and areas change
   useEffect(() => {
     if (!mapInstanceRef.current || !isMapReady || areas.length === 0) return;
@@ -161,11 +178,14 @@ export function LeafletMap({
     });
     polygonsRef.current.clear();
 
-    // Dynamically import Leaflet
-    import("leaflet").then((L) => {
-      // Add area polygons
-      areas.forEach((area) => {
-        const boundary = getAreaBoundary(area); // Returns [lat, lng] format
+    // Dynamically import Leaflet and fetch boundaries
+    Promise.all([
+      import("leaflet"),
+      Promise.all(areas.map((area) => getAreaBoundaryAsync(area))),
+    ]).then(([L, boundaries]) => {
+      // Add area polygons with real boundaries
+      areas.forEach((area, index) => {
+        const boundary = boundaries[index]; // Returns [lat, lng] format
         const coords = getAreaCoordinates(area); // Returns [lng, lat]
 
         const isSelected = selectedArea?.id === area.id;
