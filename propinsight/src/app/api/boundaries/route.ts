@@ -797,13 +797,15 @@ export async function GET(request: NextRequest) {
           }
 
           // Get response data (either from original response or retry)
-          const responseData: GeoJSONResponse = response.ok 
+          const responseData: GeoJSONResponse = response.ok
             ? await response.json()
-            : await (await fetch(url.toString(), {
-                method: "GET",
-                headers: { Accept: "application/json" },
-                next: { revalidate: 86400 },
-              })).json();
+            : await (
+                await fetch(url.toString(), {
+                  method: "GET",
+                  headers: { Accept: "application/json" },
+                  next: { revalidate: 86400 },
+                })
+              ).json();
 
           // Filter for polygons matching the suburb name
           // Try multiple field names and be flexible with matching
