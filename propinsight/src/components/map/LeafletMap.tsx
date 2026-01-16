@@ -96,8 +96,8 @@ export function LeafletMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
   const polygonsRef = useRef<Map<string, any>>(new Map());
-  const [hoveredArea, setHoveredArea] = useState<Area | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
+  // Removed hoveredArea state - hover is handled directly in event handlers to prevent flashing
 
   // Store callbacks in refs to ensure latest versions are used
   const onAreaClickRef = useRef(onAreaClick);
@@ -190,7 +190,8 @@ export function LeafletMap({
         const coords = getAreaCoordinates(area); // Returns [lng, lat]
 
         const isSelected = selectedArea?.id === area.id;
-        const isHovered = hoveredArea?.id === area.id;
+        // Don't check hoveredArea here - hover is handled only in event handlers
+        // This prevents re-renders and flashing when hovering
 
         // Determine polygon style - make boundaries clearly visible and prominent
         // Default state - subtle neutral tones
@@ -205,13 +206,8 @@ export function LeafletMap({
           borderColor = "#4a5c3f"; // sage-600 - solid green border (brand)
           borderWidth = 3.5;
           fillOpacity = 0.6; // Nice visible green tint when selected
-        } else if (isHovered) {
-          // Hover state - medium green tint
-          fillColor = "#d1d9cc"; // sage-200 - medium green tint
-          borderColor = "#5d7350"; // sage-500
-          borderWidth = 2.5;
-          fillOpacity = 0.3;
         }
+        // Hover state is NOT set here - it's handled in mouseover/mouseout handlers only
 
         const polygon = L.default
           .polygon(boundary, {
@@ -264,27 +260,50 @@ export function LeafletMap({
           onAreaClickRef.current(area);
         });
 
-        // Add hover handlers
-        polygon.on("mouseover", () => {
-          setHoveredArea(area);
+        // Add hover handlers - only update the specific polygon, not state
+        polygon.on("mouseover", (e) => {
+          // Stop event propagation to prevent triggering on parent elements
+          if (e.originalEvent) {
+            e.originalEvent.stopPropagation();
+          }
+          // Update hover state for callback (but don't cause re-renders)
           onAreaHoverRef.current?.(area);
-          // Show tooltip and update style
+          // Show tooltip and update style for THIS polygon only
           polygon.openTooltip();
           if (!isSelected) {
-            polygon.setStyle({ fillOpacity: 0.35 });
+            polygon.setStyle({ 
+              fillOpacity: 0.35,
+              fillColor: "#d1d9cc", // sage-200 for hover
+              color: "#5d7350", // sage-500
+              weight: 2.5
+            });
           }
         });
 
-        polygon.on("mouseout", () => {
-          setHoveredArea(null);
+        polygon.on("mouseout", (e) => {
+          // Stop event propagation
+          if (e.originalEvent) {
+            e.originalEvent.stopPropagation();
+          }
+          // Clear hover callback
           onAreaHoverRef.current?.(null);
-          // Hide tooltip and restore original style
+          // Hide tooltip and restore original style for THIS polygon only
           polygon.closeTooltip();
           // Restore original style based on selection state
           if (!isSelected) {
-            polygon.setStyle({ fillOpacity: 0.1 });
+            polygon.setStyle({ 
+              fillOpacity: 0.1,
+              fillColor: "#a8b89d", // sage-300 default
+              color: "#5d7350", // sage-500
+              weight: 2
+            });
           } else {
-            polygon.setStyle({ fillOpacity: 0.6 });
+            polygon.setStyle({ 
+              fillOpacity: 0.6,
+              fillColor: "#e8ede6", // sage-100 selected
+              color: "#4a5c3f", // sage-600
+              weight: 3.5
+            });
           }
         });
 
