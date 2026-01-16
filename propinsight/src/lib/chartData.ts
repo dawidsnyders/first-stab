@@ -140,7 +140,8 @@ export function generateOutperformanceData(
 
   // Current area growth rate = national benchmark + outperformance
   // currentOutperformance is already in percentage form (e.g., 5.2 means 5.2%)
-  const currentAreaGrowthRate = nationalBenchmark + currentOutperformance;
+  // But we need to convert it properly - if outperformance is 5.2%, that means area grows at nationalBenchmark + 5.2
+  const currentAreaGrowthRate = nationalBenchmark + (currentOutperformance / 100);
 
   for (let i = months - 1; i >= 0; i--) {
     const date = new Date(now);
@@ -153,21 +154,23 @@ export function generateOutperformanceData(
     // Use a gradual approach: past values start closer to national average and trend toward current
     // This simulates the area gradually outperforming over time
     const progressToCurrent = Math.min(yearsAgo / years, 1); // 0 = 3 years ago, 1 = now
+    // currentOutperformance is in percentage (e.g., 5.2 means 5.2%), so divide by 100
     const baseAreaGrowthRate =
-      nationalBenchmark + currentOutperformance * progressToCurrent;
+      nationalBenchmark + (currentOutperformance / 100) * progressToCurrent;
 
     // Add realistic monthly variation (±0.3% for area, ±0.15% for national)
     const areaVariation = (Math.random() - 0.5) * 0.6; // ±0.3% variation
     const nationalVariation = (Math.random() - 0.5) * 0.3; // ±0.15% variation (less volatile)
 
     // Ensure values are reasonable (growth rates typically between -10% and +20%)
+    // Convert to percentage for display
     const finalAreaValue = Math.max(
       -10,
-      Math.min(20, baseAreaGrowthRate + areaVariation)
+      Math.min(20, (baseAreaGrowthRate + areaVariation) * 100)
     );
     const finalNationalValue = Math.max(
       -5,
-      Math.min(10, nationalBenchmark + nationalVariation)
+      Math.min(10, (nationalBenchmark + nationalVariation) * 100)
     );
 
     data.push({

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { CalendarIcon, BoltIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
+import { CalendarIcon, BoltIcon, CurrencyDollarIcon, SparklesIcon } from "@heroicons/react/24/outline";
 import { getAreaBySlug, getChildAreas, sampleAreas } from "@/data/areas";
 import { getDevelopmentsByArea } from "@/data/developments";
 import { formatPrice, formatPriceChange, formatNumber, Area } from "@/types";
@@ -10,14 +10,13 @@ import {
   NATIONAL_BENCHMARKS,
 } from "@/lib/constants";
 import { AreaCard } from "@/components/area/AreaCard";
-import { ReportCTA } from "./ReportCTA";
 import { StatsGrid } from "@/components/area/StatsGrid";
 import { PriceTrendChartSection } from "@/components/charts/PriceTrendChartSection";
 import { PropertyTypeBreakdown } from "@/components/area/PropertyTypeBreakdown";
 import { DevelopmentsSection } from "@/components/area/DevelopmentsSection";
 import { AreaMapWithButton } from "@/components/area/AreaMapWithButton";
-import { StickyReportCTA } from "@/components/area/StickyReportCTA";
 import { AreaPageHeader } from "@/components/area/AreaPageHeader";
+import { AreaPageClient } from "./AreaPageClient";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -160,9 +159,17 @@ export default async function AreaPage({ params }: PageProps) {
                   Western Cape
                 </span>
               </div>
-              <p className="text-lg text-stone-600 leading-relaxed max-w-2xl">
-                {getDescription()}
-              </p>
+              {/* Quick Insight Box */}
+              <div className="bg-gradient-to-br from-sage-50/50 to-moss-50/30 border border-sage-200/60 rounded-xl p-5 flex gap-4 max-w-2xl">
+                <div className="flex-shrink-0 mt-0.5">
+                  <div className="w-8 h-8 rounded-lg bg-sage-100 flex items-center justify-center">
+                    <SparklesIcon className="w-5 h-5 text-sage-600" />
+                  </div>
+                </div>
+                <p className="text-lg text-stone-700 leading-relaxed flex-1">
+                  {getDescription()}
+                </p>
+              </div>
               
               {/* Key Market Metrics */}
               {stats && (
@@ -284,16 +291,8 @@ export default async function AreaPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* Report CTA */}
-      <section
-        id="report"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"
-      >
-        <ReportCTA area={area} />
-      </section>
-
-      {/* Premium Sticky Buy Report CTA */}
-      <StickyReportCTA area={area} />
+      {/* Report CTA with Intersection Observer for Sticky Footer */}
+      <AreaPageClient area={area} />
 
       {/* Footer - Add padding bottom to account for floating CTA */}
       <footer className="bg-white border-t border-stone-200 py-8 mt-12 pb-32">

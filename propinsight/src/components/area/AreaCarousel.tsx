@@ -199,9 +199,9 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                   onClick={() => scrollToSection(index)}
                   className="group relative flex items-center gap-0 cursor-pointer transition-all duration-200 hover:scale-105"
                 >
-                  {/* Indicator Circle - Centered on line (line center at 11px, dot center at 11px) */}
+                  {/* Indicator Circle - Centered on line (line is at left-[11px] with w-1, so center is at 13px) */}
                   <div
-                    className={`w-3 h-3 rounded-full border-2 flex-shrink-0 transition-all duration-200 absolute left-[11px] -translate-x-1/2 ${
+                    className={`w-3 h-3 rounded-full border-2 flex-shrink-0 transition-all duration-200 absolute left-[13px] -translate-x-1/2 ${
                       isActive
                         ? "bg-sage-600 border-sage-600 scale-125"
                         : isPast
