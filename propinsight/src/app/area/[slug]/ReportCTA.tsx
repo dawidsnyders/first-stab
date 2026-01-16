@@ -68,8 +68,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
       {/* Subtle gradient accent */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sage-500 via-moss-500 to-sage-500"></div>
 
-      <div className="p-5 md:p-6">
-        <div className="max-w-4xl mx-auto">
+      <div className="px-4 sm:px-6 lg:px-8 py-5 md:py-6">
           {/* Compact Header */}
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1 min-w-0">
@@ -285,7 +284,6 @@ export function ReportCTA({ area }: ReportCTAProps) {
               </div>
             </div>
           </div>
-        </div>
       </div>
     </div>
   );
