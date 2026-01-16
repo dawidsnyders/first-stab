@@ -91,7 +91,11 @@ export async function GET(request: NextRequest) {
       clifton: { name: "Clifton", source: "capeTown" },
       bakoven: { name: "Bakoven", source: "capeTown" },
       // Stellenbosch areas
-      stellenbosch: { name: "Stellenbosch", source: "openstreetmap", searchTerms: ["Stellenbosch, Western Cape, South Africa"] },
+      stellenbosch: {
+        name: "Stellenbosch",
+        source: "openstreetmap",
+        searchTerms: ["Stellenbosch, Western Cape, South Africa"],
+      },
       "stellenbosch-central": {
         name: "Stellenbosch",
         source: "openstreetmap",
@@ -237,7 +241,11 @@ export async function GET(request: NextRequest) {
         searchTerms: ["Vrykyk, Paarl"],
       },
       // Franschhoek - part of Stellenbosch municipality
-      franschhoek: { name: "Franschhoek", source: "openstreetmap", searchTerms: ["Franschhoek, Western Cape, South Africa"] },
+      franschhoek: {
+        name: "Franschhoek",
+        source: "openstreetmap",
+        searchTerms: ["Franschhoek, Western Cape, South Africa"],
+      },
       "franschhoek-village": {
         name: "Franschhoek",
         source: "openstreetmap",
@@ -378,7 +386,7 @@ export async function GET(request: NextRequest) {
                   // Try all features and pick the smallest/most specific one
                   let bestFeature = null;
                   let smallestArea = Infinity;
-                  
+
                   for (const feature of osmData.features) {
                     // Check if it has a proper polygon geometry (not just a point)
                     if (
@@ -390,11 +398,14 @@ export async function GET(request: NextRequest) {
                       // Calculate approximate bounding box area to filter out overly large polygons
                       let coords: number[][] = [];
                       if (feature.geometry.type === "Polygon") {
-                        coords = feature.geometry.coordinates[0] as unknown as number[][];
+                        coords = feature.geometry
+                          .coordinates[0] as unknown as number[][];
                       } else {
-                        coords = (feature.geometry.coordinates[0] as number[][][])[0] as number[][];
+                        coords = (
+                          feature.geometry.coordinates[0] as number[][][]
+                        )[0] as number[][];
                       }
-                      
+
                       if (coords && coords.length > 0) {
                         const lngs = coords.map((c) => c[0]);
                         const lats = coords.map((c) => c[1]);
@@ -402,20 +413,31 @@ export async function GET(request: NextRequest) {
                         const maxLng = Math.max(...lngs);
                         const minLat = Math.min(...lats);
                         const maxLat = Math.max(...lats);
-                        
+
                         // Approximate area in square degrees (rough conversion: 1° ≈ 111km)
-                        const area = (maxLng - minLng) * (maxLat - minLat) * 111 * 111; // km²
-                        
+                        const area =
+                          (maxLng - minLng) * (maxLat - minLat) * 111 * 111; // km²
+
                         // Reject polygons larger than 500 km² (suburbs/estates should be much smaller)
                         // Also ensure it's in the right geographic area (Western Cape)
-                        const isInWesternCape = minLat >= -36 && maxLat <= -31 && minLng >= 16 && maxLng <= 26;
-                        
-                        if (area < 500 && isInWesternCape && area < smallestArea) {
+                        const isInWesternCape =
+                          minLat >= -36 &&
+                          maxLat <= -31 &&
+                          minLng >= 16 &&
+                          maxLng <= 26;
+
+                        if (
+                          area < 500 &&
+                          isInWesternCape &&
+                          area < smallestArea
+                        ) {
                           bestFeature = feature;
                           smallestArea = area;
                         } else if (area >= 500) {
                           console.warn(
-                            `Rejecting overly large polygon for "${searchTerm}": ${area.toFixed(2)} km² (max 500 km² for suburbs/estates)`
+                            `Rejecting overly large polygon for "${searchTerm}": ${area.toFixed(
+                              2
+                            )} km² (max 500 km² for suburbs/estates)`
                           );
                         } else if (!isInWesternCape) {
                           console.warn(
@@ -425,14 +447,16 @@ export async function GET(request: NextRequest) {
                       }
                     }
                   }
-                  
+
                   if (bestFeature) {
                     data = {
                       type: "FeatureCollection",
                       features: [bestFeature],
                     };
                     console.log(
-                      `Successfully fetched boundary from OpenStreetMap for "${searchTerm}" with ${bestFeature.geometry.type} (area: ${smallestArea.toFixed(2)} km²)`
+                      `Successfully fetched boundary from OpenStreetMap for "${searchTerm}" with ${
+                        bestFeature.geometry.type
+                      } (area: ${smallestArea.toFixed(2)} km²)`
                     );
                     break;
                   } else {
@@ -480,44 +504,60 @@ export async function GET(request: NextRequest) {
         let matchingFeature = null;
         if (source === "stellenbosch" || source === "national") {
           // Try to find matching features and pick the smallest one
-          const candidates = responseData.features?.filter((f) => {
-            const props = f.properties;
-            const nameField = String(
-              props.NAME || props.OFC_SBRB_NAME || props.name || ""
-            );
-            const nameLower = nameField.toLowerCase();
-            // Try matching against all search terms
-            return searchTerms.some((term) => {
-              const termLower = term.toLowerCase();
-              return (
-                nameLower.includes(termLower) || termLower.includes(nameLower)
+          const candidates =
+            responseData.features?.filter((f) => {
+              const props = f.properties;
+              const nameField = String(
+                props.NAME || props.OFC_SBRB_NAME || props.name || ""
               );
-            });
-          }) || [];
-          
+              const nameLower = nameField.toLowerCase();
+              // Try matching against all search terms
+              return searchTerms.some((term) => {
+                const termLower = term.toLowerCase();
+                return (
+                  nameLower.includes(termLower) || termLower.includes(nameLower)
+                );
+              });
+            }) || [];
+
           // Pick the smallest polygon (most specific boundary)
           let smallestArea = Infinity;
           for (const candidate of candidates) {
-            if (candidate.geometry && (candidate.geometry.type === "Polygon" || candidate.geometry.type === "MultiPolygon")) {
+            if (
+              candidate.geometry &&
+              (candidate.geometry.type === "Polygon" ||
+                candidate.geometry.type === "MultiPolygon")
+            ) {
               let coords: number[][] = [];
               if (candidate.geometry.type === "Polygon") {
-                coords = candidate.geometry.coordinates[0] as unknown as number[][];
+                coords = candidate.geometry
+                  .coordinates[0] as unknown as number[][];
               } else {
-                coords = (candidate.geometry.coordinates[0] as number[][][])[0] as number[][];
+                coords = (
+                  candidate.geometry.coordinates[0] as number[][][]
+                )[0] as number[][];
               }
-              
+
               if (coords && coords.length > 0) {
                 const lngs = coords.map((c) => c[0]);
                 const lats = coords.map((c) => c[1]);
-                const area = (Math.max(...lngs) - Math.min(...lngs)) * (Math.max(...lats) - Math.min(...lats)) * 111 * 111;
-                
+                const area =
+                  (Math.max(...lngs) - Math.min(...lngs)) *
+                  (Math.max(...lats) - Math.min(...lats)) *
+                  111 *
+                  111;
+
                 // Reject overly large polygons (> 500 km²) and ensure it's in Western Cape
                 const minLat = Math.min(...lats);
                 const maxLat = Math.max(...lats);
                 const minLng = Math.min(...lngs);
                 const maxLng = Math.max(...lngs);
-                const isInWesternCape = minLat >= -36 && maxLat <= -31 && minLng >= 16 && maxLng <= 26;
-                
+                const isInWesternCape =
+                  minLat >= -36 &&
+                  maxLat <= -31 &&
+                  minLng >= 16 &&
+                  maxLng <= 26;
+
                 if (area < 500 && isInWesternCape && area < smallestArea) {
                   matchingFeature = candidate;
                   smallestArea = area;
@@ -525,11 +565,13 @@ export async function GET(request: NextRequest) {
               }
             }
           }
-          
+
           // Fallback to first match if no size validation passed
           if (!matchingFeature && candidates.length > 0) {
             matchingFeature = candidates[0];
-            console.warn(`Using first match for ${suburbName} without size validation`);
+            console.warn(
+              `Using first match for ${suburbName} without size validation`
+            );
           }
         } else {
           matchingFeature = responseData.features?.[0];
