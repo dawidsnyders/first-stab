@@ -244,21 +244,30 @@ export function LeafletMap({
           areasWithoutBoundaries.map((a) => a.name)
         );
       }
+      // Calculate and store polygon bounds for ALL areas (needed for viewport culling)
+      polygonBoundsRef.current.clear();
+      areas.forEach((area, index) => {
+        const boundary = boundaries[index];
+        if (boundary && boundary.length > 0) {
+          const bounds = L.default.latLngBounds(boundary);
+          polygonBoundsRef.current.set(area.slug, bounds);
+        }
+      });
+
       // Helper function to check if polygon is visible
-      const isPolygonVisible = (area: Area, boundary: [number, number][]): boolean => {
+      const isPolygonVisible = (area: Area): boolean => {
         // Always show selected area
         if (selectedArea?.slug === area.slug) return true;
-        
+
         // If no viewport bounds yet, show all (initial load)
         if (!viewportBounds || !mapInstanceRef.current) return true;
 
-        // Calculate polygon bounds from boundary coordinates
-        const map = mapInstanceRef.current as any;
-        const bounds = L.default.latLngBounds(boundary);
-        polygonBoundsRef.current.set(area.slug, bounds);
+        // Get stored polygon bounds
+        const polygonBounds = polygonBoundsRef.current.get(area.slug);
+        if (!polygonBounds) return false;
 
         // Check if polygon bounds intersect with viewport
-        return (viewportBounds as any).intersects(bounds);
+        return (viewportBounds as any).intersects(polygonBounds);
       };
 
       // Add area polygons with real boundaries
@@ -274,7 +283,7 @@ export function LeafletMap({
         }
 
         // Skip areas not visible in viewport
-        if (!isPolygonVisible(area, boundary)) {
+        if (!isPolygonVisible(area)) {
           return; // Don't render this polygon
         }
 
