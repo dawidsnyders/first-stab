@@ -172,10 +172,9 @@ export async function GET(request: NextRequest) {
           // Western Cape Spatial Data Warehouse - Most accurate source
           // Try multiple field names for suburb matching
           const searchName = searchTerms[0] || suburbName;
-          url.searchParams.append(
-            "where",
-            `UPPER(SUBURB) = UPPER('${searchName}') OR UPPER(NAME) = UPPER('${searchName}') OR UPPER(SUBURB_NAME) = UPPER('${searchName}')`
-          );
+          const whereClause = `UPPER(SUBURB) = UPPER('${searchName}') OR UPPER(NAME) = UPPER('${searchName}') OR UPPER(SUBURB_NAME) = UPPER('${searchName}')`;
+          console.log(`Querying Western Cape API for "${suburbName}" (search: "${searchName}") with: ${whereClause}`);
+          url.searchParams.append("where", whereClause);
           url.searchParams.append("outFields", "*");
           url.searchParams.append("returnGeometry", "true");
           url.searchParams.append("f", "geojson");
@@ -448,8 +447,10 @@ export async function GET(request: NextRequest) {
             type: "FeatureCollection",
             features: [matchingFeature],
           };
-          console.log(`Successfully fetched boundary from ${endpoint}`);
+          console.log(`✓ Successfully fetched boundary for "${suburbName}" from ${endpoint} (${matchingFeature.geometry.type})`);
           break;
+        } else {
+          console.warn(`⚠ No matching feature found for "${suburbName}" from ${endpoint}`);
         }
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));

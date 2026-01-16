@@ -199,22 +199,46 @@ export function LeafletMap({
     polygonsRef.current.clear();
 
     // Dynamically import Leaflet and fetch boundaries
-    console.log(`Loading boundaries for ${areas.length} areas:`, areas.map(a => a.name));
+    console.log(
+      `Loading boundaries for ${areas.length} areas:`,
+      areas.map((a) => a.name)
+    );
     Promise.all([
       import("leaflet"),
       Promise.all(areas.map((area) => getAreaBoundaryAsync(area))),
     ]).then(([L, boundaries]) => {
-      console.log(`Loaded ${boundaries.length} boundaries, ${boundaries.filter(b => b && b.length > 0).length} are valid`);
+      const validBoundaries = boundaries.filter((b) => b && b.length > 0);
+      console.log(
+        `Loaded ${boundaries.length} boundaries, ${validBoundaries.length} are valid`
+      );
+      const areasWithBoundaries = areas.filter(
+        (a, i) => boundaries[i] && boundaries[i].length > 0
+      );
+      const areasWithoutBoundaries = areas.filter(
+        (a, i) => !boundaries[i] || boundaries[i].length === 0
+      );
+      console.log(
+        `✓ Areas with valid boundaries (${areasWithBoundaries.length}):`,
+        areasWithBoundaries.map((a) => a.name)
+      );
+      if (areasWithoutBoundaries.length > 0) {
+        console.error(
+          `✗ Areas with missing boundaries (${areasWithoutBoundaries.length}):`,
+          areasWithoutBoundaries.map((a) => a.name)
+        );
+      }
       // Add area polygons with real boundaries
       areas.forEach((area, index) => {
         const boundary = boundaries[index]; // Returns [lat, lng] format
-        
+
         // Skip areas with empty or invalid boundaries
         if (!boundary || !Array.isArray(boundary) || boundary.length === 0) {
-          console.warn(`Skipping ${area.name} (${area.slug}): boundary is empty or invalid`);
+          console.error(
+            `✗ SKIPPING ${area.name} (${area.slug}): boundary is empty or invalid - area will NOT be visible on map`
+          );
           return;
         }
-        
+
         const coords = getAreaCoordinates(area); // Returns [lng, lat]
 
         const isSelected = selectedArea?.id === area.id;
@@ -237,7 +261,9 @@ export function LeafletMap({
         }
         // Hover state is NOT set here - it's handled in mouseover/mouseout handlers only
 
-        console.log(`Adding polygon for ${area.name} (${area.slug}) with ${boundary.length} points`);
+        console.log(
+          `Adding polygon for ${area.name} (${area.slug}) with ${boundary.length} points`
+        );
         const polygon = L.default
           .polygon(boundary, {
             color: borderColor,

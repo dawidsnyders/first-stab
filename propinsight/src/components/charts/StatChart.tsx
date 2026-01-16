@@ -198,7 +198,8 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
         ...point,
         previousValue: index > 0 ? data[index - 1].value : null,
         areaValue: point.areaValue ?? point.value ?? 0,
-        nationalValue: point.nationalValue ?? NATIONAL_BENCHMARKS.avgPropertyGrowth,
+        nationalValue:
+          point.nationalValue ?? NATIONAL_BENCHMARKS.avgPropertyGrowth,
       }));
     }
     return dataWithPrev;
