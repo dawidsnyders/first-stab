@@ -238,6 +238,13 @@ export function LeafletMap({
           );
           return;
         }
+        
+        // Special logging for Stellenbosch to debug
+        if (area.slug === "stellenbosch") {
+          console.log(`🔍 DEBUG Stellenbosch: boundary loaded with ${boundary.length} points`);
+          console.log(`🔍 DEBUG Stellenbosch: first 3 coords:`, boundary.slice(0, 3));
+          console.log(`🔍 DEBUG Stellenbosch: last 3 coords:`, boundary.slice(-3));
+        }
 
         const isSelected = selectedArea?.id === area.id;
         // Don't check hoveredArea here - hover is handled only in event handlers
@@ -298,7 +305,7 @@ export function LeafletMap({
             pane: "overlayPane", // Ensure polygon is in overlay pane (above tiles)
           })
           .addTo(mapInstanceRef.current);
-        
+
         // Ensure polygon is in the correct pane and has proper z-index
         const polygonElement = polygon.getElement();
         if (polygonElement) {
@@ -308,6 +315,20 @@ export function LeafletMap({
 
         // Store polygon reference for debugging
         polygonsRef.current.set(area.id, polygon);
+        
+        // Special logging for Stellenbosch
+        if (area.slug === "stellenbosch") {
+          console.log(`🔍 DEBUG Stellenbosch: Polygon created and added to map`);
+          console.log(`🔍 DEBUG Stellenbosch: Polygon element:`, polygon.getElement());
+          console.log(`🔍 DEBUG Stellenbosch: Polygon bounds:`, polygon.getBounds());
+          // Test if polygon is actually on the map
+          setTimeout(() => {
+            const bounds = polygon.getBounds();
+            const center = bounds.getCenter();
+            console.log(`🔍 DEBUG Stellenbosch: Polygon center: [${center.lat}, ${center.lng}]`);
+            console.log(`🔍 DEBUG Stellenbosch: Polygon visible on map:`, mapInstanceRef.current && mapInstanceRef.current.getBounds().intersects(bounds));
+          }, 1000);
+        }
 
         // Add tooltip with area name - nice looking tooltip
         const tooltipContent = `
