@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 import Link from "next/link";
 import { Area, formatPrice, formatPriceChange, formatNumber } from "@/types";
 import { AreaLocationMap } from "@/components/map/AreaLocationMap";
@@ -153,9 +152,9 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                   <div className="absolute left-[11px] top-10 w-0.5 h-8 -translate-x-1/2">
                     {/* Background line (grey) */}
                     <div className="absolute inset-0 bg-stone-200" />
-                    {/* Progress line (sage) - fills from bottom to top */}
+                    {/* Progress line (sage) - fills from top to bottom */}
                     <div
-                      className="absolute bottom-0 left-0 right-0 bg-sage-600 transition-all duration-100 ease-out"
+                      className="absolute top-0 left-0 right-0 bg-sage-600 transition-all duration-100 ease-out"
                       style={{
                         height: `${lineProgress * 100}%`,
                       }}
@@ -182,13 +181,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
               }}
               className="h-[600px] flex items-center"
             >
-              <motion.div
-                initial={{ opacity: 0, y: 40 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: false, amount: 0.3 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                className="w-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden"
-              >
+              <div className="w-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
                 {/* Area Name Header - Large, Dark Gray */}
                 <div className="px-8 py-6 border-b border-stone-200">
                   <h2 className="text-4xl font-bold text-stone-900 mb-2">
@@ -285,7 +278,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                     </div>
                   </div>
                 )}
-              </motion.div>
+              </div>
             </section>
           );
         })}
