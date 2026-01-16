@@ -173,13 +173,13 @@ export default function Home() {
       </section>
 
       {/* Product Showcase - Ondo-Style Carousel */}
-      <section id="features" className="relative bg-gradient-to-b from-white to-stone-100 pt-32 md:pt-40 pb-16 md:pb-24 overflow-hidden">
+      <section id="features" className="relative bg-gradient-to-b from-white to-stone-100 pt-20 md:pt-24 pb-12 md:pb-16 overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.03)_1px,transparent_0)] bg-[size:32px_32px]"></div>
         
         <div className="relative">
           {/* Section Header */}
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -229,7 +229,7 @@ export default function Home() {
             {/* Scrollable Cards */}
             <div
               ref={carouselRef}
-              className="flex gap-6 overflow-x-auto scrollbar-hide scroll-smooth px-4 md:px-8 lg:px-16 pb-4"
+              className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth px-4 md:px-6 lg:px-12 pb-4"
             >
               {/* Card 1: Market Data */}
               <ProductCard
@@ -617,7 +617,6 @@ interface ProductCardProps {
   metric: string;
   metricLabel: string;
   description: string;
-  textDark?: boolean;
 }
 
 function ProductCard({
@@ -629,52 +628,47 @@ function ProductCard({
   metric,
   metricLabel,
   description,
-  textDark = false,
 }: ProductCardProps) {
-  const textColor = textDark ? 'text-stone-800' : 'text-stone-900';
-  const textMuted = textDark ? 'text-stone-600' : 'text-stone-700';
-  const textSubtle = textDark ? 'text-stone-500' : 'text-stone-600';
-  
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      className="flex-shrink-0 w-[320px] md:w-[380px] lg:w-[420px]"
+      className="flex-shrink-0 w-[340px] md:w-[400px] lg:w-[440px]"
     >
-      <div className={`${bgColor} rounded-3xl p-6 md:p-8 min-h-[380px] md:min-h-[420px] flex flex-col relative overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200/50`}>
+      <div className={`${bgColor} rounded-2xl p-6 md:p-8 h-[420px] md:h-[480px] flex flex-col relative overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200/60`}>
         {/* Decorative circles */}
-        <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-white/30"></div>
-        <div className="absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-white/20"></div>
+        <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-white/40"></div>
+        <div className="absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-white/30"></div>
         
         {/* Header */}
-        <div className="flex items-start justify-between mb-4 relative z-10">
+        <div className="flex items-start justify-between mb-5 relative z-10">
           {icon}
-          <span className={`text-xs font-medium ${textMuted} uppercase tracking-wider`}>
+          <span className="text-xs font-medium text-stone-600 uppercase tracking-wider">
             {label}
           </span>
         </div>
         
         {/* Title Section */}
         <div className="mb-4 relative z-10">
-          <h4 className={`text-xl md:text-2xl font-bold ${textColor} mb-1`}>{title}</h4>
-          <p className={`text-sm ${textMuted}`}>{subtitle}</p>
+          <h4 className="text-2xl font-bold text-stone-900 mb-1">{title}</h4>
+          <p className="text-sm text-stone-600">{subtitle}</p>
         </div>
         
         {/* Big Metric */}
-        <div className="flex-grow flex items-center relative z-10 my-2">
+        <div className="flex-1 flex items-center relative z-10">
           <div>
-            <div className={`text-4xl md:text-5xl font-bold ${textColor} tracking-tight`}>
+            <div className="text-5xl md:text-6xl font-bold text-stone-900 tracking-tight">
               {metric}
             </div>
-            <div className={`text-sm ${textMuted} mt-1`}>{metricLabel}</div>
+            <div className="text-sm text-stone-600 mt-2">{metricLabel}</div>
           </div>
         </div>
         
         {/* Description & Arrow */}
-        <div className="flex items-end justify-between gap-4 relative z-10 mt-auto pt-4">
-          <p className={`text-sm ${textSubtle} leading-relaxed flex-1`}>
+        <div className="flex items-end justify-between gap-3 relative z-10 pt-4 border-t border-stone-300/30">
+          <p className="text-sm text-stone-600 leading-relaxed flex-1">
             {description}
           </p>
           <div className="w-10 h-10 rounded-full bg-stone-900 flex-shrink-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">

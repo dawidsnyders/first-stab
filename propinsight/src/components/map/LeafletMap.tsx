@@ -203,9 +203,6 @@ export function LeafletMap({
           bubblingMouseEvents: false,
         }).addTo(mapInstanceRef.current);
 
-        // Set cursor
-        polygon.setStyle({ cursor: "pointer" });
-
         // Add click handler - use refs to get latest callbacks
         polygon.on("click", (e) => {
           if (e.originalEvent) {
@@ -218,7 +215,7 @@ export function LeafletMap({
         polygon.on("mouseover", () => {
           setHoveredArea(area);
           onAreaHoverRef.current?.(area);
-          polygon.setStyle({ cursor: "pointer", fillOpacity: 0.4 });
+          polygon.setStyle({ fillOpacity: 0.4 });
         });
 
         polygon.on("mouseout", () => {
