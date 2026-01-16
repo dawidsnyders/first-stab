@@ -190,6 +190,20 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
     previousValue: index > 0 ? data[index - 1].value : null,
   }));
 
+  // Ensure data has required fields for outperformance charts
+  const chartData = useMemo(() => {
+    if (type === "outperformance") {
+      // Verify data structure and ensure areaValue and nationalValue exist
+      return data.map((point, index) => ({
+        ...point,
+        previousValue: index > 0 ? data[index - 1].value : null,
+        areaValue: point.areaValue ?? point.value ?? 0,
+        nationalValue: point.nationalValue ?? NATIONAL_BENCHMARKS.avgPropertyGrowth,
+      }));
+    }
+    return dataWithPrev;
+  }, [data, dataWithPrev, type]);
+
   const getYAxisFormatter = () => {
     switch (type) {
       case "medianPrice":

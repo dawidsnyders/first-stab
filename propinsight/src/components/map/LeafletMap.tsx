@@ -46,26 +46,34 @@ function getAreaCoordinates(area: Area): [number, number] {
 async function getAreaBoundaryAsync(area: Area): Promise<[number, number][]> {
   // ALWAYS try to get real boundary from official API sources
   // This ensures pixel-perfect accuracy down to the last coordinate
-  const geoJSONBoundary = await getBoundaryForArea(area.slug);
-  if (geoJSONBoundary && geoJSONBoundary.length > 0) {
-    if (geoJSONBoundary.length >= 50) {
-      console.log(
-        `Using high-precision API boundary for ${area.slug} with ${geoJSONBoundary.length} points - pixel-perfect accuracy`
-      );
-    } else {
-      console.warn(
-        `API boundary for ${area.slug} has only ${geoJSONBoundary.length} points - may lack precision. For pixel-perfect accuracy, boundaries should have 100+ points.`
-      );
+  try {
+    const geoJSONBoundary = await getBoundaryForArea(area.slug);
+    if (geoJSONBoundary && geoJSONBoundary.length > 0) {
+      if (geoJSONBoundary.length >= 50) {
+        console.log(
+          `✓ Using high-precision API boundary for ${area.name} (${area.slug}) with ${geoJSONBoundary.length} points`
+        );
+      } else {
+        console.warn(
+          `⚠ API boundary for ${area.name} (${area.slug}) has only ${geoJSONBoundary.length} points - may lack precision`
+        );
+      }
+      return geoJSONBoundary;
     }
-    return geoJSONBoundary;
-  }
 
-  // NO FALLBACK - If API boundary not found, return empty array
-  // This ensures we never use inaccurate approximations
-  console.error(
-    `No API boundary found for ${area.slug} - cannot display accurate boundary. Please ensure the area exists in official municipal GIS data.`
-  );
-  return [];
+    // NO FALLBACK - If API boundary not found, return empty array
+    // This ensures we never use inaccurate approximations
+    console.error(
+      `✗ No API boundary found for ${area.name} (${area.slug}) - area will not be displayed on map`
+    );
+    return [];
+  } catch (error) {
+    console.error(
+      `✗ Error fetching boundary for ${area.name} (${area.slug}):`,
+      error
+    );
+    return [];
+  }
 }
 
 interface LeafletMapProps {
@@ -191,13 +199,22 @@ export function LeafletMap({
     polygonsRef.current.clear();
 
     // Dynamically import Leaflet and fetch boundaries
+    console.log(`Loading boundaries for ${areas.length} areas:`, areas.map(a => a.name));
     Promise.all([
       import("leaflet"),
       Promise.all(areas.map((area) => getAreaBoundaryAsync(area))),
     ]).then(([L, boundaries]) => {
+      console.log(`Loaded ${boundaries.length} boundaries, ${boundaries.filter(b => b && b.length > 0).length} are valid`);
       // Add area polygons with real boundaries
       areas.forEach((area, index) => {
         const boundary = boundaries[index]; // Returns [lat, lng] format
+        
+        // Skip areas with empty or invalid boundaries
+        if (!boundary || !Array.isArray(boundary) || boundary.length === 0) {
+          console.warn(`Skipping ${area.name} (${area.slug}): boundary is empty or invalid`);
+          return;
+        }
+        
         const coords = getAreaCoordinates(area); // Returns [lng, lat]
 
         const isSelected = selectedArea?.id === area.id;
@@ -220,6 +237,7 @@ export function LeafletMap({
         }
         // Hover state is NOT set here - it's handled in mouseover/mouseout handlers only
 
+        console.log(`Adding polygon for ${area.name} (${area.slug}) with ${boundary.length} points`);
         const polygon = L.default
           .polygon(boundary, {
             color: borderColor,
