@@ -422,8 +422,8 @@ export default async function AreaPage({ params }: PageProps) {
       {/* Premium Sticky Buy Report CTA */}
       <StickyReportCTA area={area} />
 
-      {/* Footer - Add padding bottom to account for sticky button */}
-      <footer className="bg-white border-t border-stone-200 py-8 mt-12 pb-24">
+      {/* Footer - Add padding bottom to account for floating CTA */}
+      <footer className="bg-white border-t border-stone-200 py-8 mt-12 pb-32">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <p className="text-stone-500 text-sm text-center">
             Data last updated: {stats?.lastUpdated || "N/A"}. For informational

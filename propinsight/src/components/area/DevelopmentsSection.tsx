@@ -71,19 +71,19 @@ function DeveloperLogo({ developer }: { developer: Development["developer"] }) {
     !developer.logo || imageError || !developer.logo.startsWith("http");
 
   return (
-    <div className="h-8 flex items-center min-w-0 flex-1 pr-2">
+    <div className="h-6 flex items-center min-w-0 flex-1 pr-2">
       {!showTextFallback ? (
         <img
           src={developer.logo}
           alt={developer.name}
-          className={`h-full w-auto object-contain max-w-[120px] ${
+          className={`h-full w-auto object-contain max-w-[100px] ${
             imageLoaded ? "opacity-100" : "opacity-0"
           } transition-opacity duration-200`}
           onLoad={() => setImageLoaded(true)}
           onError={() => setImageError(true)}
         />
       ) : (
-        <span className="text-sm font-semibold text-stone-700">
+        <span className="text-xs font-semibold text-stone-700 truncate">
           {developer.name}
         </span>
       )}
@@ -118,48 +118,46 @@ function DevelopmentCard({ development }: DevelopmentCardProps) {
       href={development.website}
       target="_blank"
       rel="noopener noreferrer"
-      className="group bg-white border border-stone-200 rounded-xl p-5 hover:shadow-lg hover:border-sage-300 transition-all duration-200 flex flex-col max-h-[300px] overflow-hidden"
+      className="group bg-white border border-stone-200 rounded-xl p-4 hover:shadow-lg hover:border-sage-300 transition-all duration-200 flex flex-col max-h-[150px] overflow-hidden"
     >
       {/* Developer Logo & Status */}
-      <div className="flex items-start justify-between mb-3 flex-shrink-0">
+      <div className="flex items-center justify-between mb-2 flex-shrink-0">
         <DeveloperLogo developer={development.developer} />
         <div className="flex-shrink-0">{getStatusBadge()}</div>
       </div>
 
       {/* Development Name */}
-      <h4 className="text-base font-bold text-stone-900 mb-2 group-hover:text-sage-600 transition-colors duration-200 line-clamp-2 flex-shrink-0">
+      <h4 className="text-sm font-bold text-stone-900 mb-1.5 group-hover:text-sage-600 transition-colors duration-200 line-clamp-1 flex-shrink-0">
         {development.name}
       </h4>
 
-      {/* Details */}
-      <div className="space-y-2 mb-3 flex-grow min-h-0 overflow-hidden">
-        <div className="flex items-center gap-2 text-xs text-stone-600">
-          <CalendarIcon className="w-3.5 h-3.5 flex-shrink-0" />
+      {/* Details - Compact layout */}
+      <div className="flex items-center justify-between gap-3 mb-2 flex-grow min-h-0">
+        <div className="flex items-center gap-1.5 text-xs text-stone-600 min-w-0 flex-1">
+          <CalendarIcon className="w-3 h-3 flex-shrink-0" />
           <span className="truncate">
             {isPastDue
-              ? "Est. completion: Past due"
+              ? "Past due"
               : daysUntilCompletion <= 90
-              ? `Est. completion: ${daysUntilCompletion} days`
-              : `Est. completion: ${completionDate.toLocaleDateString("en-ZA", {
+              ? `${daysUntilCompletion} days`
+              : completionDate.toLocaleDateString("en-ZA", {
                   month: "short",
                   year: "numeric",
-                })}`}
+                })}
           </span>
         </div>
-        <div className="pt-2 border-t border-stone-100">
-          <p className="text-xs text-stone-500 mb-0.5">
-            Average Apartment Price
-          </p>
-          <p className="text-lg font-bold text-stone-900">
+        <div className="text-right flex-shrink-0">
+          <p className="text-[10px] text-stone-500 leading-tight">Avg Price</p>
+          <p className="text-sm font-bold text-stone-900 leading-tight">
             {formatPrice(development.averageApartmentPrice)}
           </p>
         </div>
       </div>
 
       {/* View Link */}
-      <div className="flex items-center gap-2 text-xs text-sage-600 font-medium pt-2 border-t border-stone-100 group-hover:gap-3 transition-all duration-200 flex-shrink-0">
+      <div className="flex items-center gap-1.5 text-xs text-sage-600 font-medium pt-1.5 border-t border-stone-100 group-hover:gap-2 transition-all duration-200 flex-shrink-0">
         <span>View Development</span>
-        <ArrowTopRightOnSquareIcon className="w-3.5 h-3.5" />
+        <ArrowTopRightOnSquareIcon className="w-3 h-3" />
       </div>
     </Link>
   );
