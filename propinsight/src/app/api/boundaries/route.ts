@@ -435,7 +435,9 @@ export async function GET(request: NextRequest) {
                         const area =
                           (maxLng - minLng) * (maxLat - minLat) * 111 * 111; // km²
 
-                        // Reject polygons larger than 500 km² (suburbs/estates should be much smaller)
+                        // Reject polygons larger than 100 km² (suburbs should be much smaller)
+                        // Most suburbs should be < 50 km²
+                        const maxArea = 100; // km² - strict limit for suburbs
                         // Also ensure it's in the right geographic area (Western Cape)
                         const isInWesternCape =
                           minLat >= -36 &&
@@ -444,7 +446,7 @@ export async function GET(request: NextRequest) {
                           maxLng <= 26;
 
                         if (
-                          area < 500 &&
+                          area < maxArea &&
                           isInWesternCape &&
                           area < smallestArea
                         ) {

@@ -40,7 +40,7 @@ const PriceTooltip = ({
   if (active && payload && payload.length && data) {
     const value = payload[0].value;
     if (value === undefined) return null;
-    
+
     const currentIndex = data.findIndex((d) => d.label === label);
 
     // Find value from 12 months ago (YoY comparison)
