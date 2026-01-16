@@ -249,35 +249,19 @@ export default async function AreaPage({ params }: PageProps) {
                 {getDescription()}
               </p>
               
-              {/* Key Stats Card */}
+              {/* Key Market Metrics */}
               {stats && (
-                <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
-                  <div className="space-y-4">
-                    <div>
-                      <div className="text-xs text-stone-500 uppercase tracking-wide mb-1">
-                        Average Price
-                      </div>
-                      <div className="text-3xl font-bold text-stone-900">
-                        {formatPrice(stats.avgPrice)}
-                      </div>
-                    </div>
-                    <div className="pt-4 border-t border-stone-100">
-                      <div className="text-xs text-stone-500 uppercase tracking-wide mb-1">
-                        Median Price
-                      </div>
-                      <div className="text-2xl font-semibold text-stone-800">
-                        {formatPrice(stats.medianPrice)}
-                      </div>
-                    </div>
-                    <div className="pt-4 border-t border-stone-100">
-                      <div className="text-xs text-stone-500 uppercase tracking-wide mb-1">
-                        Sales (12 months)
-                      </div>
-                      <div className="text-2xl font-semibold text-stone-800">
-                        {formatNumber(stats.salesCount)}
-                      </div>
-                    </div>
+                <div className="pt-6">
+                  <div className="mb-4">
+                    <h2 className="text-2xl font-bold text-stone-900 mb-2">
+                      Key Market Metrics
+                    </h2>
+                    <p className="text-stone-600">
+                      Interactive metrics with detailed charts. Click any card to
+                      explore historical trends and performance data.
+                    </p>
                   </div>
+                  <StatsGrid stats={stats} areaName={area.name} />
                 </div>
               )}
             </div>
@@ -323,21 +307,6 @@ export default async function AreaPage({ params }: PageProps) {
         </div>
       </section>
 
-      {/* Stats grid */}
-      {stats && (
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-stone-900 mb-2">
-              Key Market Metrics
-            </h2>
-            <p className="text-stone-600">
-              Interactive metrics with detailed charts. Click any card to
-              explore historical trends and performance data.
-            </p>
-          </div>
-          <StatsGrid stats={stats} areaName={area.name} />
-        </section>
-      )}
 
       {/* Price chart */}
       {stats && (
