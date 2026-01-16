@@ -8,7 +8,8 @@ import { getAreasByLevel } from "@/data/areas";
 
 // Use Google Maps as primary map (most accurate boundaries)
 const GoogleMapsMap = dynamic(
-  () => import("./GoogleMapsMap").then((mod) => ({ default: mod.GoogleMapsMap })),
+  () =>
+    import("./GoogleMapsMap").then((mod) => ({ default: mod.GoogleMapsMap })),
   {
     ssr: false,
     loading: () => (

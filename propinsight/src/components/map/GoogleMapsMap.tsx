@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState, useCallback } from "react";
-import { GoogleMap, useJsApiLoader, Polygon, InfoWindow } from "@react-google-maps/api";
+import {
+  GoogleMap,
+  useJsApiLoader,
+  Polygon,
+  InfoWindow,
+} from "@react-google-maps/api";
 import { Area } from "@/types";
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/lib/constants";
 import {
@@ -41,7 +46,9 @@ function getAreaCoordinates(area: Area): [number, number] {
   );
 }
 
-async function getAreaBoundaryAsync(area: Area): Promise<google.maps.LatLngLiteral[]> {
+async function getAreaBoundaryAsync(
+  area: Area
+): Promise<google.maps.LatLngLiteral[]> {
   try {
     console.log(`🔍 Fetching boundary for ${area.name} (${area.slug})...`);
     const geoJSONBoundary = await getBoundaryForArea(area.slug);
@@ -51,7 +58,10 @@ async function getAreaBoundaryAsync(area: Area): Promise<google.maps.LatLngLiter
     }
     return [];
   } catch (error) {
-    console.error(`✗ Error fetching boundary for ${area.name} (${area.slug}):`, error);
+    console.error(
+      `✗ Error fetching boundary for ${area.name} (${area.slug}):`,
+      error
+    );
     return [];
   }
 }
@@ -85,7 +95,9 @@ export function GoogleMapsMap({
   const polygonsRef = useRef<Map<string, google.maps.Polygon>>(new Map());
   const [isMapReady, setIsMapReady] = useState(false);
   const [hoveredArea, setHoveredArea] = useState<Area | null>(null);
-  const [boundaries, setBoundaries] = useState<Map<string, google.maps.LatLngLiteral[]>>(new Map());
+  const [boundaries, setBoundaries] = useState<
+    Map<string, google.maps.LatLngLiteral[]>
+  >(new Map());
 
   const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -106,7 +118,7 @@ export function GoogleMapsMap({
 
     const loadBoundaries = async () => {
       const boundariesMap = new Map<string, google.maps.LatLngLiteral[]>();
-      
+
       for (const area of areas) {
         try {
           const boundary = await getAreaBoundaryAsync(area);
@@ -175,7 +187,15 @@ export function GoogleMapsMap({
 
       polygonsRef.current.set(area.slug, polygon);
     });
-  }, [areas, boundaries, isMapReady, selectedArea, hoveredArea, onAreaClick, onAreaHover]);
+  }, [
+    areas,
+    boundaries,
+    isMapReady,
+    selectedArea,
+    hoveredArea,
+    onAreaClick,
+    onAreaHover,
+  ]);
 
   // Auto-focus on selected area
   useEffect(() => {
@@ -198,7 +218,7 @@ export function GoogleMapsMap({
   const onLoad = useCallback((map: google.maps.Map) => {
     mapRef.current = map;
     setIsMapReady(true);
-    
+
     // Set initial center and zoom
     map.setCenter({
       lat: DEFAULT_MAP_CENTER[1],
