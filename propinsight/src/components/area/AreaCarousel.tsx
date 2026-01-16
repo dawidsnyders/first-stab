@@ -308,11 +308,11 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                         {/* Price History Charts - Side by Side */}
                         <div className="mb-4 grid grid-cols-2 gap-4">
                           {/* Price Trend Chart */}
-                          <div>
+                          <div className="bg-stone-50 rounded-lg p-3">
                             <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-2 font-medium">
                               5-Year Price Trend
                             </div>
-                            <div className="h-20 w-full bg-stone-50 rounded-lg p-2">
+                            <div className="h-20 w-full">
                               <ResponsiveContainer width="100%" height="100%">
                                 <LineChart
                                   data={generateMedianPriceData(
@@ -388,11 +388,11 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
 
                           {/* Price per m² Chart */}
                           {stats.avgPricePerSqm && (
-                            <div>
+                            <div className="bg-stone-50 rounded-lg p-3">
                               <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-2 font-medium">
                                 5-Year Price per m²
                               </div>
-                              <div className="h-20 w-full bg-stone-50 rounded-lg p-2">
+                              <div className="h-20 w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                   <LineChart
                                     data={generatePricePerSqmData(
