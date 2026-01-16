@@ -8,7 +8,6 @@ import {
   MapIcon,
   DocumentTextIcon,
   BoltIcon,
-  CursorArrowRaysIcon,
   MagnifyingGlassIcon,
   HomeIcon,
   MapPinIcon,
@@ -194,7 +193,7 @@ export default function Home() {
       </section>
 
       {/* Product Showcase - Ondo-Style Carousel */}
-      <section className="relative bg-gradient-to-b from-stone-100 to-stone-50 py-16 md:py-24 overflow-hidden">
+      <section id="features" className="relative bg-gradient-to-b from-stone-100 to-stone-50 py-16 md:py-24 overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.03)_1px,transparent_0)] bg-[size:32px_32px]"></div>
         
@@ -346,57 +345,6 @@ export default function Home() {
               {/* End spacer */}
               <div className="flex-shrink-0 w-4 md:w-8"></div>
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features section */}
-      <section
-        id="features"
-        className="relative bg-white py-24 border-b border-stone-100"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h3 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
-              Everything you need to
-              <span className="text-sage-600"> make informed decisions</span>
-            </h3>
-            <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-              Comprehensive market intelligence at your fingertips
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <FeatureCard
-              Icon={ChartBarIcon}
-              title="Real-Time Market Data"
-              description="Access up-to-date property prices, sales volumes, and market trends for any suburb in the Western Cape."
-            />
-            <FeatureCard
-              Icon={ArrowTrendingUpIcon}
-              title="Growth Analytics"
-              description="See year-over-year growth rates, price trends, and performance comparisons against national benchmarks."
-            />
-            <FeatureCard
-              Icon={MapIcon}
-              title="Interactive Maps"
-              description="Explore areas visually with our interactive map. Click on regions to see detailed statistics instantly."
-            />
-            <FeatureCard
-              Icon={DocumentTextIcon}
-              title="Comprehensive Reports"
-              description="Get 10-15 page in-depth analysis reports with historical data, growth drivers, and investment outlook."
-            />
-            <FeatureCard
-              Icon={BoltIcon}
-              title="Instant Insights"
-              description="Quick stats and key metrics displayed beautifully. No need to dig through spreadsheets."
-            />
-            <FeatureCard
-              Icon={CursorArrowRaysIcon}
-              title="Investment Intelligence"
-              description="Understand market dynamics, risk factors, and opportunities to make smarter property investments."
-            />
           </div>
         </div>
       </section>
@@ -622,24 +570,6 @@ function StatBox({ value, label, Icon }: StatBoxProps) {
         {value}
       </div>
       <div className="text-sm text-stone-600">{label}</div>
-    </div>
-  );
-}
-
-interface FeatureCardProps {
-  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  title: string;
-  description: string;
-}
-
-function FeatureCard({ Icon, title, description }: FeatureCardProps) {
-  return (
-    <div className="bg-white border border-stone-200 rounded-2xl p-6 md:p-8 hover:shadow-lg hover:border-sage-200 transition-all duration-200">
-      <div className="w-12 h-12 bg-sage-50 rounded-xl flex items-center justify-center mb-4">
-        <Icon className="w-6 h-6 text-sage-600" />
-      </div>
-      <h4 className="text-xl font-bold text-stone-900 mb-3">{title}</h4>
-      <p className="text-stone-600 leading-relaxed">{description}</p>
     </div>
   );
 }
