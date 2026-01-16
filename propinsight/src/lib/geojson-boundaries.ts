@@ -186,9 +186,14 @@ export async function getBoundaryForArea(
 
     if (!response.ok) {
       if (response.status === 404) {
-        console.warn(`Boundary not found for ${slug} via API`);
+        console.warn(`Boundary not found for ${slug} via API (404)`);
         return null;
       }
+      const errorText = await response.text().catch(() => "");
+      console.error(
+        `API error for ${slug}: ${response.status} ${response.statusText}`,
+        errorText.substring(0, 200)
+      );
       throw new Error(
         `API returned ${response.status}: ${response.statusText}`
       );
@@ -197,7 +202,14 @@ export async function getBoundaryForArea(
     const data = await response.json();
 
     if (!data.success || !data.boundary || !Array.isArray(data.boundary)) {
-      console.error(`Invalid boundary data for ${slug}:`, data);
+      console.error(`Invalid boundary data for ${slug}:`, {
+        success: data.success,
+        hasBoundary: !!data.boundary,
+        boundaryType: Array.isArray(data.boundary) ? "array" : typeof data.boundary,
+        boundaryLength: Array.isArray(data.boundary) ? data.boundary.length : "N/A",
+        error: data.error,
+        fullResponse: data,
+      });
       return null;
     }
 

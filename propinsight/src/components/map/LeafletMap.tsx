@@ -47,6 +47,7 @@ async function getAreaBoundaryAsync(area: Area): Promise<[number, number][]> {
   // ALWAYS try to get real boundary from official API sources
   // This ensures pixel-perfect accuracy down to the last coordinate
   try {
+    console.log(`🔍 Fetching boundary for ${area.name} (${area.slug})...`);
     const geoJSONBoundary = await getBoundaryForArea(area.slug);
     if (geoJSONBoundary && geoJSONBoundary.length > 0) {
       if (geoJSONBoundary.length >= 50) {
@@ -64,7 +65,7 @@ async function getAreaBoundaryAsync(area: Area): Promise<[number, number][]> {
     // NO FALLBACK - If API boundary not found, return empty array
     // This ensures we never use inaccurate approximations
     console.error(
-      `✗ No API boundary found for ${area.name} (${area.slug}) - area will not be displayed on map`
+      `✗ No API boundary found for ${area.name} (${area.slug}) - getBoundaryForArea returned null or empty array`
     );
     return [];
   } catch (error) {
@@ -238,12 +239,20 @@ export function LeafletMap({
           );
           return;
         }
-        
+
         // Special logging for Stellenbosch to debug
         if (area.slug === "stellenbosch") {
-          console.log(`🔍 DEBUG Stellenbosch: boundary loaded with ${boundary.length} points`);
-          console.log(`🔍 DEBUG Stellenbosch: first 3 coords:`, boundary.slice(0, 3));
-          console.log(`🔍 DEBUG Stellenbosch: last 3 coords:`, boundary.slice(-3));
+          console.log(
+            `🔍 DEBUG Stellenbosch: boundary loaded with ${boundary.length} points`
+          );
+          console.log(
+            `🔍 DEBUG Stellenbosch: first 3 coords:`,
+            boundary.slice(0, 3)
+          );
+          console.log(
+            `🔍 DEBUG Stellenbosch: last 3 coords:`,
+            boundary.slice(-3)
+          );
         }
 
         const isSelected = selectedArea?.id === area.id;
@@ -315,18 +324,32 @@ export function LeafletMap({
 
         // Store polygon reference for debugging
         polygonsRef.current.set(area.id, polygon);
-        
+
         // Special logging for Stellenbosch
         if (area.slug === "stellenbosch") {
-          console.log(`🔍 DEBUG Stellenbosch: Polygon created and added to map`);
-          console.log(`🔍 DEBUG Stellenbosch: Polygon element:`, polygon.getElement());
-          console.log(`🔍 DEBUG Stellenbosch: Polygon bounds:`, polygon.getBounds());
+          console.log(
+            `🔍 DEBUG Stellenbosch: Polygon created and added to map`
+          );
+          console.log(
+            `🔍 DEBUG Stellenbosch: Polygon element:`,
+            polygon.getElement()
+          );
+          console.log(
+            `🔍 DEBUG Stellenbosch: Polygon bounds:`,
+            polygon.getBounds()
+          );
           // Test if polygon is actually on the map
           setTimeout(() => {
             const bounds = polygon.getBounds();
             const center = bounds.getCenter();
-            console.log(`🔍 DEBUG Stellenbosch: Polygon center: [${center.lat}, ${center.lng}]`);
-            console.log(`🔍 DEBUG Stellenbosch: Polygon visible on map:`, mapInstanceRef.current && mapInstanceRef.current.getBounds().intersects(bounds));
+            console.log(
+              `🔍 DEBUG Stellenbosch: Polygon center: [${center.lat}, ${center.lng}]`
+            );
+            console.log(
+              `🔍 DEBUG Stellenbosch: Polygon visible on map:`,
+              mapInstanceRef.current &&
+                mapInstanceRef.current.getBounds().intersects(bounds)
+            );
           }, 1000);
         }
 
