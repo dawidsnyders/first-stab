@@ -786,26 +786,44 @@ export async function GET(request: NextRequest) {
             next: { revalidate: 86400 },
           });
 
+          let responseData: GeoJSONResponse;
           if (!response.ok) {
+            const apiName = source === "national" ? "National API" : "Western Cape API";
             console.warn(
-              `Western Cape fallback endpoint returned ${response.status}: ${response.statusText}`
+              `${apiName} fallback endpoint returned ${response.status}: ${response.statusText}`
             );
-            lastError = new Error(
-              `HTTP ${response.status}: ${response.statusText}`
-            );
-            continue;
+            // For National API with WHERE clause for Paarl, retry without WHERE clause
+            if (source === "national" && suburbName === "Paarl" && url.searchParams.get("where")?.includes("DRAKENSTEIN")) {
+              console.log(
+                `National API WHERE clause failed (${response.status}), retrying with where=1=1 for "${suburbName}"`
+              );
+              url.searchParams.set("where", "1=1");
+              const retryResponse = await fetch(url.toString(), {
+                method: "GET",
+                headers: { Accept: "application/json" },
+                next: { revalidate: 86400 },
+              });
+              if (retryResponse.ok) {
+                responseData = await retryResponse.json();
+                console.log(
+                  `National API retry successful, got ${responseData.features?.length || 0} features`
+                );
+                // Continue to filtering logic below
+              } else {
+                lastError = new Error(
+                  `HTTP ${retryResponse.status}: ${retryResponse.statusText}`
+                );
+                continue;
+              }
+            } else {
+              lastError = new Error(
+                `HTTP ${response.status}: ${response.statusText}`
+              );
+              continue;
+            }
+          } else {
+            responseData = await response.json();
           }
-
-          // Get response data (either from original response or retry)
-          const responseData: GeoJSONResponse = response.ok
-            ? await response.json()
-            : await (
-                await fetch(url.toString(), {
-                  method: "GET",
-                  headers: { Accept: "application/json" },
-                  next: { revalidate: 86400 },
-                })
-              ).json();
 
           // Filter for polygons matching the suburb name
           // Try multiple field names and be flexible with matching
