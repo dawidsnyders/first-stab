@@ -93,8 +93,10 @@ export function GoogleMapsMap({
 }: GoogleMapsMapProps) {
   const mapRef = useRef<google.maps.Map | null>(null);
   const polygonsRef = useRef<Map<string, google.maps.Polygon>>(new Map());
+  const polygonBoundsRef = useRef<Map<string, google.maps.LatLngBounds>>(new Map());
   const [isMapReady, setIsMapReady] = useState(false);
   const [hoveredArea, setHoveredArea] = useState<Area | null>(null);
+  const [viewportBounds, setViewportBounds] = useState<google.maps.LatLngBounds | null>(null);
   const [boundaries, setBoundaries] = useState<
     Map<string, google.maps.LatLngLiteral[]>
   >(new Map());
@@ -136,7 +138,63 @@ export function GoogleMapsMap({
     loadBoundaries();
   }, [areas, isLoaded]);
 
-  // Update polygons when boundaries are loaded
+  // Calculate and store polygon bounds when boundaries are loaded
+  useEffect(() => {
+    if (boundaries.size === 0) return;
+
+    polygonBoundsRef.current.clear();
+    boundaries.forEach((boundary, slug) => {
+      if (boundary.length === 0) return;
+      const bounds = new google.maps.LatLngBounds();
+      boundary.forEach((point) => {
+        bounds.extend(point);
+      });
+      polygonBoundsRef.current.set(slug, bounds);
+    });
+  }, [boundaries]);
+
+  // Update viewport bounds when map moves/zooms
+  useEffect(() => {
+    if (!isMapReady || !mapRef.current) return;
+
+    const updateViewportBounds = () => {
+      if (mapRef.current) {
+        const bounds = mapRef.current.getBounds();
+        if (bounds) {
+          setViewportBounds(bounds);
+        }
+      }
+    };
+
+    // Update immediately
+    updateViewportBounds();
+
+    // Listen to bounds changes
+    const listener = mapRef.current.addListener("bounds_changed", updateViewportBounds);
+
+    return () => {
+      if (listener) {
+        google.maps.event.removeListener(listener);
+      }
+    };
+  }, [isMapReady]);
+
+  // Check if polygon is visible in viewport
+  const isPolygonVisible = useCallback((area: Area): boolean => {
+    // Always show selected area
+    if (selectedArea?.slug === area.slug) return true;
+    
+    // If no viewport bounds yet, show all (initial load)
+    if (!viewportBounds) return true;
+
+    const polygonBounds = polygonBoundsRef.current.get(area.slug);
+    if (!polygonBounds) return false;
+
+    // Check if polygon bounds intersect with viewport
+    return viewportBounds.intersects(polygonBounds);
+  }, [viewportBounds, selectedArea]);
+
+  // Update polygons when boundaries are loaded or viewport changes
   useEffect(() => {
     if (!isMapReady || !mapRef.current || boundaries.size === 0) return;
 
@@ -146,10 +204,15 @@ export function GoogleMapsMap({
     });
     polygonsRef.current.clear();
 
-    // Add polygons for each area
+    // Add polygons for each area (only if visible)
     areas.forEach((area) => {
       const boundary = boundaries.get(area.slug);
       if (!boundary || boundary.length === 0) return;
+
+      // Check if polygon should be visible
+      if (!isPolygonVisible(area)) {
+        return; // Skip rendering this polygon
+      }
 
       const isSelected = selectedArea?.slug === area.slug;
       const isHovered = hoveredArea?.slug === area.slug;
@@ -195,6 +258,7 @@ export function GoogleMapsMap({
     hoveredArea,
     onAreaClick,
     onAreaHover,
+    isPolygonVisible,
   ]);
 
   // Auto-focus on selected area

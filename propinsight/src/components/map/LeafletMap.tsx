@@ -93,7 +93,9 @@ export function LeafletMap({
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<unknown>(null);
   const polygonsRef = useRef<Map<string, unknown>>(new Map());
+  const polygonBoundsRef = useRef<Map<string, unknown>>(new Map());
   const [isMapReady, setIsMapReady] = useState(false);
+  const [viewportBounds, setViewportBounds] = useState<unknown>(null);
   // Removed hoveredArea state - hover is handled directly in event handlers to prevent flashing
 
   // Store callbacks in refs to ensure latest versions are used
@@ -140,6 +142,20 @@ export function LeafletMap({
 
       mapInstanceRef.current = map;
       setIsMapReady(true);
+
+      // Track viewport bounds changes
+      const updateViewportBounds = () => {
+        if (map) {
+          setViewportBounds(map.getBounds());
+        }
+      };
+
+      // Update immediately
+      updateViewportBounds();
+
+      // Listen to map move and zoom events
+      map.on("moveend", updateViewportBounds);
+      map.on("zoomend", updateViewportBounds);
     });
 
     return () => {
@@ -228,6 +244,31 @@ export function LeafletMap({
           areasWithoutBoundaries.map((a) => a.name)
         );
       }
+      // Calculate and store polygon bounds
+      polygonBoundsRef.current.clear();
+      areas.forEach((area, index) => {
+        const boundary = boundaries[index];
+        if (boundary && boundary.length > 0) {
+          const polygon = L.default.polygon(boundary);
+          polygonBoundsRef.current.set(area.slug, polygon.getBounds());
+        }
+      });
+
+      // Helper function to check if polygon is visible
+      const isPolygonVisible = (area: Area): boolean => {
+        // Always show selected area
+        if (selectedArea?.slug === area.slug) return true;
+        
+        // If no viewport bounds yet, show all (initial load)
+        if (!viewportBounds) return true;
+
+        const polygonBounds = polygonBoundsRef.current.get(area.slug);
+        if (!polygonBounds) return false;
+
+        // Check if polygon bounds intersect with viewport
+        return (viewportBounds as any).intersects(polygonBounds as any);
+      };
+
       // Add area polygons with real boundaries
       areas.forEach((area, index) => {
         const boundary = boundaries[index]; // Returns [lat, lng] format
@@ -238,6 +279,11 @@ export function LeafletMap({
             `✗ SKIPPING ${area.name} (${area.slug}): boundary is empty or invalid - area will NOT be visible on map`
           );
           return;
+        }
+
+        // Skip areas not visible in viewport
+        if (!isPolygonVisible(area)) {
+          return; // Don't render this polygon
         }
 
         // Special logging for Stellenbosch to debug
@@ -469,6 +515,47 @@ export function LeafletMap({
       }
     });
   }, [areas.length, isMapReady, selectedArea?.id]); // Use stable dependencies - only length and IDs, not full objects/arrays
+
+  // Update visible polygons when viewport changes
+  useEffect(() => {
+    if (!mapInstanceRef.current || !isMapReady || polygonsRef.current.size === 0) return;
+
+    // Re-check visibility and show/hide polygons based on viewport
+    import("leaflet").then((L) => {
+      const map = mapInstanceRef.current as any;
+      if (!map) return;
+
+      const currentBounds = map.getBounds();
+      if (!currentBounds) return;
+
+      polygonsRef.current.forEach((polygon: any, areaId: string) => {
+        const area = areas.find((a) => a.id === areaId);
+        if (!area) return;
+
+        // Always show selected area
+        if (selectedArea?.id === area.id) {
+          if (!map.hasLayer(polygon)) {
+            polygon.addTo(map);
+          }
+          return;
+        }
+
+        // Check if polygon bounds intersect with viewport
+        const polygonBounds = polygonBoundsRef.current.get(area.slug);
+        if (polygonBounds && currentBounds.intersects(polygonBounds as any)) {
+          // Visible - ensure it's on the map
+          if (!map.hasLayer(polygon)) {
+            polygon.addTo(map);
+          }
+        } else {
+          // Not visible - remove from map
+          if (map.hasLayer(polygon)) {
+            map.removeLayer(polygon);
+          }
+        }
+      });
+    });
+  }, [viewportBounds, areas, selectedArea, isMapReady]);
 
   // Track previous selected area ID to prevent unnecessary updates
   const prevSelectedAreaIdRef = useRef<string | null>(null);
