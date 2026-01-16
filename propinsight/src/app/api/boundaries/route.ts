@@ -164,9 +164,14 @@ export async function GET(request: NextRequest) {
     const source = areaInfo.source === "custom" ? "capeTown" : areaInfo.source; // Map custom to capeTown
 
     // Try endpoints based on source
+    // For Cape Town suburbs, try Cape Town API first, then fallback to Western Cape API
     let data: GeoJSONResponse | null = null;
     let lastError: Error | null = null;
-    const endpoints = API_ENDPOINTS[source] || API_ENDPOINTS.capeTown;
+    let endpoints = API_ENDPOINTS[source] || API_ENDPOINTS.capeTown;
+    
+    // If Cape Town API fails, fallback to Western Cape API for Cape Town suburbs
+    const shouldTryFallback = source === "capeTown";
+    const fallbackEndpoints = shouldTryFallback ? API_ENDPOINTS.westernCape : [];
 
     for (const endpoint of endpoints) {
       try {
@@ -586,18 +591,27 @@ export async function GET(request: NextRequest) {
           }
         } else {
           // For Cape Town API, filter for Polygon/MultiPolygon only (reject Points)
-          const polygonFeatures = responseData.features?.filter((f) => {
-            return f.geometry && (f.geometry.type === "Polygon" || f.geometry.type === "MultiPolygon");
-          }) || [];
-          
+          const polygonFeatures =
+            responseData.features?.filter((f) => {
+              return (
+                f.geometry &&
+                (f.geometry.type === "Polygon" ||
+                  f.geometry.type === "MultiPolygon")
+              );
+            }) || [];
+
           if (polygonFeatures.length > 0) {
             matchingFeature = polygonFeatures[0];
             console.log(
-              `Found polygon feature for "${suburbName}" from Cape Town API: ${matchingFeature.geometry?.type || "unknown type"}`
+              `Found polygon feature for "${suburbName}" from Cape Town API: ${
+                matchingFeature.geometry?.type || "unknown type"
+              }`
             );
           } else {
             const allFeatures = responseData.features || [];
-            const pointFeatures = allFeatures.filter((f) => f.geometry?.type === "Point");
+            const pointFeatures = allFeatures.filter(
+              (f) => f.geometry?.type === "Point"
+            );
             console.warn(
               `No polygon features returned from Cape Town API for "${suburbName}" (found ${allFeatures.length} total features, ${pointFeatures.length} are Points)`
             );
@@ -625,6 +639,102 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    // If primary source failed and we have a fallback, try it
+    if (!data && shouldTryFallback && fallbackEndpoints.length > 0) {
+      console.log(`Cape Town API failed for "${suburbName}", trying Western Cape API as fallback...`);
+      // Switch to Western Cape source and try those endpoints
+      source = "westernCape";
+      endpoints = fallbackEndpoints;
+      lastError = null;
+      
+      // Retry with Western Cape endpoints
+      for (const endpoint of endpoints) {
+        try {
+          const url = new URL(endpoint);
+          console.log(`Querying Western Cape API (fallback) for "${suburbName}"`);
+          url.searchParams.append("where", "1=1"); // Get all, filter in code
+          url.searchParams.append("outFields", "*");
+          url.searchParams.append("returnGeometry", "true");
+          url.searchParams.append("f", "geojson");
+          url.searchParams.append("outSR", "4326");
+          url.searchParams.append("returnExceededLimitFeatures", "true");
+          url.searchParams.append("geometryPrecision", "8");
+          
+          const response = await fetch(url.toString(), {
+            method: "GET",
+            headers: { Accept: "application/json" },
+            next: { revalidate: 86400 },
+          });
+          
+          if (!response.ok) {
+            const errorText = await response.text().catch(() => "");
+            console.warn(`Western Cape fallback endpoint returned ${response.status}: ${response.statusText}`);
+            lastError = new Error(`HTTP ${response.status}: ${response.statusText}`);
+            continue;
+          }
+          
+          const responseData: GeoJSONResponse = await response.json();
+          
+          // Filter for polygons matching the suburb name
+          const candidates = responseData.features?.filter((f) => {
+            if (!f.geometry || (f.geometry.type !== "Polygon" && f.geometry.type !== "MultiPolygon")) {
+              return false;
+            }
+            const props = f.properties;
+            const nameField = String(
+              props.SUBURB || props.NAME || props.SUBURB_NAME || props.name || ""
+            );
+            const nameLower = nameField.toLowerCase();
+            return searchTerms.some((term) => {
+              const termLower = term.toLowerCase();
+              return nameLower.includes(termLower) || termLower.includes(nameLower);
+            });
+          }) || [];
+          
+          if (candidates.length > 0) {
+            // Use smallest candidate
+            let smallestArea = Infinity;
+            let bestCandidate = null;
+            for (const candidate of candidates) {
+              if (candidate.geometry && (candidate.geometry.type === "Polygon" || candidate.geometry.type === "MultiPolygon")) {
+                let coords: number[][] = [];
+                if (candidate.geometry.type === "Polygon") {
+                  coords = candidate.geometry.coordinates[0] as unknown as number[][];
+                } else {
+                  const multiPoly = candidate.geometry.coordinates[0] as unknown as number[][][];
+                  coords = multiPoly[0] as number[][];
+                }
+                if (coords && coords.length > 0) {
+                  const lngs = coords.map((c) => c[0]);
+                  const lats = coords.map((c) => c[1]);
+                  const area = (Math.max(...lngs) - Math.min(...lngs)) * (Math.max(...lats) - Math.min(...lats)) * 111 * 111;
+                  const minLat = Math.min(...lats);
+                  const maxLat = Math.max(...lats);
+                  const minLng = Math.min(...lngs);
+                  const maxLng = Math.max(...lngs);
+                  const isInWesternCape = minLat >= -36 && maxLat <= -31 && minLng >= 16 && maxLng <= 26;
+                  const maxArea = 5; // km² for suburbs
+                  if (area < maxArea && isInWesternCape && area < smallestArea) {
+                    bestCandidate = candidate;
+                    smallestArea = area;
+                  }
+                }
+              }
+            }
+            if (bestCandidate) {
+              data = { type: "FeatureCollection", features: [bestCandidate] };
+              console.log(`✓ Found boundary for "${suburbName}" from Western Cape API (fallback)`);
+              break;
+            }
+          }
+        } catch (error) {
+          lastError = error instanceof Error ? error : new Error(String(error));
+          console.warn(`Error with Western Cape fallback endpoint:`, lastError.message);
+          continue;
+        }
+      }
+    }
+    
     if (!data) {
       console.error(
         `All endpoints failed for ${suburbName} (source: ${source}). Last error:`,
