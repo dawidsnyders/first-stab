@@ -753,8 +753,16 @@ export async function GET(request: NextRequest) {
           console.log(`Querying ${apiName} (fallback) for "${suburbName}"`);
           // Build query based on source type
           if (source === "national") {
-            // National API - query all and filter in code
-            url.searchParams.append("where", "1=1");
+            // National API - for Paarl, try searching for Drakenstein directly
+            if (suburbName === "Paarl") {
+              // Try common field names for Drakenstein
+              url.searchParams.append(
+                "where",
+                "UPPER(MUNIC_NAME) LIKE '%DRAKENSTEIN%' OR UPPER(NAME) LIKE '%DRAKENSTEIN%' OR UPPER(ADMIN_NAME) LIKE '%DRAKENSTEIN%' OR UPPER(LOCAL_MUNICIPALITY) LIKE '%DRAKENSTEIN%'"
+              );
+            } else {
+              url.searchParams.append("where", "1=1"); // Get all, filter in code
+            }
             url.searchParams.append("outFields", "*");
             url.searchParams.append("returnGeometry", "true");
             url.searchParams.append("f", "geojson");
@@ -788,7 +796,14 @@ export async function GET(request: NextRequest) {
             continue;
           }
 
-          const responseData: GeoJSONResponse = await response.json();
+          // Get response data (either from original response or retry)
+          const responseData: GeoJSONResponse = response.ok 
+            ? await response.json()
+            : await (await fetch(url.toString(), {
+                method: "GET",
+                headers: { Accept: "application/json" },
+                next: { revalidate: 86400 },
+              })).json();
 
           // Filter for polygons matching the suburb name
           // Try multiple field names and be flexible with matching
