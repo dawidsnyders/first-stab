@@ -5,7 +5,7 @@ import { Area } from "@/types";
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/lib/constants";
 import "leaflet/dist/leaflet.css";
 
-// Coordinates for all Western Cape areas
+// Coordinates for all Western Cape areas [lng, lat] format
 const AREA_COORDINATES: Record<string, [number, number]> = {
   // Province
   "western-cape": [22.0, -20.0],
@@ -29,24 +29,22 @@ const AREA_COORDINATES: Record<string, [number, number]> = {
 };
 
 // Generate approximate polygon boundaries around coordinates
-// In production, these would be real GeoJSON boundaries
-// Creating irregular polygons that look more like real suburb boundaries
+// Leaflet uses [lat, lng] format, so we convert here
 function generateAreaBoundary(
-  center: [number, number],
+  center: [number, number], // [lng, lat] from our data
   size: number = 0.02
 ): [number, number][] {
   const [lng, lat] = center;
-  // Create an irregular polygon (hexagon-like) for more realistic appearance
+  // Create a regular hexagon polygon for consistent boundaries
   const points: [number, number][] = [];
   const sides = 6;
   for (let i = 0; i <= sides; i++) {
     const angle = (i * 2 * Math.PI) / sides;
-    // Add some randomness to make it look more natural
-    const radius = size * (0.8 + Math.random() * 0.4);
-    points.push([
-      lng + radius * Math.cos(angle),
-      lat + radius * Math.sin(angle),
-    ]);
+    const radius = size;
+    const pointLng = lng + radius * Math.cos(angle);
+    const pointLat = lat + radius * Math.sin(angle);
+    // Leaflet expects [lat, lng] format
+    points.push([pointLat, pointLng]);
   }
   return points;
 }
@@ -61,14 +59,14 @@ function getAreaCoordinates(area: Area): [number, number] {
 }
 
 function getAreaBoundary(area: Area): [number, number][] {
-  const coords = getAreaCoordinates(area);
-  // Adjust size based on area level
+  const coords = getAreaCoordinates(area); // Returns [lng, lat]
+  // Adjust size based on area level - make suburbs clearly visible
   const size =
     area.level === "province"
       ? 2.0
       : area.level === "city"
-      ? 0.3
-      : 0.02; // suburb
+      ? 0.4
+      : 0.05; // suburb - increased for better visibility
   return generateAreaBoundary(coords, size);
 }
 
@@ -91,20 +89,35 @@ export function LeafletMap({
   const [hoveredArea, setHoveredArea] = useState<Area | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
 
+  // Store callbacks in refs to ensure latest versions are used
+  const onAreaClickRef = useRef(onAreaClick);
+  const onAreaHoverRef = useRef(onAreaHover);
+
+  useEffect(() => {
+    onAreaClickRef.current = onAreaClick;
+    onAreaHoverRef.current = onAreaHover;
+  }, [onAreaClick, onAreaHover]);
+
+  // Initialize map once
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
+
+    // Check if container already has a map instance
+    if ((mapRef.current as any)._leaflet_id) {
+      return;
+    }
 
     // Dynamically import Leaflet to avoid SSR issues
     import("leaflet").then((L) => {
       const map = L.default.map(mapRef.current!, {
-        center: [DEFAULT_MAP_CENTER[1], DEFAULT_MAP_CENTER[0]],
+        center: [DEFAULT_MAP_CENTER[1], DEFAULT_MAP_CENTER[0]], // [lat, lng] for Leaflet
         zoom: DEFAULT_MAP_ZOOM,
         zoomControl: false,
         attributionControl: true,
       });
 
-      // Add greyed-out OpenStreetMap tile layer
-      const tileLayer = L.default
+      // Add OpenStreetMap tile layer
+      L.default
         .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
           attribution:
             '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
@@ -118,29 +131,66 @@ export function LeafletMap({
 
       mapInstanceRef.current = map;
       setIsMapReady(true);
+    });
 
+    return () => {
+      if (mapInstanceRef.current) {
+        try {
+          // Clear all polygons
+          polygonsRef.current.forEach((polygon) => {
+            mapInstanceRef.current.removeLayer(polygon);
+          });
+          polygonsRef.current.clear();
+          
+          mapInstanceRef.current.remove();
+          // Clear the leaflet ID from the container
+          if (mapRef.current) {
+            delete (mapRef.current as any)._leaflet_id;
+          }
+        } catch (e) {
+          console.warn("Error removing map:", e);
+        }
+        mapInstanceRef.current = null;
+      }
+    };
+  }, []); // Only run once for map initialization
+
+  // Add/update polygons when map is ready and areas change
+  useEffect(() => {
+    if (!mapInstanceRef.current || !isMapReady || areas.length === 0) return;
+
+    // Clear existing polygons
+    polygonsRef.current.forEach((polygon) => {
+      mapInstanceRef.current.removeLayer(polygon);
+    });
+    polygonsRef.current.clear();
+
+    // Dynamically import Leaflet
+    import("leaflet").then((L) => {
       // Add area polygons
       areas.forEach((area) => {
-        const boundary = getAreaBoundary(area);
+        const boundary = getAreaBoundary(area); // Returns [lat, lng] format
+        const coords = getAreaCoordinates(area); // Returns [lng, lat]
+
         const isSelected = selectedArea?.id === area.id;
         const isHovered = hoveredArea?.id === area.id;
 
-        // Determine polygon style - darker grey boundaries for visibility
-        let fillColor = "rgba(120, 113, 108, 0.05)"; // stone-400 with very low opacity
-        let borderColor = "#57534e"; // stone-600 - darker grey for clear boundaries
-        let borderWidth = 2;
-        let fillOpacity = 0.05;
+        // Determine polygon style - make boundaries clearly visible
+        let fillColor = "#5d7350"; // sage-600 solid color
+        let borderColor = "#4a5c3f"; // sage-700 - darker border
+        let borderWidth = 3;
+        let fillOpacity = 0.25; // Clearly visible
 
         if (isSelected) {
-          fillColor = "rgba(93, 115, 80, 0.3)"; // sage-600
+          fillColor = "#7d9470"; // sage-500 brighter
           borderColor = "#5d7350"; // sage-600
-          borderWidth = 3;
-          fillOpacity = 0.3;
+          borderWidth = 4;
+          fillOpacity = 0.4;
         } else if (isHovered) {
-          fillColor = "rgba(93, 115, 80, 0.2)"; // sage-600 lighter
-          borderColor = "#7d9470"; // sage-500
-          borderWidth = 2.5;
-          fillOpacity = 0.2;
+          fillColor = "#6f8464"; // sage-500 lighter
+          borderColor = "#5d7350"; // sage-600
+          borderWidth = 3.5;
+          fillOpacity = 0.35;
         }
 
         const polygon = L.default.polygon(boundary, {
@@ -149,30 +199,34 @@ export function LeafletMap({
           fillColor: fillColor,
           fillOpacity: fillOpacity,
           className: `area-polygon area-${area.id}`,
-        }).addTo(map);
+          interactive: true,
+          bubblingMouseEvents: false,
+        }).addTo(mapInstanceRef.current);
 
-        // Add click handler
-        polygon.on("click", () => {
-          onAreaClick(area);
+        // Set cursor
+        polygon.setStyle({ cursor: "pointer" });
+
+        // Add click handler - use refs to get latest callbacks
+        polygon.on("click", (e) => {
+          if (e.originalEvent) {
+            e.originalEvent.stopPropagation();
+          }
+          onAreaClickRef.current(area);
         });
 
         // Add hover handlers
         polygon.on("mouseover", () => {
           setHoveredArea(area);
-          onAreaHover?.(area);
+          onAreaHoverRef.current?.(area);
+          polygon.setStyle({ cursor: "pointer", fillOpacity: 0.4 });
         });
 
         polygon.on("mouseout", () => {
           setHoveredArea(null);
-          onAreaHover?.(null);
-        });
-
-        // Change cursor on hover
-        polygon.on("mouseover", function (this: L.Polygon) {
-          this.setStyle({ fillOpacity: 0.5 });
-        });
-        polygon.on("mouseout", function (this: L.Polygon) {
-          this.setStyle({ fillOpacity: 0.35 });
+          onAreaHoverRef.current?.(null);
+          if (!isSelected) {
+            polygon.setStyle({ fillOpacity: 0.25 });
+          }
         });
 
         polygonsRef.current.set(area.id, polygon);
@@ -180,69 +234,61 @@ export function LeafletMap({
 
       // Auto-focus on selected area
       if (selectedArea) {
-        const coords = getAreaCoordinates(selectedArea);
-        map.setView([coords[1], coords[0]], 12, {
+        const coords = getAreaCoordinates(selectedArea); // [lng, lat]
+        mapInstanceRef.current.setView([coords[1], coords[0]], 12, {
+          // Convert to [lat, lng] for Leaflet
           animate: true,
           duration: 0.3,
         });
       }
     });
+  }, [areas, isMapReady, selectedArea, hoveredArea]); // Re-run when areas change or map becomes ready
 
-    return () => {
-      if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
-        mapInstanceRef.current = null;
-      }
-      polygonsRef.current.clear();
-    };
-  }, []);
-
-  // Update polygons when selected/hovered area changes
+  // Update polygon styles when selection changes
   useEffect(() => {
     if (!mapInstanceRef.current || !isMapReady) return;
 
-    import("leaflet").then((L) => {
-      polygonsRef.current.forEach((polygon, areaId) => {
-        const area = areas.find((a) => a.id === areaId);
-        if (!area) return;
+    polygonsRef.current.forEach((polygon, areaId) => {
+      const area = areas.find((a) => a.id === areaId);
+      if (!area) return;
 
-        const isSelected = selectedArea?.id === area.id;
-        const isHovered = hoveredArea?.id === area.id;
+      const isSelected = selectedArea?.id === area.id;
+      const isHovered = hoveredArea?.id === area.id;
 
-        // Determine polygon style - darker grey boundaries for visibility
-        let fillColor = "rgba(120, 113, 108, 0.05)";
-        let borderColor = "#57534e"; // stone-600 - darker grey
-        let borderWidth = 2;
-        let fillOpacity = 0.05;
+      // Determine polygon style
+      let fillColor = "#5d7350";
+      let borderColor = "#4a5c3f";
+      let borderWidth = 3;
+      let fillOpacity = 0.25;
 
-        if (isSelected) {
-          fillColor = "rgba(93, 115, 80, 0.3)";
-          borderColor = "#5d7350";
-          borderWidth = 3;
-          fillOpacity = 0.3;
-        } else if (isHovered) {
-          fillColor = "rgba(93, 115, 80, 0.2)";
-          borderColor = "#7d9470";
-          borderWidth = 2.5;
-          fillOpacity = 0.2;
-        }
+      if (isSelected) {
+        fillColor = "#7d9470";
+        borderColor = "#5d7350";
+        borderWidth = 4;
+        fillOpacity = 0.4;
+      } else if (isHovered) {
+        fillColor = "#6f8464";
+        borderColor = "#5d7350";
+        borderWidth = 3.5;
+        fillOpacity = 0.35;
+      }
 
-        polygon.setStyle({
-          color: borderColor,
-          weight: borderWidth,
-          fillColor: fillColor,
-          fillOpacity: fillOpacity,
-        });
-
-        // Focus on selected area
-        if (isSelected) {
-          const coords = getAreaCoordinates(area);
-          mapInstanceRef.current.setView([coords[1], coords[0]], 12, {
-            animate: true,
-            duration: 0.3,
-          });
-        }
+      polygon.setStyle({
+        color: borderColor,
+        weight: borderWidth,
+        fillColor: fillColor,
+        fillOpacity: fillOpacity,
+        cursor: "pointer",
       });
+
+      // Focus on selected area
+      if (isSelected) {
+        const coords = getAreaCoordinates(area);
+        mapInstanceRef.current.setView([coords[1], coords[0]], 12, {
+          animate: true,
+          duration: 0.3,
+        });
+      }
     });
   }, [selectedArea, hoveredArea, isMapReady, areas]);
 
@@ -257,18 +303,42 @@ export function LeafletMap({
           background: #f5f5f4;
         }
 
+        /* Ensure all interactive elements are clickable */
+        .leaflet-interactive {
+          pointer-events: auto !important;
+          cursor: pointer !important;
+        }
+
+        .leaflet-interactive:hover {
+          cursor: pointer !important;
+        }
+
         .area-polygon {
-          cursor: pointer;
-          transition: all 0.2s ease;
+          cursor: pointer !important;
+          pointer-events: auto !important;
         }
 
         .area-polygon:hover {
-          cursor: pointer;
+          cursor: pointer !important;
         }
 
-        /* Ensure boundaries are visible */
-        .leaflet-interactive {
+        /* Ensure map doesn't block interactions */
+        .leaflet-map-pane {
+          pointer-events: auto;
+        }
+
+        .leaflet-overlay-pane {
           pointer-events: auto !important;
+        }
+
+        .leaflet-overlay-pane svg {
+          pointer-events: auto !important;
+        }
+
+        /* Make sure paths are clickable */
+        .leaflet-overlay-pane svg path {
+          pointer-events: auto !important;
+          cursor: pointer !important;
         }
       `}</style>
 

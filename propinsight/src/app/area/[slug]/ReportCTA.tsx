@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Area } from '@/types';
-import { REPORT_PRICE_DISPLAY } from '@/lib/constants';
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Area } from "@/types";
+import { REPORT_PRICE_DISPLAY } from "@/lib/constants";
 
 interface ReportCTAProps {
   area: Area;
@@ -11,7 +11,7 @@ interface ReportCTAProps {
 
 export function ReportCTA({ area }: ReportCTAProps) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handlePurchase = async (e: React.FormEvent) => {
@@ -20,10 +20,10 @@ export function ReportCTA({ area }: ReportCTAProps) {
 
     try {
       // Create Stripe checkout session
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
+      const response = await fetch("/api/checkout", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           areaSlug: area.slug,
@@ -34,21 +34,21 @@ export function ReportCTA({ area }: ReportCTAProps) {
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create checkout session');
+        throw new Error(data.error || "Failed to create checkout session");
       }
 
       // Redirect to Stripe Checkout
       if (data.url) {
         window.location.href = data.url;
       } else {
-        throw new Error('No checkout URL received');
+        throw new Error("No checkout URL received");
       }
     } catch (error) {
-      console.error('Checkout error:', error);
+      console.error("Checkout error:", error);
       alert(
         error instanceof Error
           ? error.message
-          : 'Failed to start checkout. Please try again.'
+          : "Failed to start checkout. Please try again."
       );
       setIsSubmitting(false);
     }
@@ -69,16 +69,19 @@ export function ReportCTA({ area }: ReportCTAProps) {
           {/* Features grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-5">
             {[
-              '10-Year Price Analysis',
-              'CAGR Calculations',
-              'National Benchmarks',
-              'Growth Driver Analysis',
-              'Risk Assessment',
-              'Investment Outlook',
-              'Comparable Areas',
-              'PDF Download',
+              "10-Year Price Analysis",
+              "CAGR Calculations",
+              "National Benchmarks",
+              "Growth Driver Analysis",
+              "Risk Assessment",
+              "Investment Outlook",
+              "Comparable Areas",
+              "PDF Download",
             ].map((feature) => (
-              <div key={feature} className="flex items-center gap-1.5 text-sage-50">
+              <div
+                key={feature}
+                className="flex items-center gap-1.5 text-sage-50"
+              >
                 <svg
                   className="w-4 h-4 text-terracotta-300 flex-shrink-0"
                   fill="currentColor"
@@ -145,7 +148,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
                           transition={{
                             duration: 1,
                             repeat: Infinity,
-                            ease: 'linear',
+                            ease: "linear",
                           }}
                           className="w-5 h-5 border-2 border-sage-600 border-t-transparent rounded-full"
                         />

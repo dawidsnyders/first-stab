@@ -110,90 +110,70 @@ export default function Home() {
         </motion.div>
       </header>
 
-      {/* Hero section - Enhanced */}
-      <section className="relative bg-gradient-to-br from-white via-stone-50 to-sage-50 text-stone-900 pt-28 pb-24 md:pt-36 md:pb-32 overflow-hidden">
-        {/* Enhanced decorative elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-sage-200/40 to-transparent rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-moss-200/40 to-transparent rounded-full blur-3xl"></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-terracotta-100/20 rounded-full blur-3xl"></div>
-          {/* Grid pattern overlay */}
-          <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px] opacity-40"></div>
-        </div>
+      {/* Hero section - Mercury-style */}
+      <section className="relative bg-white text-stone-900 min-h-screen flex flex-col overflow-visible">
+        <div className="relative flex-1 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-0">
+          <div className="max-w-4xl mx-auto w-full">
+            {/* Title */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              className="text-center mb-5"
+            >
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4 leading-[1.1] tracking-tight text-stone-900">
+                Property Intelligence
+                <br />
+                <span className="text-sage-600">for South Africa</span>
+              </h1>
+            </motion.div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-5xl mx-auto">
-            {/* Badge */}
-            <div className="flex justify-center mb-6">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-stone-200 rounded-full shadow-sm">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                </span>
-                <span className="text-sm font-medium text-stone-700">
-                  Live market data • Updated daily
-                </span>
+            {/* Subtitle */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+              className="text-center mb-8"
+            >
+              <p className="text-xl md:text-2xl text-stone-600 font-light leading-relaxed max-w-2xl mx-auto">
+                Make informed property decisions with comprehensive market insights
+                and data-driven analysis across the Western Cape.
+              </p>
+            </motion.div>
+
+            {/* Search bar */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
+              className="flex justify-center mb-16"
+            >
+              <div className="w-full max-w-2xl">
+                <SearchBar onMapClick={() => setIsMapModalOpen(true)} />
+              </div>
+            </motion.div>
+          </div>
+
+          {/* Map preview - sticking out at bottom */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+            className="relative mt-auto -mb-20 md:-mb-28 lg:-mb-36"
+          >
+            <div className="relative max-w-6xl mx-auto px-4">
+              <div className="bg-white rounded-2xl border border-stone-200 shadow-2xl overflow-hidden">
+                <div className="h-[350px] md:h-[450px] lg:h-[550px]">
+                  <MapView initialLevel="suburb" />
+                </div>
               </div>
             </div>
-
-            <div className="text-center mb-12">
-              <h2 className="text-6xl md:text-7xl lg:text-8xl font-bold mb-6 leading-[1.1] tracking-tight">
-                <span className="bg-gradient-to-r from-stone-900 via-stone-800 to-stone-900 bg-clip-text text-transparent">
-                  Property Intelligence
-                </span>
-                <span className="block mt-3 bg-gradient-to-r from-sage-600 via-sage-500 to-moss-600 bg-clip-text text-transparent">
-                  for South Africa
-                </span>
-              </h2>
-              <p className="text-xl md:text-2xl text-stone-600 mb-4 font-light leading-relaxed max-w-3xl mx-auto">
-                Unlock comprehensive market insights for every suburb. Make
-                informed property decisions with
-                <span className="font-semibold text-stone-900">
-                  {' '}
-                  data-driven analysis
-                </span>
-                .
-              </p>
-              <p className="text-lg text-stone-500 mb-10">
-                Access real-time prices, growth trends, and market analytics
-                across the Western Cape
-              </p>
-            </div>
-
-            {/* Search bar with map button */}
-            <div className="flex justify-center mb-8">
-              <SearchBar onMapClick={() => setIsMapModalOpen(true)} />
-            </div>
-
-            {/* Stats bar */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 max-w-4xl mx-auto">
-              <StatBox
-                value={`${avgPriceGrowth.toFixed(1)}%`}
-                label="Avg Growth YoY"
-                Icon={ArrowTrendingUpIcon}
-              />
-              <StatBox
-                value={formatNumber(totalSales)}
-                label="Total Sales (12m)"
-                Icon={HomeIcon}
-              />
-              <StatBox
-                value={formatNumber(allSuburbs.length)}
-                label="Active Areas"
-                Icon={MapPinIcon}
-              />
-              <StatBox
-                value={`+${(avgPriceGrowth - NATIONAL_BENCHMARKS.avgPropertyGrowth).toFixed(1)}%`}
-                label="vs National"
-                Icon={BoltIcon}
-              />
-            </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Product Showcase - Ondo-Style Carousel */}
-      <section id="features" className="relative bg-gradient-to-b from-stone-100 to-stone-50 py-16 md:py-24 overflow-hidden">
+      <section id="features" className="relative bg-gradient-to-b from-white to-stone-100 pt-32 md:pt-40 pb-16 md:pb-24 overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.03)_1px,transparent_0)] bg-[size:32px_32px]"></div>
         
