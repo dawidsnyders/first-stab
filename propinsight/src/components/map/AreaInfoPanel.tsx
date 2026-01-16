@@ -218,6 +218,54 @@ function AreaInfoContent({ area }: { area: Area }) {
               </AreaChart>
             </ResponsiveContainer>
           </motion.div>
+
+          {/* Houses vs Apartments Breakdown */}
+          {stats.propertyTypeBreakdown && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.55, duration: 0.2 }}
+              className="space-y-2"
+            >
+              <div className="text-xs text-stone-500 font-medium uppercase tracking-wide">
+                Market Composition
+              </div>
+              {/* Single 100% stacked bar */}
+              <div className="h-6 bg-stone-200 rounded-full overflow-hidden flex">
+                <div
+                  className="h-full bg-sage-500 flex items-center justify-center transition-all duration-500"
+                  style={{ width: `${stats.propertyTypeBreakdown.houses}%` }}
+                >
+                  {stats.propertyTypeBreakdown.houses > 10 && (
+                    <span className="text-[10px] font-semibold text-white">
+                      {stats.propertyTypeBreakdown.houses}%
+                    </span>
+                  )}
+                </div>
+                <div
+                  className="h-full bg-terracotta-500 flex items-center justify-center transition-all duration-500"
+                  style={{ width: `${stats.propertyTypeBreakdown.apartments}%` }}
+                >
+                  {stats.propertyTypeBreakdown.apartments > 10 && (
+                    <span className="text-[10px] font-semibold text-white">
+                      {stats.propertyTypeBreakdown.apartments}%
+                    </span>
+                  )}
+                </div>
+              </div>
+              {/* Labels below bar */}
+              <div className="flex justify-between text-[10px] text-stone-600">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded bg-sage-500"></div>
+                  <span>Houses: {stats.propertyTypeBreakdown.houses}%</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded bg-terracotta-500"></div>
+                  <span>Apartments: {stats.propertyTypeBreakdown.apartments}%</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
         </>
       )}
 
