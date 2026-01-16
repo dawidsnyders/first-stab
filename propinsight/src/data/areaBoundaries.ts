@@ -1,174 +1,164 @@
-// Area boundary definitions for Western Cape
-// These are approximations of real suburb boundaries based on actual geographic extents
-// In production, this would come from official GeoJSON data sources (StatsSA Census 2011, City of Cape Town GIS)
-// Each boundary is defined as an array of [lat, lng] coordinates (for Leaflet)
+/**
+ * Realistic polygon boundaries for Cape Town suburbs
+ * These approximate the actual geographic boundaries of each suburb
+ * In production, these would come from City of Cape Town GeoJSON data
+ * Format: [lat, lng] arrays for Leaflet compatibility
+ */
 
-export type Boundary = [number, number][];
+export const AREA_BOUNDARIES: Record<
+  string,
+  [number, number][] // [lat, lng] format for Leaflet
+> = {
+  // Cape Town City (larger bounding area)
+  "cape-town": [
+    [18.2, -34.1], // Northwest
+    [18.7, -34.1], // Northeast
+    [18.7, -33.7], // Southeast
+    [18.2, -33.7], // Southwest
+    [18.2, -34.1], // Close polygon
+  ],
 
-export const areaBoundaries: Record<string, Boundary> = {
-  // Camps Bay - coastal suburb, narrow strip along the Atlantic coast
-  // Extends from the beach up the slopes of Table Mountain
+  // Camps Bay - Coastal suburb along the Atlantic seaboard
   "camps-bay": [
-    [-33.948, 18.370], // Beachfront NW corner
-    [-33.952, 18.375],
-    [-33.955, 18.378],
-    [-33.957, 18.380],
-    [-33.958, 18.378], // South point
-    [-33.956, 18.373],
-    [-33.954, 18.370],
-    [-33.951, 18.368],
-    [-33.948, 18.368],
-    [-33.947, 18.370],
-    [-33.948, 18.370], // Close polygon
+    [-33.9508, 18.3700], // Northwest (coastal, near Clifton)
+    [-33.9508, 18.3800], // North central
+    [-33.9480, 18.3850], // Northeast (inland boundary)
+    [-33.9450, 18.3850], // East
+    [-33.9420, 18.3780], // Southeast
+    [-33.9400, 18.3700], // South (coastal road)
+    [-33.9450, 18.3650], // Southwest
+    [-33.9508, 18.3700], // Close polygon
   ],
 
-  // Sea Point - long narrow coastal strip between beach and hills
-  // Runs along the Atlantic Seaboard from Three Anchor Bay to Mouille Point
+  // Sea Point - Elongated coastal suburb between Clifton and Green Point
   "sea-point": [
-    [-33.908, 18.380], // Northern boundary near Three Anchor Bay
-    [-33.912, 18.388],
-    [-33.916, 18.394],
-    [-33.920, 18.397],
-    [-33.923, 18.396], // Southern end
-    [-33.925, 18.393],
-    [-33.924, 18.388],
-    [-33.921, 18.383],
-    [-33.917, 18.381],
-    [-33.912, 18.380],
-    [-33.908, 18.380], // Close polygon
+    [-33.9167, 18.3800], // Northwest (Lion's Head/Clifton side)
+    [-33.9167, 18.3980], // North (coastal stretch)
+    [-33.9120, 18.4000], // Northeast
+    [-33.9080, 18.4000], // East (Beach Road)
+    [-33.9040, 18.3950], // Southeast
+    [-33.9080, 18.3880], // South (Main Road area)
+    [-33.9100, 18.3850], // Southwest
+    [-33.9167, 18.3800], // Close polygon
   ],
 
-  // Green Point - compact coastal area near V&A Waterfront
+  // Green Point - Compact area between Sea Point and V&A Waterfront
   "green-point": [
-    [-33.903, 18.400],
-    [-33.907, 18.408],
-    [-33.910, 18.411],
-    [-33.913, 18.410],
-    [-33.916, 18.407],
-    [-33.917, 18.403],
-    [-33.915, 18.400],
-    [-33.911, 18.399],
-    [-33.906, 18.400],
-    [-33.903, 18.400], // Close polygon
+    [-33.9092, 18.4000], // Northwest (border with Sea Point)
+    [-33.9092, 18.4130], // North (near Waterfront)
+    [-33.9070, 18.4150], // Northeast (Waterfront boundary)
+    [-33.9040, 18.4130], // East
+    [-33.9030, 18.4080], // Southeast (near stadium)
+    [-33.9040, 18.4050], // South
+    [-33.9070, 18.4020], // Southwest
+    [-33.9092, 18.4000], // Close polygon
   ],
 
-  // Woodstock - inner city area, more rectangular/irregular shape
-  // Located between the city center and Table Mountain
+  // Woodstock - Inner city industrial/residential area near the mountain
   "woodstock": [
-    [-33.920, 18.438],
-    [-33.923, 18.445],
-    [-33.927, 18.449],
-    [-33.931, 18.451],
-    [-33.934, 18.449], // Southern boundary
-    [-33.936, 18.445],
-    [-33.935, 18.440],
-    [-33.932, 18.437],
-    [-33.928, 18.436],
-    [-33.924, 18.437],
-    [-33.920, 18.438], // Close polygon
+    [-33.9278, 18.4380], // Northwest (mountain side)
+    [-33.9278, 18.4520], // North
+    [-33.9220, 18.4560], // Northeast
+    [-33.9180, 18.4540], // East (towards Observatory)
+    [-33.9170, 18.4480], // Southeast
+    [-33.9200, 18.4420], // South (lower Woodstock)
+    [-33.9240, 18.4380], // Southwest
+    [-33.9278, 18.4380], // Close polygon
   ],
 
-  // Observatory - small inner city suburb, irregular shape
-  // Located near UCT and Groote Schuur
+  // Observatory - Compact inner city area
   "observatory": [
-    [-33.931, 18.468],
-    [-33.934, 18.474],
-    [-33.937, 18.477],
-    [-33.941, 18.477],
-    [-33.943, 18.475], // Southern boundary
-    [-33.944, 18.471],
-    [-33.942, 18.467],
-    [-33.938, 18.466],
-    [-33.934, 18.467],
-    [-33.931, 18.468], // Close polygon
+    [-33.9389, 18.4680], // Northwest
+    [-33.9389, 18.4770], // North
+    [-33.9360, 18.4800], // Northeast
+    [-33.9330, 18.4780], // East
+    [-33.9320, 18.4730], // Southeast (Lower Main Road)
+    [-33.9340, 18.4700], // South
+    [-33.9360, 18.4680], // Southwest
+    [-33.9389, 18.4680], // Close polygon
   ],
 
-  // Claremont - larger Southern Suburbs area, spread out
-  // Major commercial and residential area
+  // Claremont - Larger southern suburbs area, quite extensive
   "claremont": [
-    [-33.973, 18.465], // Northern boundary
-    [-33.977, 18.475],
-    [-33.981, 18.480],
-    [-33.986, 18.481],
-    [-33.990, 18.479], // Southern boundary
-    [-33.992, 18.474],
-    [-33.990, 18.468],
-    [-33.985, 18.464],
-    [-33.979, 18.463],
-    [-33.974, 18.464],
-    [-33.973, 18.465], // Close polygon
+    [-33.9806, 18.4650], // Northwest (Newlands border)
+    [-33.9806, 18.4850], // North
+    [-33.9750, 18.4900], // Northeast (Wynberg side)
+    [-33.9700, 18.4880], // East
+    [-33.9680, 18.4820], // Southeast (Lower Claremont)
+    [-33.9700, 18.4780], // South
+    [-33.9750, 18.4720], // Southwest
+    [-33.9806, 18.4650], // Close polygon
   ],
 
-  // Constantia - large wine valley area, irregular shape
-  // Extends along Constantia Valley between mountains
+  // Constantia - Large wine estate area, southern suburbs
   "constantia": [
-    [-34.018, 18.405], // Northern boundary
-    [-34.022, 18.420],
-    [-34.027, 18.428],
-    [-34.032, 18.430],
-    [-34.036, 18.428], // Southern valley
-    [-34.037, 18.422],
-    [-34.034, 18.415],
-    [-34.029, 18.409],
-    [-34.023, 18.404],
-    [-34.019, 18.403],
-    [-34.018, 18.405], // Close polygon
+    [-34.0278, 18.3950], // Northwest (Newlands/Plumstead border)
+    [-34.0278, 18.4400], // North (stretches east)
+    [-34.0180, 18.4450], // Northeast
+    [-34.0100, 18.4400], // East
+    [-34.0080, 18.4300], // Southeast (lower Constantia)
+    [-34.0100, 18.4150], // South
+    [-34.0150, 18.4050], // Southwest
+    [-34.0278, 18.3950], // Close polygon
   ],
 
-  // Val de Vie Estate - Paarl, gated estate
+  // Paarl - Wine region city
+  paarl: [
+    [18.93, -33.76], // Northwest
+    [19.02, -33.76], // Northeast
+    [19.02, -33.71], // Southeast
+    [18.93, -33.71], // Southwest
+    [18.93, -33.76], // Close polygon
+  ],
+
+  // Stellenbosch - Wine region city
+  stellenbosch: [
+    [18.81, -33.96], // Northwest
+    [18.91, -33.96], // Northeast
+    [18.91, -33.90], // Southeast
+    [18.81, -33.90], // Southwest
+    [18.81, -33.96], // Close polygon
+  ],
+
+  // Val de Vie Estate - Large estate in Paarl
   "val-de-vie": [
-    [-33.726, 18.962],
-    [-33.729, 18.969],
-    [-33.734, 18.973],
-    [-33.739, 18.974],
-    [-33.743, 18.971],
-    [-33.743, 18.966],
-    [-33.740, 18.961],
-    [-33.734, 18.959],
-    [-33.729, 18.960],
-    [-33.726, 18.962], // Close polygon
+    [18.955, -33.745], // Northwest
+    [18.975, -33.745], // Northeast
+    [18.975, -33.725], // Southeast
+    [18.955, -33.725], // Southwest
+    [18.955, -33.745], // Close polygon
   ],
 
-  // Pearl Valley - Paarl, wine estate
+  // Pearl Valley - Estate in Paarl
   "pearl-valley": [
-    [-33.743, 18.978],
-    [-33.746, 18.986],
-    [-33.751, 18.991],
-    [-33.757, 18.991],
-    [-33.762, 18.987],
-    [-33.762, 18.981],
-    [-33.758, 18.976],
-    [-33.752, 18.974],
-    [-33.747, 18.975],
-    [-33.743, 18.978], // Close polygon
+    [18.970, -33.760], // Northwest
+    [18.995, -33.760], // Northeast
+    [18.995, -33.745], // Southeast
+    [18.970, -33.745], // Southwest
+    [18.970, -33.760], // Close polygon
   ],
 
-  // De Zalze - Stellenbosch, wine estate
+  // De Zalze - Estate in Stellenbosch
   "de-zalze": [
-    [-34.008, 18.862],
-    [-34.012, 18.869],
-    [-34.017, 18.874],
-    [-34.023, 18.875],
-    [-34.028, 18.872],
-    [-34.028, 18.866],
-    [-34.024, 18.860],
-    [-34.018, 18.858],
-    [-34.012, 18.859],
-    [-34.008, 18.862], // Close polygon
+    [18.845, -34.025], // Northwest
+    [18.885, -34.025], // Northeast
+    [18.885, -34.005], // Southeast
+    [18.845, -34.005], // Southwest
+    [18.845, -34.025], // Close polygon
   ],
 };
 
 /**
- * Get boundary for an area by its slug
- * Returns boundary as [lat, lng][] for Leaflet
+ * Get boundary polygon for an area
+ * Returns coordinates in [lat, lng] format for Leaflet
  */
-export function getAreaBoundary(slug: string): Boundary | null {
-  return areaBoundaries[slug] || null;
+export function getAreaBoundaryPolygon(areaSlug: string): [number, number][] | null {
+  return AREA_BOUNDARIES[areaSlug] || null;
 }
 
 /**
  * Check if an area has a defined boundary
  */
-export function hasBoundary(slug: string): boolean {
-  return slug in areaBoundaries;
+export function hasAreaBoundary(areaSlug: string): boolean {
+  return areaSlug in AREA_BOUNDARIES;
 }
