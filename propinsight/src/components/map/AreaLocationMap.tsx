@@ -44,14 +44,21 @@ async function getAreaBoundaryAsync(area: Area): Promise<[number, number][]> {
   // First try to get real boundary from City of Cape Town GeoJSON API
   if (area.level === "suburb") {
     const geoJSONBoundary = await getBoundaryForArea(area.slug);
-    if (geoJSONBoundary) {
+    if (geoJSONBoundary && geoJSONBoundary.length > 10) {
+      // Only use API boundary if it has sufficient detail (more than 10 points)
+      console.log(`Using API boundary for ${area.slug} with ${geoJSONBoundary.length} points`);
       return geoJSONBoundary;
+    } else if (geoJSONBoundary) {
+      console.warn(`API boundary for ${area.slug} has only ${geoJSONBoundary.length} points, may be incomplete`);
+    } else {
+      console.warn(`API boundary not found for ${area.slug}, falling back to static data`);
     }
   }
 
-  // Fallback: Try static boundary data
+  // Fallback: Try static boundary data (these are simplified and may be inaccurate)
   const staticBoundary = getAreaBoundaryPolygon(area.slug);
   if (staticBoundary) {
+    console.warn(`Using simplified static boundary for ${area.slug} - this may be inaccurate`);
     return staticBoundary;
   }
 

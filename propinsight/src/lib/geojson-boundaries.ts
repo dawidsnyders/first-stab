@@ -91,8 +91,15 @@ export async function fetchSuburbBoundaries(): Promise<
     url.searchParams.append("outSR", "4326"); // WGS84 coordinate system
     url.searchParams.append("geometryPrecision", "6"); // High precision for granular boundaries
 
-    const response = await fetch(url.toString());
+    const response = await fetch(url.toString(), {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+      },
+    });
+    
     if (!response.ok) {
+      console.error(`Failed to fetch boundaries: ${response.status} ${response.statusText}`);
       throw new Error(`Failed to fetch boundaries: ${response.statusText}`);
     }
 
@@ -100,6 +107,7 @@ export async function fetchSuburbBoundaries(): Promise<
     const boundariesMap = new Map<string, [number, number][]>();
 
     if (data.features && Array.isArray(data.features)) {
+      console.log(`Fetched ${data.features.length} suburb boundaries from City of Cape Town API`);
       data.features.forEach((feature) => {
         if (feature.properties.OFC_SBRB_NAME && feature.geometry?.coordinates) {
           const suburbName = feature.properties.OFC_SBRB_NAME;
@@ -111,19 +119,28 @@ export async function fetchSuburbBoundaries(): Promise<
             feature.geometry.coordinates.length > 0
           ) {
             const boundary = geoJSONToLeaflet(feature.geometry.coordinates);
-            boundariesMap.set(normalizedName, boundary);
-            // Also store with original name for exact matching
-            boundariesMap.set(suburbName.toLowerCase(), boundary);
-            // Store with original name exactly as provided
-            boundariesMap.set(suburbName, boundary);
+            // Only store if boundary has sufficient detail (more than 10 points)
+            if (boundary.length > 10) {
+              boundariesMap.set(normalizedName, boundary);
+              // Also store with original name for exact matching
+              boundariesMap.set(suburbName.toLowerCase(), boundary);
+              // Store with original name exactly as provided
+              boundariesMap.set(suburbName, boundary);
+            } else {
+              console.warn(`Boundary for ${suburbName} has only ${boundary.length} points, skipping`);
+            }
           }
         }
       });
+      console.log(`Successfully loaded ${boundariesMap.size} detailed boundaries`);
+    } else {
+      console.warn("No features found in API response");
     }
 
     return boundariesMap;
   } catch (error) {
-    console.error("Error fetching suburb boundaries:", error);
+    console.error("Error fetching suburb boundaries from City of Cape Town API:", error);
+    console.error("This may be due to CORS issues or network problems. Falling back to static boundaries.");
     return new Map();
   }
 }
@@ -138,35 +155,51 @@ let fetchPromise: Promise<Map<string, [number, number][]>> | null = null;
 export async function getBoundaryForArea(
   slug: string
 ): Promise<[number, number][] | null> {
-  // Ensure boundaries are loaded
-  if (!boundariesCache && !fetchPromise) {
-    fetchPromise = fetchSuburbBoundaries().then((boundaries) => {
-      boundariesCache = boundaries;
-      fetchPromise = null;
-      return boundaries;
-    });
+  try {
+    // Ensure boundaries are loaded
+    if (!boundariesCache && !fetchPromise) {
+      fetchPromise = fetchSuburbBoundaries().then((boundaries) => {
+        boundariesCache = boundaries;
+        fetchPromise = null;
+        return boundaries;
+      });
+    }
+
+    // Wait for fetch to complete if needed
+    const boundaries = boundariesCache || (await fetchPromise);
+    if (!boundaries || boundaries.size === 0) {
+      console.warn(`No boundaries loaded from API for ${slug}`);
+      return null;
+    }
+
+    const suburbName = slugToSuburbName(slug);
+    const normalizedSlug = normalizeSuburbName(slug);
+    const normalizedSuburb = normalizeSuburbName(suburbName);
+
+    // Try multiple matching strategies
+    const boundary = 
+      boundaries.get(suburbName) || // Exact match with mapped name
+      boundaries.get(suburbName.toLowerCase()) || // Lowercase mapped name
+      boundaries.get(normalizedSlug) || // Normalized slug
+      boundaries.get(normalizedSuburb) || // Normalized mapped name
+      // Try finding by substring match (case-insensitive)
+      Array.from(boundaries.entries()).find(
+        ([name]) => name.includes(normalizedSlug) || normalizedSlug.includes(name)
+      )?.[1] ||
+      null;
+
+    if (!boundary) {
+      console.warn(`Boundary not found for ${slug} (tried: ${suburbName}, ${normalizedSlug}, ${normalizedSuburb})`);
+      // Log available boundaries for debugging
+      const availableNames = Array.from(boundaries.keys()).slice(0, 10);
+      console.log(`Available boundaries (first 10):`, availableNames);
+    }
+
+    return boundary;
+  } catch (error) {
+    console.error(`Error getting boundary for ${slug}:`, error);
+    return null;
   }
-
-  // Wait for fetch to complete if needed
-  const boundaries = boundariesCache || (await fetchPromise);
-  if (!boundaries) return null;
-
-  const suburbName = slugToSuburbName(slug);
-  const normalizedSlug = normalizeSuburbName(slug);
-  const normalizedSuburb = normalizeSuburbName(suburbName);
-
-  // Try multiple matching strategies
-  return (
-    boundaries.get(suburbName) || // Exact match with mapped name
-    boundaries.get(suburbName.toLowerCase()) || // Lowercase mapped name
-    boundaries.get(normalizedSlug) || // Normalized slug
-    boundaries.get(normalizedSuburb) || // Normalized mapped name
-    // Try finding by substring match (case-insensitive)
-    Array.from(boundaries.entries()).find(
-      ([name]) => name.includes(normalizedSlug) || normalizedSlug.includes(name)
-    )?.[1] ||
-    null
-  );
 }
 
 /**
