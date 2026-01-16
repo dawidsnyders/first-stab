@@ -454,7 +454,7 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
             />
             {isDualLineChart ? (
               <>
-                {/* Area Performance Line */}
+                {/* Area Performance Line with gradient fill */}
                 <Area
                   type="monotone"
                   dataKey="areaValue"
@@ -473,15 +473,14 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
                   animationDuration={1000}
                   animationBegin={0}
                 />
-                {/* National Average Line */}
-                <Area
+                {/* National Average Line - using Line component for better visibility */}
+                <Line
                   type="monotone"
                   dataKey="nationalValue"
                   name="National Average"
                   stroke="#78716c"
                   strokeWidth={2.5}
                   strokeDasharray="5 5"
-                  fill="transparent"
                   dot={false}
                   activeDot={{
                     r: 5,

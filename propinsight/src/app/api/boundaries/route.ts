@@ -170,13 +170,12 @@ export async function GET(request: NextRequest) {
         // Build query based on source type
         if (source === "westernCape") {
           // Western Cape Spatial Data Warehouse - Most accurate source
-          // Try multiple field names for suburb matching
-          const searchName = searchTerms[0] || suburbName;
-          const whereClause = `UPPER(SUBURB) = UPPER('${searchName}') OR UPPER(NAME) = UPPER('${searchName}') OR UPPER(SUBURB_NAME) = UPPER('${searchName}')`;
+          // Query all features and filter in code (field names vary by endpoint)
+          // This is more reliable than guessing field names in WHERE clause
           console.log(
-            `Querying Western Cape API for "${suburbName}" (search: "${searchName}") with: ${whereClause}`
+            `Querying Western Cape API for "${suburbName}" (search terms: ${searchTerms.join(", ")})`
           );
-          url.searchParams.append("where", whereClause);
+          url.searchParams.append("where", "1=1"); // Get all, filter in code
           url.searchParams.append("outFields", "*");
           url.searchParams.append("returnGeometry", "true");
           url.searchParams.append("f", "geojson");
