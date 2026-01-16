@@ -156,14 +156,52 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
   }, [area]);
 
   return (
-    <div className="relative w-full h-64 rounded-xl overflow-hidden border border-stone-200 bg-stone-50 pointer-events-none">
-      <div ref={mapRef} className="w-full h-full pointer-events-none" />
+    <div className="relative w-full h-64 rounded-xl overflow-hidden border border-stone-200 bg-stone-50 pointer-events-none z-0">
+      <div ref={mapRef} className="w-full h-full pointer-events-none relative z-0" />
 
       {/* Custom CSS for map styling - matching main map */}
       <style jsx global>{`
         .leaflet-container {
           font-family: inherit;
           background: #f5f5f4;
+          z-index: 1 !important;
+        }
+
+        /* Constrain all Leaflet panes to low z-index */
+        .leaflet-pane {
+          z-index: 1 !important;
+        }
+
+        .leaflet-map-pane {
+          z-index: 1 !important;
+        }
+
+        .leaflet-tile-pane {
+          z-index: 1 !important;
+        }
+
+        .leaflet-overlay-pane {
+          z-index: 2 !important;
+        }
+
+        .leaflet-shadow-pane {
+          z-index: 3 !important;
+        }
+
+        .leaflet-marker-pane {
+          z-index: 4 !important;
+        }
+
+        .leaflet-tooltip-pane {
+          z-index: 5 !important;
+        }
+
+        .leaflet-popup-pane {
+          z-index: 6 !important;
+        }
+
+        .leaflet-control-container {
+          z-index: 7 !important;
         }
 
         /* Remove focus outline from polygons */
