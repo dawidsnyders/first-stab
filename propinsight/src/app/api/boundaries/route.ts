@@ -521,8 +521,9 @@ export async function GET(request: NextRequest) {
           const candidates =
             responseData.features?.filter((f) => {
               const props = f.properties;
+              // Western Cape Spatial Data Warehouse uses SUBURB, NAME, or SUBURB_NAME fields
               const nameField = String(
-                props.NAME || props.OFC_SBRB_NAME || props.name || ""
+                props.SUBURB || props.NAME || props.SUBURB_NAME || props.OFC_SBRB_NAME || props.name || ""
               );
               const nameLower = nameField.toLowerCase();
               // Try matching against all search terms
@@ -534,7 +535,7 @@ export async function GET(request: NextRequest) {
               });
             }) || [];
 
-          // Pick the smallest polygon (most specific boundary)
+          // Pick the smallest polygon (most specific boundary) that matches search terms
           let smallestArea = Infinity;
           for (const candidate of candidates) {
             if (
