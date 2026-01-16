@@ -183,6 +183,17 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
     previousValue: index > 0 ? data[index - 1].value : null,
   }));
 
+  // Debug: Log data for outperformance charts
+  if (type === "outperformance" && data.length > 0) {
+    console.log("Outperformance chart data:", {
+      sample: data[0],
+      hasAreaValue: data[0].areaValue !== undefined,
+      hasNationalValue: data[0].nationalValue !== undefined,
+      areaValues: data.map(d => d.areaValue).slice(0, 5),
+      nationalValues: data.map(d => d.nationalValue).slice(0, 5),
+    });
+  }
+
   const getYAxisFormatter = () => {
     switch (type) {
       case "medianPrice":
