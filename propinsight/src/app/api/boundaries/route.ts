@@ -186,6 +186,8 @@ export async function GET(request: NextRequest) {
           url.searchParams.append("returnExceededLimitFeatures", "true");
           url.searchParams.append("geometryPrecision", "8"); // Maximum precision
         } else if (source === "capeTown") {
+          // City of Cape Town API - use exact suburb name match
+          console.log(`Querying Cape Town API for "${suburbName}"`);
           url.searchParams.append("where", `OFC_SBRB_NAME = '${suburbName}'`);
           url.searchParams.append("outFields", "OFC_SBRB_NAME");
           url.searchParams.append("returnGeometry", "true");
@@ -350,8 +352,13 @@ export async function GET(request: NextRequest) {
         });
 
         if (!response.ok) {
+          const errorText = await response.text().catch(() => "");
           console.warn(
-            `Endpoint ${endpoint} returned ${response.status}: ${response.statusText}`
+            `Endpoint ${endpoint} returned ${response.status}: ${response.statusText}`,
+            errorText ? `Response: ${errorText.substring(0, 200)}` : ""
+          );
+          lastError = new Error(
+            `HTTP ${response.status}: ${response.statusText}`
           );
           continue;
         }
@@ -473,7 +480,17 @@ export async function GET(request: NextRequest) {
             );
           }
         } else {
+          // For Cape Town API, use first feature (should be exact match)
           matchingFeature = responseData.features?.[0];
+          if (matchingFeature) {
+            console.log(
+              `Found feature for "${suburbName}" from Cape Town API: ${matchingFeature.geometry?.type || "unknown type"}`
+            );
+          } else {
+            console.warn(
+              `No features returned from Cape Town API for "${suburbName}"`
+            );
+          }
         }
 
         if (matchingFeature && matchingFeature.geometry) {
