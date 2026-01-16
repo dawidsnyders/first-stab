@@ -718,9 +718,10 @@ export async function GET(request: NextRequest) {
         source === "capeTown"
           ? "Cape Town API failed"
           : "OpenStreetMap only returned Point geometries";
-      const fallbackAPIs = suburbName === "Paarl" 
-        ? "Western Cape and National APIs" 
-        : "Western Cape API";
+      const fallbackAPIs =
+        suburbName === "Paarl"
+          ? "Western Cape and National APIs"
+          : "Western Cape API";
       console.log(
         `${fallbackReason} for "${suburbName}", trying ${fallbackAPIs} as fallback...`
       );
@@ -738,10 +739,9 @@ export async function GET(request: NextRequest) {
         }
         try {
           const url = new URL(endpoint);
-          const apiName = source === "national" ? "National API" : "Western Cape API";
-          console.log(
-            `Querying ${apiName} (fallback) for "${suburbName}"`
-          );
+          const apiName =
+            source === "national" ? "National API" : "Western Cape API";
+          console.log(`Querying ${apiName} (fallback) for "${suburbName}"`);
           // Build query based on source type
           if (source === "national") {
             // National API - query all and filter in code
@@ -818,7 +818,12 @@ export async function GET(request: NextRequest) {
               const allSearchTerms = [...searchTerms, suburbName].map((t) =>
                 t.toLowerCase().trim()
               );
-              
+
+              // Special case: For Paarl, also accept "Drakenstein" (the municipality it's in)
+              if (suburbName === "Paarl") {
+                allSearchTerms.push("drakenstein");
+              }
+
               // Check if any of the possible names match any search term
               return possibleNames.some((nameLower) =>
                 allSearchTerms.some((termLower) => {
