@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Area, formatPrice, formatPriceChange, formatNumber } from "@/types";
 import { AreaLocationMap } from "@/components/map/AreaLocationMap";
-import { generateMedianPriceData } from "@/lib/chartData";
+import { generateMedianPriceData, generatePricePerSqmData } from "@/lib/chartData";
 import {
   LineChart,
   Line,
@@ -290,78 +290,157 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                         )}
                       </div>
 
-                      {/* Price History Chart */}
-                      <div className="mb-4">
-                        <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-2 font-medium">
-                          5-Year Price Trend
+                      {/* Price History Charts - Side by Side */}
+                      <div className="mb-4 grid grid-cols-2 gap-4">
+                        {/* Price Trend Chart */}
+                        <div>
+                          <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-2 font-medium">
+                            5-Year Price Trend
+                          </div>
+                          <div className="h-20 w-full">
+                            <ResponsiveContainer width="100%" height="100%">
+                              <LineChart
+                                data={generateMedianPriceData(
+                                  stats.medianPrice,
+                                  stats.priceChangeYoY,
+                                  5
+                                )}
+                                margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                              >
+                                <defs>
+                                  <linearGradient
+                                    id={`priceMini-${area.id}`}
+                                    x1="0"
+                                    y1="0"
+                                    x2="0"
+                                    y2="1"
+                                  >
+                                    <stop
+                                      offset="5%"
+                                      stopColor="#5d7350"
+                                      stopOpacity={0.3}
+                                    />
+                                    <stop
+                                      offset="95%"
+                                      stopColor="#5d7350"
+                                      stopOpacity={0}
+                                    />
+                                  </linearGradient>
+                                </defs>
+                                <XAxis
+                                  dataKey="label"
+                                  hide
+                                  axisLine={false}
+                                  tickLine={false}
+                                />
+                                <YAxis hide />
+                                <Tooltip
+                                  content={({ active, payload }) => {
+                                    if (active && payload && payload.length) {
+                                      return (
+                                        <div className="bg-white p-2 rounded shadow-lg border border-stone-200 text-xs">
+                                          <p className="font-semibold text-stone-900">
+                                            {formatPrice(
+                                              payload[0].value as number
+                                            )}
+                                          </p>
+                                          <p className="text-stone-500 text-[10px]">
+                                            {payload[0].payload.label}
+                                          </p>
+                                        </div>
+                                      );
+                                    }
+                                    return null;
+                                  }}
+                                />
+                                <Line
+                                  type="monotone"
+                                  dataKey="value"
+                                  stroke="#5d7350"
+                                  strokeWidth={2}
+                                  dot={false}
+                                  activeDot={{ r: 4, fill: "#5d7350" }}
+                                />
+                              </LineChart>
+                            </ResponsiveContainer>
+                          </div>
                         </div>
-                        <div className="h-20 w-full">
-                          <ResponsiveContainer width="100%" height="100%">
-                            <LineChart
-                              data={generateMedianPriceData(
-                                stats.medianPrice,
-                                stats.priceChangeYoY,
-                                5
-                              )}
-                              margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-                            >
-                              <defs>
-                                <linearGradient
-                                  id={`priceMini-${area.id}`}
-                                  x1="0"
-                                  y1="0"
-                                  x2="0"
-                                  y2="1"
+
+                        {/* Price per m² Chart */}
+                        {stats.avgPricePerSqm && (
+                          <div>
+                            <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-2 font-medium">
+                              5-Year Price per m²
+                            </div>
+                            <div className="h-20 w-full">
+                              <ResponsiveContainer width="100%" height="100%">
+                                <LineChart
+                                  data={generatePricePerSqmData(
+                                    stats.avgPricePerSqm,
+                                    stats.priceChangeYoY,
+                                    5
+                                  )}
+                                  margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
                                 >
-                                  <stop
-                                    offset="5%"
-                                    stopColor="#5d7350"
-                                    stopOpacity={0.3}
+                                  <defs>
+                                    <linearGradient
+                                      id={`pricePerSqmMini-${area.id}`}
+                                      x1="0"
+                                      y1="0"
+                                      x2="0"
+                                      y2="1"
+                                    >
+                                      <stop
+                                        offset="5%"
+                                        stopColor="#ed6b4a"
+                                        stopOpacity={0.3}
+                                      />
+                                      <stop
+                                        offset="95%"
+                                        stopColor="#ed6b4a"
+                                        stopOpacity={0}
+                                      />
+                                    </linearGradient>
+                                  </defs>
+                                  <XAxis
+                                    dataKey="label"
+                                    hide
+                                    axisLine={false}
+                                    tickLine={false}
                                   />
-                                  <stop
-                                    offset="95%"
-                                    stopColor="#5d7350"
-                                    stopOpacity={0}
+                                  <YAxis hide />
+                                  <Tooltip
+                                    content={({ active, payload }) => {
+                                      if (active && payload && payload.length) {
+                                        return (
+                                          <div className="bg-white p-2 rounded shadow-lg border border-stone-200 text-xs">
+                                            <p className="font-semibold text-stone-900">
+                                              {formatPrice(
+                                                payload[0].value as number
+                                              )}
+                                            </p>
+                                            <p className="text-stone-500 text-[10px]">
+                                              {payload[0].payload.label}
+                                            </p>
+                                          </div>
+                                        );
+                                      }
+                                      return null;
+                                    }}
                                   />
-                                </linearGradient>
-                              </defs>
-                              <XAxis
-                                dataKey="label"
-                                hide
-                                axisLine={false}
-                                tickLine={false}
-                              />
-                              <YAxis hide />
-                              <Tooltip
-                                content={({ active, payload }) => {
-                                  if (active && payload && payload.length) {
-                                    return (
-                                      <div className="bg-white p-2 rounded shadow-lg border border-stone-200 text-xs">
-                                        <p className="font-semibold text-stone-900">
-                                          {formatPrice(
-                                            payload[0].value as number
-                                          )}
-                                        </p>
-                                        <p className="text-stone-500 text-[10px]">
-                                          {payload[0].payload.label}
-                                        </p>
-                                      </div>
-                                    );
-                                  }
-                                  return null;
-                                }}
-                              />
-                              <Line
-                                type="monotone"
-                                dataKey="value"
-                                stroke="#5d7350"
-                                strokeWidth={2}
-                                dot={false}
-                                activeDot={{ r: 4, fill: "#5d7350" }}
-                              />
-                            </LineChart>
-                          </ResponsiveContainer>
-                        </div>
+                                  <Line
+                                    type="monotone"
+                                    dataKey="value"
+                                    stroke="#ed6b4a"
+                                    strokeWidth={2}
+                                    dot={false}
+                                    activeDot={{ r: 4, fill: "#ed6b4a" }}
+                                  />
+                                </LineChart>
+                              </ResponsiveContainer>
+                            </div>
+                          </div>
+                        )}
                       </div>
 
                       {/* CTA Link */}
