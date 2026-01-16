@@ -98,7 +98,7 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
 
         // Determine zoom level based on area level
         const zoom =
-          area.level === "province" ? 7 : area.level === "city" ? 10 : 12; // suburb
+          area.level === "province" ? 9 : area.level === "city" ? 12 : 14; // suburb
 
         const map = L.default.map(mapRef.current!, {
           center: [coords[1], coords[0]], // [lat, lng] for Leaflet
