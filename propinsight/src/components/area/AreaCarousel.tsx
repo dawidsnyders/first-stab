@@ -30,10 +30,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
 
   // Pre-compute and memoize chart data for all areas to prevent regeneration on scroll
   const chartDataCache = useMemo(() => {
-    const cache: Record<
-      string,
-      { priceTrend: any[]; pricePerSqm: any[] }
-    > = {};
+    const cache: Record<string, { priceTrend: any[]; pricePerSqm: any[] }> = {};
     areas.forEach((area) => {
       if (area.stats) {
         cache[area.id] = {
@@ -53,7 +50,14 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
       }
     });
     return cache;
-  }, [areas.map((a) => `${a.id}-${a.stats?.medianPrice}-${a.stats?.priceChangeYoY}-${a.stats?.avgPricePerSqm}`).join(",")]);
+  }, [
+    areas
+      .map(
+        (a) =>
+          `${a.id}-${a.stats?.medianPrice}-${a.stats?.priceChangeYoY}-${a.stats?.avgPricePerSqm}`
+      )
+      .join(","),
+  ]);
 
   // Track which section is in view and scroll progress between sections
   useEffect(() => {
@@ -309,38 +313,38 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
 
                       {/* Stats - Right Aligned */}
                       {stats && (
-                        <div className="flex items-center gap-6 flex-shrink-0">
-                          <div className="text-right">
+                        <div className="flex items-center gap-3 flex-shrink-0">
+                          <div className="text-right bg-stone-50 rounded-lg px-4 py-2.5">
                             <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                               Average Price
                             </div>
-                            <div className="text-lg font-bold text-stone-900">
+                            <div className="text-xl font-bold text-stone-900">
                               {formatPrice(stats.avgPrice)}
                             </div>
                           </div>
-                          <div className="text-right">
+                          <div className="text-right bg-stone-50 rounded-lg px-4 py-2.5">
                             <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                               Sales (12mo)
                             </div>
-                            <div className="text-lg font-bold text-stone-900">
+                            <div className="text-xl font-bold text-stone-900">
                               {formatNumber(stats.salesCount)}
                             </div>
                           </div>
                           {stats.avgPricePerSqm ? (
-                            <div className="text-right">
+                            <div className="text-right bg-stone-50 rounded-lg px-4 py-2.5">
                               <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                                 Price per m²
                               </div>
-                              <div className="text-lg font-bold text-stone-900">
+                              <div className="text-xl font-bold text-stone-900">
                                 {formatPrice(stats.avgPricePerSqm)}
                               </div>
                             </div>
                           ) : (
-                            <div className="text-right">
+                            <div className="text-right bg-stone-50 rounded-lg px-4 py-2.5">
                               <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                                 Median Price
                               </div>
-                              <div className="text-lg font-bold text-stone-900">
+                              <div className="text-xl font-bold text-stone-900">
                                 {formatPrice(stats.medianPrice)}
                               </div>
                             </div>
@@ -362,7 +366,9 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                             <div className="h-20 w-full">
                               <ResponsiveContainer width="100%" height="100%">
                                 <LineChart
-                                  data={chartDataCache[area.id]?.priceTrend || []}
+                                  data={
+                                    chartDataCache[area.id]?.priceTrend || []
+                                  }
                                   margin={{
                                     top: 5,
                                     right: 5,
@@ -438,7 +444,9 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                               <div className="h-20 w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                   <LineChart
-                                    data={chartDataCache[area.id]?.pricePerSqm || []}
+                                    data={
+                                      chartDataCache[area.id]?.pricePerSqm || []
+                                    }
                                     margin={{
                                       top: 5,
                                       right: 5,

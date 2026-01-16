@@ -6,8 +6,15 @@ import { NextRequest, NextResponse } from "next/server";
  */
 
 // Multiple API endpoints for different municipalities
+// Priority order: Western Cape Spatial Data Warehouse (most accurate, used by Property24) > Municipal APIs > OpenStreetMap
 const API_ENDPOINTS = {
-  // City of Cape Town - Official Suburb boundaries
+  // Western Cape Spatial Data Warehouse - Most accurate source, likely what Property24 uses
+  // This is the PRIMARY source for accurate boundaries
+  westernCape: [
+    "https://gis.westerncape.gov.za/server2/rest/services/SpatialDataWarehouse/AfriGIS_MainAdminBoundaries/MapServer/0/query", // Suburbs layer
+    "https://gis.westerncape.gov.za/server2/rest/services/SpatialDataWarehouse/SG_Boundaries/MapServer/0/query", // Surveyor General Boundaries - Suburbs
+  ],
+  // City of Cape Town - Official Suburb boundaries (fallback for Cape Town areas)
   capeTown: [
     "https://citymaps.capetown.gov.za/agsext/rest/services/Search_Layers/SL_WGDB_OFC_SBRB/MapServer/0/query",
     "https://citymaps.capetown.gov.za/agsext/rest/services/Theme_Based/EGISViewer/MapServer/0/query",
@@ -21,7 +28,7 @@ const API_ENDPOINTS = {
   national: [
     "https://dpmegis.dpme.gov.za/arcgis/rest/services/Hosted/Boundaries/FeatureServer/2/query", // Local Municipality
   ],
-  // OpenStreetMap Nominatim - For estates and suburbs not in municipal APIs
+  // OpenStreetMap Nominatim - For estates and suburbs not in municipal APIs (last resort)
   openstreetmap: ["https://nominatim.openstreetmap.org/search"],
 };
 
@@ -72,6 +79,7 @@ export async function GET(request: NextRequest) {
       {
         name: string;
         source:
+          | "westernCape"
           | "capeTown"
           | "stellenbosch"
           | "national"
@@ -80,29 +88,26 @@ export async function GET(request: NextRequest) {
         searchTerms?: string[]; // Alternative search terms for flexible matching
       }
     > = {
-      // Cape Town suburbs
-      "camps-bay": { name: "Camps Bay", source: "capeTown" },
-      "sea-point": { name: "Sea Point", source: "capeTown" },
-      "green-point": { name: "Green Point", source: "capeTown" },
-      woodstock: { name: "Woodstock", source: "capeTown" },
-      observatory: { name: "Observatory", source: "capeTown" },
-      claremont: { name: "Claremont", source: "capeTown" },
-      constantia: { name: "Constantia", source: "capeTown" },
-      clifton: { name: "Clifton", source: "capeTown" },
-      bakoven: { name: "Bakoven", source: "capeTown" },
-      // Stellenbosch areas
+      // Cape Town suburbs - Use Western Cape Spatial Data Warehouse (most accurate, Property24 source)
+      "camps-bay": { name: "Camps Bay", source: "westernCape" },
+      "sea-point": { name: "Sea Point", source: "westernCape" },
+      "green-point": { name: "Green Point", source: "westernCape" },
+      woodstock: { name: "Woodstock", source: "westernCape" },
+      observatory: { name: "Observatory", source: "westernCape" },
+      claremont: { name: "Claremont", source: "westernCape" },
+      constantia: { name: "Constantia", source: "westernCape" },
+      clifton: { name: "Clifton", source: "westernCape" },
+      bakoven: { name: "Bakoven", source: "westernCape" },
+      // Stellenbosch areas - Use Western Cape Spatial Data Warehouse first
       stellenbosch: {
         name: "Stellenbosch",
-        source: "openstreetmap",
-        searchTerms: ["Stellenbosch, Western Cape, South Africa"],
+        source: "westernCape",
+        searchTerms: ["Stellenbosch"],
       },
       "stellenbosch-central": {
         name: "Stellenbosch",
-        source: "openstreetmap",
-        searchTerms: [
-          "Stellenbosch, Western Cape, South Africa",
-          "Stellenbosch Central, Western Cape",
-        ],
+        source: "westernCape",
+        searchTerms: ["Stellenbosch"],
       },
       dalsig: { name: "Dalsig", source: "stellenbosch" },
       welgevonden: { name: "Welgevonden", source: "stellenbosch" },
