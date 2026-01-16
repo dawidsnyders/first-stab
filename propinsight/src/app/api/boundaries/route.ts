@@ -543,7 +543,7 @@ export async function GET(request: NextRequest) {
               suburbName === "Stellenbosch" ||
               suburbName === "Franschhoek" ||
               suburbName === "Cape Town";
-            const maxArea = isCity ? 30 : 5;
+            const maxArea = isCity ? 150 : 25; // 5x larger: cities 150 km², suburbs 25 km²
             let bestCandidate = null;
             let smallestCandidateArea = Infinity;
             for (const candidate of candidates) {
