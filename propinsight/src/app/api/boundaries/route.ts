@@ -404,7 +404,7 @@ export async function GET(request: NextRequest) {
                     break;
                   } else {
                     console.warn(
-                      `No suitable polygon found in OpenStreetMap results for "${searchTerm}" - tried ${polygonFeatures.length} polygon features, all were rejected (too large, outside WC, or wrong type)`
+                      `No suitable polygon found in OpenStreetMap results for "${searchTerm}" - tried polygon features, all were rejected (too large, outside WC, or wrong type)`
                     );
                   }
                 } else {
