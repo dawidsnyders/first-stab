@@ -16,7 +16,6 @@ import { SearchBar } from "@/components/ui/SearchBar";
 import { MapModal } from "@/components/ui/MapModal";
 import { MapView } from "@/components/map/MapView";
 import { AreaCard } from "@/components/area/AreaCard";
-import { AreaPreviewCard } from "@/components/area/AreaPreviewCard";
 import { AreaCarousel } from "@/components/area/AreaCarousel";
 import { getAreasByLevel, searchAreas } from "@/data/areas";
 import { PurchaseModal } from "@/components/area/PurchaseModal";
@@ -482,45 +481,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured Areas - Map Preview Cards */}
-      <section
-        id="explore"
-        className="relative bg-gradient-to-b from-white to-stone-50 py-24"
-      >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h3 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
-              Explore the Western Cape
-            </h3>
-            <p className="text-xl text-stone-600 max-w-2xl mx-auto mb-6">
-              Discover market insights for top-performing suburbs across Cape
-              Town
-            </p>
-            <button
-              onClick={() => setIsMapModalOpen(true)}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-sage-600 text-white font-semibold rounded-xl hover:bg-sage-700 transition-all duration-200 shadow-lg hover:shadow-xl"
-            >
-              <MapIcon className="w-5 h-5" />
-              Open Full Map
-            </button>
-          </div>
-
-          {/* Area Preview Cards Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {getAreasByLevel("suburb")
-              .filter((area) => area.stats) // Only show areas with stats
-              .slice(0, 4)
-              .map((area, index) => (
-                <AreaPreviewCard
-                  key={area.id}
-                  area={area}
-                  delay={index * 0.1}
-                />
-              ))}
-          </div>
-        </div>
-      </section>
-
       {/* Featured suburbs - Carousel Style */}
       <section className="bg-white py-24 border-t border-stone-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -528,10 +488,17 @@ export default function Home() {
             <h3 className="text-4xl md:text-5xl font-bold text-stone-900 mb-4">
               Popular Areas
             </h3>
-            <p className="text-xl text-stone-600 max-w-2xl mx-auto">
+            <p className="text-xl text-stone-600 max-w-2xl mx-auto mb-6">
               Discover insights for some of the most sought-after suburbs in the
               Western Cape
             </p>
+            <button
+              onClick={() => setIsMapModalOpen(true)}
+              className="inline-flex items-center gap-2 px-6 py-3 bg-sage-600 text-white font-semibold rounded-xl hover:bg-sage-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+            >
+              <MapIcon className="w-5 h-5" />
+              View Full Map
+            </button>
           </div>
           <AreaCarousel areas={featuredSuburbs} />
         </div>

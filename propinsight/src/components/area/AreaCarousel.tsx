@@ -162,7 +162,9 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
         <div className="flex items-center justify-center gap-3 mt-8">
           <button
             onClick={() =>
-              setSelectedIndex((prev) => (prev > 0 ? prev - 1 : areas.length - 1))
+              setSelectedIndex((prev) =>
+                prev > 0 ? prev - 1 : areas.length - 1
+              )
             }
             className="w-9 h-9 rounded-full border border-stone-300 flex items-center justify-center hover:bg-stone-100 hover:border-stone-400 transition-all duration-200 text-stone-600 hover:text-stone-900"
             aria-label="Previous"
@@ -201,7 +203,9 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
 
           <button
             onClick={() =>
-              setSelectedIndex((prev) => (prev < areas.length - 1 ? prev + 1 : 0))
+              setSelectedIndex((prev) =>
+                prev < areas.length - 1 ? prev + 1 : 0
+              )
             }
             className="w-9 h-9 rounded-full border border-stone-300 flex items-center justify-center hover:bg-stone-100 hover:border-stone-400 transition-all duration-200 text-stone-600 hover:text-stone-900"
             aria-label="Next"
