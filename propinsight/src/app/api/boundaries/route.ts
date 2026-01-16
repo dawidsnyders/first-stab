@@ -759,31 +759,41 @@ export async function GET(request: NextRequest) {
                 return false;
               }
               const props = f.properties || {};
-              // Try multiple possible field names
-              const nameField = String(
-                props.SUBURB ||
-                  props.NAME ||
-                  props.SUBURB_NAME ||
-                  props.OFC_SBRB_NAME ||
-                  props.MUNICIPALITY ||
-                  props.MUNICIPALITY_NAME ||
-                  props.LOCAL_MUNICIPALITY ||
-                  props.name ||
-                  ""
-              );
-              const nameLower = nameField.toLowerCase().trim();
-              if (!nameLower) return false;
+              // Try multiple possible field names - check all of them
+              const possibleNames = [
+                props.SUBURB,
+                props.NAME,
+                props.SUBURB_NAME,
+                props.OFC_SBRB_NAME,
+                props.MUNICIPALITY,
+                props.MUNICIPALITY_NAME,
+                props.LOCAL_MUNICIPALITY,
+                props.name,
+                // For Paarl, also check municipality fields
+                props.MUNIC_NAME,
+                props.ADMIN_NAME,
+              ]
+                .filter(Boolean)
+                .map((n) => String(n).toLowerCase().trim());
 
-              // Try matching with all search terms
-              return searchTerms.some((term) => {
-                const termLower = term.toLowerCase().trim();
-                // Exact match or contains match
-                return (
-                  nameLower === termLower ||
-                  nameLower.includes(termLower) ||
-                  termLower.includes(nameLower)
-                );
-              });
+              if (possibleNames.length === 0) return false;
+
+              // Try matching with all search terms, plus suburb name directly
+              const allSearchTerms = [...searchTerms, suburbName].map((t) =>
+                t.toLowerCase().trim()
+              );
+              
+              // Check if any of the possible names match any search term
+              return possibleNames.some((nameLower) =>
+                allSearchTerms.some((termLower) => {
+                  // Exact match or contains match
+                  return (
+                    nameLower === termLower ||
+                    nameLower.includes(termLower) ||
+                    termLower.includes(nameLower)
+                  );
+                })
+              );
             }) || [];
 
           console.log(
