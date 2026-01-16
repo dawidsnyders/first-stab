@@ -253,15 +253,15 @@ export default function Home() {
             >
               {/* Card 1: Market Data */}
               <ProductCard
-                bgColor="bg-gradient-to-br from-sage-500 to-sage-600"
+                bgColor="bg-gradient-to-br from-sage-100 to-sage-200"
                 icon={
-                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 rounded-xl bg-sage-600/10 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-sage-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
                     </svg>
                   </div>
                 }
-                label="For Investors & Analysts"
+                label="For Investors"
                 title="Market Data"
                 subtitle="Live Property Prices"
                 metric="150+"
@@ -271,15 +271,15 @@ export default function Home() {
               
               {/* Card 2: Growth Analytics */}
               <ProductCard
-                bgColor="bg-gradient-to-br from-terracotta-400 to-terracotta-500"
+                bgColor="bg-gradient-to-br from-terracotta-100 to-terracotta-200"
                 icon={
-                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 rounded-xl bg-terracotta-600/10 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-terracotta-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                     </svg>
                   </div>
                 }
-                label="For Long-term Planning"
+                label="For Planning"
                 title="Growth Analytics"
                 subtitle="Historical Performance"
                 metric="10yr"
@@ -289,10 +289,10 @@ export default function Home() {
               
               {/* Card 3: Reports */}
               <ProductCard
-                bgColor="bg-gradient-to-br from-stone-700 to-stone-800"
+                bgColor="bg-gradient-to-br from-stone-100 to-stone-200"
                 icon={
-                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 rounded-xl bg-stone-600/10 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-stone-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
@@ -302,20 +302,20 @@ export default function Home() {
                 subtitle="Comprehensive Analysis"
                 metric={REPORT_PRICE_DISPLAY}
                 metricLabel="per Report"
-                description="In-depth 10-15 page reports with investment outlook and risk assessment"
+                description="10-15 page reports with investment outlook and risk assessment"
               />
               
               {/* Card 4: Interactive Maps */}
               <ProductCard
-                bgColor="bg-gradient-to-br from-moss-500 to-moss-600"
+                bgColor="bg-gradient-to-br from-moss-100 to-moss-200"
                 icon={
-                  <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 rounded-xl bg-moss-600/10 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-moss-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
                     </svg>
                   </div>
                 }
-                label="For Visual Exploration"
+                label="For Exploration"
                 title="Interactive Maps"
                 subtitle="Click & Discover"
                 metric="Free"
@@ -325,11 +325,10 @@ export default function Home() {
               
               {/* Card 5: Investment Intelligence */}
               <ProductCard
-                bgColor="bg-gradient-to-br from-sand-400 to-sand-500"
-                textDark={true}
+                bgColor="bg-gradient-to-br from-sand-100 to-sand-200"
                 icon={
-                  <div className="w-16 h-16 rounded-2xl bg-black/10 backdrop-blur-sm flex items-center justify-center">
-                    <svg className="w-8 h-8 text-stone-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 rounded-xl bg-sand-500/10 flex items-center justify-center">
+                    <svg className="w-6 h-6 text-sand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                   </div>
@@ -339,7 +338,7 @@ export default function Home() {
                 subtitle="Investment Analysis"
                 metric="AI"
                 metricLabel="Powered Insights"
-                description="Risk assessments, ROI projections, and comparable area analysis"
+                description="Risk assessments, ROI projections, and comparable analysis"
               />
               
               {/* End spacer */}
@@ -652,9 +651,9 @@ function ProductCard({
   description,
   textDark = false,
 }: ProductCardProps) {
-  const textColor = textDark ? 'text-stone-900' : 'text-white';
-  const textMuted = textDark ? 'text-stone-600' : 'text-white/70';
-  const textSubtle = textDark ? 'text-stone-500' : 'text-white/60';
+  const textColor = textDark ? 'text-stone-800' : 'text-stone-900';
+  const textMuted = textDark ? 'text-stone-600' : 'text-stone-700';
+  const textSubtle = textDark ? 'text-stone-500' : 'text-stone-600';
   
   return (
     <motion.div
@@ -662,15 +661,15 @@ function ProductCard({
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      className="flex-shrink-0 w-[340px] md:w-[420px] lg:w-[480px]"
+      className="flex-shrink-0 w-[320px] md:w-[380px] lg:w-[420px]"
     >
-      <div className={`${bgColor} rounded-3xl p-8 md:p-10 h-[400px] md:h-[440px] flex flex-col relative overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1`}>
+      <div className={`${bgColor} rounded-3xl p-6 md:p-8 min-h-[380px] md:min-h-[420px] flex flex-col relative overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200/50`}>
         {/* Decorative circles */}
-        <div className={`absolute -right-20 -top-20 w-64 h-64 rounded-full ${textDark ? 'bg-black/5' : 'bg-white/10'}`}></div>
-        <div className={`absolute -right-10 -bottom-10 w-40 h-40 rounded-full ${textDark ? 'bg-black/5' : 'bg-white/5'}`}></div>
+        <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-white/30"></div>
+        <div className="absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-white/20"></div>
         
         {/* Header */}
-        <div className="flex items-start justify-between mb-6 relative z-10">
+        <div className="flex items-start justify-between mb-4 relative z-10">
           {icon}
           <span className={`text-xs font-medium ${textMuted} uppercase tracking-wider`}>
             {label}
@@ -678,15 +677,15 @@ function ProductCard({
         </div>
         
         {/* Title Section */}
-        <div className="mb-6 relative z-10">
-          <h4 className={`text-2xl md:text-3xl font-bold ${textColor} mb-1`}>{title}</h4>
+        <div className="mb-4 relative z-10">
+          <h4 className={`text-xl md:text-2xl font-bold ${textColor} mb-1`}>{title}</h4>
           <p className={`text-sm ${textMuted}`}>{subtitle}</p>
         </div>
         
         {/* Big Metric */}
-        <div className="flex-grow flex items-center relative z-10">
+        <div className="flex-grow flex items-center relative z-10 my-2">
           <div>
-            <div className={`text-5xl md:text-6xl lg:text-7xl font-bold ${textColor} tracking-tight`}>
+            <div className={`text-4xl md:text-5xl font-bold ${textColor} tracking-tight`}>
               {metric}
             </div>
             <div className={`text-sm ${textMuted} mt-1`}>{metricLabel}</div>
@@ -694,12 +693,12 @@ function ProductCard({
         </div>
         
         {/* Description & Arrow */}
-        <div className="flex items-end justify-between relative z-10">
-          <p className={`text-sm ${textSubtle} max-w-[70%] leading-relaxed`}>
+        <div className="flex items-end justify-between gap-4 relative z-10 mt-auto pt-4">
+          <p className={`text-sm ${textSubtle} leading-relaxed flex-1`}>
             {description}
           </p>
-          <div className={`w-10 h-10 rounded-full ${textDark ? 'bg-stone-900' : 'bg-white/20'} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-            <svg className={`w-5 h-5 ${textDark ? 'text-white' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-10 h-10 rounded-full bg-stone-900 flex-shrink-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+            <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </div>

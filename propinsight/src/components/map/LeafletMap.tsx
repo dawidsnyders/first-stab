@@ -168,8 +168,11 @@ export function LeafletMap({
         });
 
         // Change cursor on hover
-        polygon.on("mouseover", function () {
-          this.setStyle({ cursor: "pointer" });
+        polygon.on("mouseover", function (this: L.Polygon) {
+          this.setStyle({ fillOpacity: 0.5 });
+        });
+        polygon.on("mouseout", function (this: L.Polygon) {
+          this.setStyle({ fillOpacity: 0.35 });
         });
 
         polygonsRef.current.set(area.id, polygon);
