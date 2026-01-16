@@ -205,8 +205,12 @@ export async function getBoundaryForArea(
       console.error(`Invalid boundary data for ${slug}:`, {
         success: data.success,
         hasBoundary: !!data.boundary,
-        boundaryType: Array.isArray(data.boundary) ? "array" : typeof data.boundary,
-        boundaryLength: Array.isArray(data.boundary) ? data.boundary.length : "N/A",
+        boundaryType: Array.isArray(data.boundary)
+          ? "array"
+          : typeof data.boundary,
+        boundaryLength: Array.isArray(data.boundary)
+          ? data.boundary.length
+          : "N/A",
         error: data.error,
         fullResponse: data,
       });

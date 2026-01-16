@@ -123,8 +123,7 @@ export async function GET(request: NextRequest) {
       paarl: {
         name: "Paarl",
         source: "openstreetmap",
-        searchTerms: ["Paarl", "Paarl, Western Cape", "Paarl town"],
-        searchTerms: ["Paarl", "Drakenstein"],
+        searchTerms: ["Paarl", "Paarl, Western Cape", "Paarl town", "Paarl, Drakenstein"],
       },
       // Val de Vie Estate (merged from Val de Vie and Pearl Valley) - use OpenStreetMap
       "val-de-vie": {
@@ -247,8 +246,9 @@ export async function GET(request: NextRequest) {
               osmUrl.searchParams.append("format", "geojson");
               osmUrl.searchParams.append("polygon_geojson", "1");
               osmUrl.searchParams.append("countrycodes", "za");
-              osmUrl.searchParams.append("limit", "1");
+              osmUrl.searchParams.append("limit", "5"); // Get more results to find the best match
               osmUrl.searchParams.append("addressdetails", "1");
+              osmUrl.searchParams.append("extratags", "1"); // Get more metadata
 
               const osmResponse = await fetch(osmUrl.toString(), {
                 method: "GET",
@@ -263,6 +263,9 @@ export async function GET(request: NextRequest) {
                 const osmData: GeoJSONResponse = await osmResponse.json();
                 // OpenStreetMap returns FeatureCollection directly
                 if (osmData.features && osmData.features.length > 0) {
+                  console.log(
+                    `OpenStreetMap returned ${osmData.features.length} features for "${searchTerm}"`
+                  );
                   // Try all features and pick the smallest/most specific one
                   let bestFeature = null;
                   let smallestArea = Infinity;
@@ -315,6 +318,12 @@ export async function GET(request: NextRequest) {
                           minLng >= 16 &&
                           maxLng <= 26;
 
+                        // Log all candidates for debugging
+                        const featureName = feature.properties?.display_name || feature.properties?.name || "unknown";
+                        console.log(
+                          `  Candidate: "${featureName}" - area: ${area.toFixed(2)} km², in WC: ${isInWesternCape}, within limit: ${area < maxArea}`
+                        );
+                        
                         if (
                           area < maxArea &&
                           isInWesternCape &&
@@ -322,15 +331,20 @@ export async function GET(request: NextRequest) {
                         ) {
                           bestFeature = feature;
                           smallestArea = area;
-                        } else if (area >= 500) {
+                          console.log(
+                            `  ✓ Selected as best candidate so far`
+                          );
+                        } else if (area >= maxArea) {
                           console.warn(
-                            `Rejecting overly large polygon for "${searchTerm}": ${area.toFixed(
-                              2
-                            )} km² (max 500 km² for suburbs/estates)`
+                            `  ✗ Rejecting: area ${area.toFixed(2)} km² exceeds max ${maxArea} km²`
                           );
                         } else if (!isInWesternCape) {
                           console.warn(
-                            `Rejecting polygon outside Western Cape for "${searchTerm}": bbox [${minLat}, ${minLng}] to [${maxLat}, ${maxLng}]`
+                            `  ✗ Rejecting: outside Western Cape (bbox [${minLat.toFixed(2)}, ${minLng.toFixed(2)}] to [${maxLat.toFixed(2)}, ${maxLng.toFixed(2)}])`
+                          );
+                        } else if (area >= smallestArea) {
+                          console.log(
+                            `  ✗ Rejecting: larger than current best (${area.toFixed(2)} vs ${smallestArea.toFixed(2)} km²)`
                           );
                         }
                       }
@@ -350,7 +364,12 @@ export async function GET(request: NextRequest) {
                     break;
                   } else {
                     console.warn(
-                      `No suitable polygon found in OpenStreetMap results for "${searchTerm}" - all were too large or outside Western Cape`
+                      `No suitable polygon found in OpenStreetMap results for "${searchTerm}" - tried ${osmData.features.length} features, all were rejected (too large, outside WC, or wrong type)`
+                    );
+                    // Log what types we got
+                    const geometryTypes = osmData.features.map(f => f.geometry?.type).filter(Boolean);
+                    console.warn(
+                      `  Geometry types found: ${[...new Set(geometryTypes)].join(", ")}`
                     );
                   }
                 }
