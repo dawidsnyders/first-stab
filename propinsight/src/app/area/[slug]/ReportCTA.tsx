@@ -64,19 +64,48 @@ export function ReportCTA({ area }: ReportCTAProps) {
   };
 
   return (
-    <div className="bg-gradient-to-br from-sage-600 to-moss-600 rounded-2xl overflow-hidden">
-      <div className="p-6 md:p-8 lg:p-10">
-        <div className="max-w-5xl mx-auto">
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
-            Get the Full Market Analysis Report
-          </h2>
-          <p className="text-sage-50 text-base md:text-lg mb-8 leading-relaxed">
-            A comprehensive 10-15 page market analysis with historical data,
-            growth drivers, investment outlook, and actionable insights.
-          </p>
+    <div className="relative bg-white border border-stone-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-100 overflow-hidden">
+      {/* Subtle gradient accent */}
+      <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sage-500 via-moss-500 to-sage-500"></div>
+
+      <div className="p-8 md:p-10 lg:p-12">
+        <div className="max-w-4xl mx-auto">
+          {/* Header */}
+          <div className="flex items-start justify-between mb-8">
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="w-10 h-10 rounded-lg bg-sage-100 flex items-center justify-center">
+                  <svg
+                    className="w-5 h-5 text-sage-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                    />
+                  </svg>
+                </div>
+                <span className="text-xs font-semibold text-sage-600 uppercase tracking-wider">
+                  Premium Report
+                </span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold text-stone-900 mb-3 tracking-tight">
+                Full Market Analysis Report
+              </h2>
+              <p className="text-stone-600 text-lg leading-relaxed max-w-2xl">
+                Comprehensive 10-15 page analysis with historical data, growth
+                drivers, investment outlook, and actionable insights for{" "}
+                <span className="font-semibold text-stone-900">{area.name}</span>.
+              </p>
+            </div>
+          </div>
 
           {/* Features grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
             {[
               "10-Year Price Analysis",
               "CAGR Calculations",
@@ -89,10 +118,10 @@ export function ReportCTA({ area }: ReportCTAProps) {
             ].map((feature) => (
               <div
                 key={feature}
-                className="flex items-center gap-1.5 text-sage-50"
+                className="flex items-start gap-2 text-stone-700"
               >
                 <svg
-                  className="w-4 h-4 text-terracotta-300 flex-shrink-0"
+                  className="w-4 h-4 text-sage-600 flex-shrink-0 mt-0.5"
                   fill="currentColor"
                   viewBox="0 0 20 20"
                 >
@@ -102,36 +131,28 @@ export function ReportCTA({ area }: ReportCTAProps) {
                     clipRule="evenodd"
                   />
                 </svg>
-                <span className="text-sm">{feature}</span>
+                <span className="text-sm leading-snug">{feature}</span>
               </div>
             ))}
           </div>
 
-          {/* Area name and Buy button - Compressed layout */}
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-            {/* Left: Area name */}
-            <div className="flex items-center gap-3">
+          {/* Divider */}
+          <div className="border-t border-stone-200 my-8"></div>
+
+          {/* CTA Section */}
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6">
+            {/* Left: Pricing */}
+            <div className="flex items-baseline gap-4">
               <div>
-                <div className="text-sage-50 text-xs font-medium mb-0.5">
-                  Report for
-                </div>
-                <div className="text-xl md:text-2xl font-bold text-white">
-                  {area.name}
+                <div className="text-sm text-stone-500 mb-1">One-time payment</div>
+                <div className="text-4xl md:text-5xl font-bold text-stone-900 tracking-tight">
+                  {REPORT_PRICE_DISPLAY}
                 </div>
               </div>
             </div>
 
-            {/* Right: Pricing and Buy button - Inline */}
-            <div className="flex items-center gap-4 sm:gap-6">
-              <div className="text-white text-right">
-                <div className="text-2xl md:text-3xl font-bold leading-tight">
-                  {REPORT_PRICE_DISPLAY}
-                </div>
-                <div className="text-sage-100 text-xs">
-                  once-off
-                </div>
-              </div>
-
+            {/* Right: CTA Button */}
+            <div className="flex-shrink-0">
               <AnimatePresence mode="wait">
                 {!showEmailForm ? (
                   <motion.button
@@ -140,82 +161,137 @@ export function ReportCTA({ area }: ReportCTAProps) {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={handleBuyClick}
-                    whileHover={{ scale: 1.02, y: -1 }}
-                    whileTap={{ scale: 0.98 }}
-                    className="group relative px-6 py-3 bg-white text-sage-700 font-bold text-base rounded-xl hover:bg-stone-50 transition-all duration-100 shadow-lg hover:shadow-xl hover:shadow-sage-900/20 overflow-hidden"
+                    whileHover={{ scale: 1.01 }}
+                    whileTap={{ scale: 0.99 }}
+                    className="group relative px-8 py-4 bg-stone-900 text-white font-semibold text-base rounded-xl hover:bg-stone-800 transition-all duration-100 shadow-sm hover:shadow-md flex items-center gap-2"
                   >
-                    {/* Shine effect on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500 ease-in-out"></div>
-                    <span className="relative">Buy Report</span>
+                    <span>Purchase Report</span>
+                    <svg
+                      className="w-4 h-4 transition-transform duration-100 group-hover:translate-x-0.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
+                      />
+                    </svg>
                   </motion.button>
                 ) : (
                   <motion.form
                     key="email-form"
-                    initial={{ opacity: 0, y: -10 }}
+                    initial={{ opacity: 0, y: -5 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
+                    exit={{ opacity: 0, y: -5 }}
                     onSubmit={handleBuySubmit}
-                    className="flex flex-col sm:flex-row gap-2 w-full md:w-auto"
+                    className="flex flex-col sm:flex-row gap-3 w-full sm:w-auto"
                   >
                     <input
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="Enter your email"
+                      placeholder="your@email.com"
                       required
                       autoFocus
-                      className="flex-1 px-4 py-3 rounded-xl text-stone-900 placeholder-stone-400 bg-white border border-white/40 focus:outline-none focus:ring-2 focus:ring-white/50 focus:border-white/60 transition-all duration-100"
+                      className="px-4 py-3 rounded-xl text-stone-900 placeholder-stone-400 bg-white border border-stone-300 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all duration-100 text-sm min-w-[240px]"
                     />
-                    <button
-                      type="submit"
-                      disabled={isSubmitting || !email.trim()}
-                      className="group relative px-6 py-3 bg-white text-sage-700 font-semibold rounded-xl hover:bg-stone-50 transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] overflow-hidden"
-                    >
-                      {/* Shine effect on hover */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-500 ease-in-out"></div>
-                      {isSubmitting ? (
-                        <>
-                          <motion.div
-                            animate={{ rotate: 360 }}
-                            transition={{
-                              duration: 1,
-                              repeat: Infinity,
-                              ease: "linear",
-                            }}
-                            className="w-4 h-4 border-2 border-sage-600 border-t-transparent rounded-full relative z-10"
-                          />
-                          <span className="relative z-10">Processing...</span>
-                        </>
-                      ) : (
-                        <span className="relative z-10">
-                          Pay {REPORT_PRICE_DISPLAY}
-                        </span>
-                      )}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setShowEmailForm(false);
-                        setEmail("");
-                      }}
-                      className="px-4 py-3 text-white/70 hover:text-white transition-colors duration-100"
-                    >
-                      Cancel
-                    </button>
+                    <div className="flex gap-2">
+                      <button
+                        type="submit"
+                        disabled={isSubmitting || !email.trim()}
+                        className="px-6 py-3 bg-stone-900 text-white font-semibold rounded-xl hover:bg-stone-800 transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <motion.div
+                              animate={{ rotate: 360 }}
+                              transition={{
+                                duration: 1,
+                                repeat: Infinity,
+                                ease: "linear",
+                              }}
+                              className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                            />
+                            <span>Processing...</span>
+                          </>
+                        ) : (
+                          `Pay ${REPORT_PRICE_DISPLAY}`
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setShowEmailForm(false);
+                          setEmail("");
+                        }}
+                        className="px-4 py-3 text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded-xl transition-all duration-100 font-medium"
+                      >
+                        Cancel
+                      </button>
+                    </div>
                   </motion.form>
                 )}
               </AnimatePresence>
             </div>
           </div>
-        </div>
-      </div>
 
-      {/* Sample report preview */}
-      <div className="bg-white/10 px-6 md:px-8 lg:px-10 py-4 border-t border-white/10">
-        <p className="text-sage-100 text-xs md:text-sm text-center max-w-3xl mx-auto">
-          Reports are generated instantly using AI analysis of the latest
-          available market data. Delivered via email and available for download.
-        </p>
+          {/* Trust indicators */}
+          <div className="mt-8 pt-6 border-t border-stone-100">
+            <div className="flex flex-wrap items-center gap-6 text-xs text-stone-500">
+              <div className="flex items-center gap-2">
+                <svg
+                  className="w-4 h-4 text-sage-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                  />
+                </svg>
+                <span>Secure payment</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg
+                  className="w-4 h-4 text-sage-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 10V3L4 14h7v7l9-11h-7z"
+                  />
+                </svg>
+                <span>Instant delivery</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <svg
+                  className="w-4 h-4 text-sage-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
+                </svg>
+                <span>AI-powered analysis</span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
