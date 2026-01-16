@@ -411,12 +411,12 @@ export default function Home() {
                 </button>
               </div>
               
-              {/* Progress bar */}
-              <div className="flex-1 h-1 bg-stone-200 rounded-full overflow-hidden">
+              {/* Scroll track with fixed-size thumb */}
+              <div className="flex-1 h-1.5 bg-stone-200 rounded-full relative">
                 <motion.div
-                  className="h-full bg-stone-900 rounded-full"
-                  style={{ width: `${Math.max(15, scrollProgress)}%` }}
-                  transition={{ duration: 0.1, ease: "easeOut" }}
+                  className="absolute top-0 h-full w-16 bg-stone-900 rounded-full"
+                  style={{ left: `calc(${scrollProgress}% - ${scrollProgress * 0.16}%)` }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
                 />
               </div>
             </div>
