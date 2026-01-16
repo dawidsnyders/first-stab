@@ -791,11 +791,13 @@ export async function GET(request: NextRequest) {
           }
 
           const responseData: GeoJSONResponse = await response.json();
-          
+
           // Debug logging for Paarl
           if (suburbName === "Paarl" && source === "national") {
             console.log(
-              `National API returned ${responseData.features?.length || 0} features for Paarl`
+              `National API returned ${
+                responseData.features?.length || 0
+              } features for Paarl`
             );
             if (responseData.features && responseData.features.length > 0) {
               const sampleFeature = responseData.features[0];
@@ -847,8 +849,14 @@ export async function GET(request: NextRequest) {
               // Special case: For Paarl, also accept "Drakenstein" (the municipality it's in)
               if (suburbName === "Paarl") {
                 allSearchTerms.push("drakenstein");
-                // For National API, be very lenient - if any field contains "drakenstein", accept it
+                // For National API, be very lenient - check ALL property values, not just names
                 if (source === "national") {
+                  // Check if ANY property value contains "drakenstein"
+                  const allPropsStr = JSON.stringify(props).toLowerCase();
+                  if (allPropsStr.includes("drakenstein")) {
+                    return true;
+                  }
+                  // Also check the possible names
                   return possibleNames.some((nameLower) =>
                     nameLower.includes("drakenstein")
                   );
