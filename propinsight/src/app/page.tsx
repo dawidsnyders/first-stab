@@ -797,4 +797,3 @@ function ProductCard({
     </motion.div>
   );
 }
-// Trigger redeploy
