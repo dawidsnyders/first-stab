@@ -92,14 +92,14 @@ export function SearchBar({ onMapClick }: SearchBarProps) {
     <div className="relative w-full max-w-2xl">
       {/* Quick Select Areas */}
       <div className="mb-4">
-        <div className="flex flex-nowrap gap-3 overflow-x-auto">
+        <div className="flex flex-nowrap gap-2.5 overflow-x-auto">
           {popularAreas.map((area) => (
             <motion.button
               key={area.id}
               onClick={() => handleQuickSelect(area)}
               whileHover={{ scale: 1.02, y: -1 }}
               whileTap={{ scale: 0.98 }}
-              className="group relative flex-shrink-0 px-6 py-3.5 text-sm font-semibold rounded-xl transition-all duration-100 bg-white text-stone-900 border border-stone-200/80 hover:border-sage-300/60 hover:shadow-lg hover:shadow-sage-100/50 active:shadow-md"
+              className="group relative flex-shrink-0 px-5 py-3 text-sm font-medium rounded-xl transition-all duration-100 bg-white text-stone-900 border border-stone-200/80 hover:border-sage-300/60 hover:shadow-lg hover:shadow-sage-100/50 active:shadow-md"
             >
               <span className="relative z-10 whitespace-nowrap">{area.name}</span>
               <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white to-stone-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-100" />

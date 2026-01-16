@@ -269,7 +269,7 @@ export default function Home() {
       <section
         id="features"
         className="relative bg-gradient-to-b from-white to-stone-100 pb-12 md:pb-16 overflow-visible z-10"
-        style={{ marginTop: '-30px', paddingTop: 'calc(8rem - 30px)' }}
+        style={{ marginTop: '-15px', paddingTop: 'calc(8rem - 15px)' }}
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.03)_1px,transparent_0)] bg-[size:32px_32px]"></div>
