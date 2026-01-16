@@ -93,10 +93,13 @@ export function GoogleMapsMap({
 }: GoogleMapsMapProps) {
   const mapRef = useRef<google.maps.Map | null>(null);
   const polygonsRef = useRef<Map<string, google.maps.Polygon>>(new Map());
-  const polygonBoundsRef = useRef<Map<string, google.maps.LatLngBounds>>(new Map());
+  const polygonBoundsRef = useRef<Map<string, google.maps.LatLngBounds>>(
+    new Map()
+  );
   const [isMapReady, setIsMapReady] = useState(false);
   const [hoveredArea, setHoveredArea] = useState<Area | null>(null);
-  const [viewportBounds, setViewportBounds] = useState<google.maps.LatLngBounds | null>(null);
+  const [viewportBounds, setViewportBounds] =
+    useState<google.maps.LatLngBounds | null>(null);
   const [boundaries, setBoundaries] = useState<
     Map<string, google.maps.LatLngLiteral[]>
   >(new Map());
@@ -170,7 +173,10 @@ export function GoogleMapsMap({
     updateViewportBounds();
 
     // Listen to bounds changes
-    const listener = mapRef.current.addListener("bounds_changed", updateViewportBounds);
+    const listener = mapRef.current.addListener(
+      "bounds_changed",
+      updateViewportBounds
+    );
 
     return () => {
       if (listener) {
@@ -180,19 +186,22 @@ export function GoogleMapsMap({
   }, [isMapReady]);
 
   // Check if polygon is visible in viewport
-  const isPolygonVisible = useCallback((area: Area): boolean => {
-    // Always show selected area
-    if (selectedArea?.slug === area.slug) return true;
-    
-    // If no viewport bounds yet, show all (initial load)
-    if (!viewportBounds) return true;
+  const isPolygonVisible = useCallback(
+    (area: Area): boolean => {
+      // Always show selected area
+      if (selectedArea?.slug === area.slug) return true;
 
-    const polygonBounds = polygonBoundsRef.current.get(area.slug);
-    if (!polygonBounds) return false;
+      // If no viewport bounds yet, show all (initial load)
+      if (!viewportBounds) return true;
 
-    // Check if polygon bounds intersect with viewport
-    return viewportBounds.intersects(polygonBounds);
-  }, [viewportBounds, selectedArea]);
+      const polygonBounds = polygonBoundsRef.current.get(area.slug);
+      if (!polygonBounds) return false;
+
+      // Check if polygon bounds intersect with viewport
+      return viewportBounds.intersects(polygonBounds);
+    },
+    [viewportBounds, selectedArea]
+  );
 
   // Update polygons when boundaries are loaded or viewport changes
   useEffect(() => {

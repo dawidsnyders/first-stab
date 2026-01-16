@@ -244,29 +244,21 @@ export function LeafletMap({
           areasWithoutBoundaries.map((a) => a.name)
         );
       }
-      // Calculate and store polygon bounds
-      polygonBoundsRef.current.clear();
-      areas.forEach((area, index) => {
-        const boundary = boundaries[index];
-        if (boundary && boundary.length > 0) {
-          const polygon = L.default.polygon(boundary);
-          polygonBoundsRef.current.set(area.slug, polygon.getBounds());
-        }
-      });
-
       // Helper function to check if polygon is visible
-      const isPolygonVisible = (area: Area): boolean => {
+      const isPolygonVisible = (area: Area, boundary: [number, number][]): boolean => {
         // Always show selected area
         if (selectedArea?.slug === area.slug) return true;
         
         // If no viewport bounds yet, show all (initial load)
-        if (!viewportBounds) return true;
+        if (!viewportBounds || !mapInstanceRef.current) return true;
 
-        const polygonBounds = polygonBoundsRef.current.get(area.slug);
-        if (!polygonBounds) return false;
+        // Calculate polygon bounds from boundary coordinates
+        const map = mapInstanceRef.current as any;
+        const bounds = L.default.latLngBounds(boundary);
+        polygonBoundsRef.current.set(area.slug, bounds);
 
         // Check if polygon bounds intersect with viewport
-        return (viewportBounds as any).intersects(polygonBounds as any);
+        return (viewportBounds as any).intersects(bounds);
       };
 
       // Add area polygons with real boundaries
@@ -282,7 +274,7 @@ export function LeafletMap({
         }
 
         // Skip areas not visible in viewport
-        if (!isPolygonVisible(area)) {
+        if (!isPolygonVisible(area, boundary)) {
           return; // Don't render this polygon
         }
 
@@ -518,7 +510,12 @@ export function LeafletMap({
 
   // Update visible polygons when viewport changes
   useEffect(() => {
-    if (!mapInstanceRef.current || !isMapReady || polygonsRef.current.size === 0) return;
+    if (
+      !mapInstanceRef.current ||
+      !isMapReady ||
+      polygonsRef.current.size === 0
+    )
+      return;
 
     // Re-check visibility and show/hide polygons based on viewport
     import("leaflet").then((L) => {
