@@ -12085,6 +12085,13 @@ const HARDCODED_BOUNDARIES: Record<
   },
 };
 
+/**
+ * Convert GeoJSON coordinates (lng, lat) to Leaflet format (lat, lng)
+ */
+function geoJSONToLeaflet(coordinates: number[][][]): [number, number][] {
+  const exteriorRing = coordinates[0];
+  return exteriorRing.map(([lng, lat]) => [lat, lng] as [number, number]);
+}
 
 export async function GET(request: NextRequest) {
   try {
