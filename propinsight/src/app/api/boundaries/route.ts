@@ -116,7 +116,11 @@ export async function GET(request: NextRequest) {
         ],
       },
       // Paarl - Use National/Provincial API (Drakenstein Local Municipality - most accurate)
-      paarl: { name: "Paarl", source: "national", searchTerms: ["Paarl", "Drakenstein"] },
+      paarl: {
+        name: "Paarl",
+        source: "national",
+        searchTerms: ["Paarl", "Drakenstein"],
+      },
       // Val de Vie Estate (merged from Val de Vie and Pearl Valley) - use OpenStreetMap
       "val-de-vie": {
         name: "Val de Vie",
@@ -207,7 +211,11 @@ export async function GET(request: NextRequest) {
         } else if (source === "national") {
           // National API - query all and filter in code (more reliable for municipality matching)
           // Paarl is in Drakenstein Local Municipality, so we need flexible matching
-          console.log(`Querying National API for "${suburbName}" (search terms: ${searchTerms.join(", ")})`);
+          console.log(
+            `Querying National API for "${suburbName}" (search terms: ${searchTerms.join(
+              ", "
+            )})`
+          );
           url.searchParams.append("where", "1=1"); // Get all, filter in code
           url.searchParams.append("outFields", "*");
           url.searchParams.append("returnGeometry", "true");
@@ -448,7 +456,7 @@ export async function GET(request: NextRequest) {
                   111 *
                   111;
 
-                // Reject overly large polygons (> 500 km²) and ensure it's in Western Cape
+                // Reject overly large polygons and ensure it's in Western Cape
                 const minLat = Math.min(...lats);
                 const maxLat = Math.max(...lats);
                 const minLng = Math.min(...lngs);
@@ -459,8 +467,10 @@ export async function GET(request: NextRequest) {
                   minLng >= 16 &&
                   maxLng <= 26;
 
-                // Use stricter 100 km² limit (was 500 km²) to avoid overly large administrative boundaries
-                const maxArea = 100; // km² - strict limit for suburbs
+                // Use different area limits for cities vs suburbs/estates
+                // Cities can be larger (up to 500 km²), suburbs/estates should be < 100 km²
+                const isCity = suburbName === "Paarl" || suburbName === "Stellenbosch" || suburbName === "Franschhoek" || suburbName === "Cape Town";
+                const maxArea = isCity ? 500 : 100; // km² - cities can be larger
                 if (area < maxArea && isInWesternCape && area < smallestArea) {
                   matchingFeature = candidate;
                   smallestArea = area;
@@ -468,7 +478,7 @@ export async function GET(request: NextRequest) {
                   console.warn(
                     `Rejecting overly large polygon for "${suburbName}": ${area.toFixed(
                       2
-                    )} km² (max ${maxArea} km²)`
+                    )} km² (max ${maxArea} km² for ${isCity ? "city" : "suburb"})`
                   );
                 }
               }
@@ -491,7 +501,9 @@ export async function GET(request: NextRequest) {
           matchingFeature = responseData.features?.[0];
           if (matchingFeature) {
             console.log(
-              `Found feature for "${suburbName}" from Cape Town API: ${matchingFeature.geometry?.type || "unknown type"}`
+              `Found feature for "${suburbName}" from Cape Town API: ${
+                matchingFeature.geometry?.type || "unknown type"
+              }`
             );
           } else {
             console.warn(
