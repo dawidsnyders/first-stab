@@ -91,7 +91,10 @@ export async function scrapeDeedsOffice(
   // In production, this would be real scraped data
   const mockRecords: DeedsOfficeRecord[] = [
     {
-      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(5, "0")}/${currentYear}`,
+      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(
+        5,
+        "0"
+      )}/${currentYear}`,
       erfNumber: "ERF-001",
       address: `${areaName} Street 1`,
       suburb: areaName,
@@ -104,7 +107,10 @@ export async function scrapeDeedsOffice(
       bondHolder: "Standard Bank",
     },
     {
-      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(5, "0")}/${currentYear}`,
+      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(
+        5,
+        "0"
+      )}/${currentYear}`,
       erfNumber: "ERF-002",
       address: `${areaName} Avenue 2`,
       suburb: areaName,
@@ -117,7 +123,10 @@ export async function scrapeDeedsOffice(
       bondHolder: "FNB",
     },
     {
-      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(5, "0")}/${currentYear}`,
+      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(
+        5,
+        "0"
+      )}/${currentYear}`,
       erfNumber: "ERF-003",
       address: `${areaName} Road 3`,
       suburb: areaName,
@@ -130,7 +139,10 @@ export async function scrapeDeedsOffice(
       bondHolder: "Nedbank",
     },
     {
-      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(5, "0")}/${currentYear}`,
+      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(
+        5,
+        "0"
+      )}/${currentYear}`,
       erfNumber: "ERF-004",
       address: `${areaName} Close 4`,
       suburb: areaName,
@@ -143,7 +155,10 @@ export async function scrapeDeedsOffice(
       bondHolder: "Absa",
     },
     {
-      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(5, "0")}/${currentYear}`,
+      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(
+        5,
+        "0"
+      )}/${currentYear}`,
       erfNumber: "ERF-005",
       address: `${areaName} Drive 5`,
       suburb: areaName,

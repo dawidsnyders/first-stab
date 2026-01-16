@@ -3,7 +3,7 @@ import Link from "next/link";
 import { CalendarIcon, BoltIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
 import { getAreaBySlug, getChildAreas, sampleAreas } from "@/data/areas";
 import { getDevelopmentsByArea } from "@/data/developments";
-import { formatPrice, formatPriceChange, formatNumber } from "@/types";
+import { formatPrice, formatPriceChange, formatNumber, Area } from "@/types";
 import {
   APP_NAME,
   REPORT_PRICE_DISPLAY,
@@ -12,10 +12,9 @@ import {
 import { AreaCard } from "@/components/area/AreaCard";
 import { ReportCTA } from "./ReportCTA";
 import { StatsGrid } from "@/components/area/StatsGrid";
-import { PriceTrendChart } from "@/components/charts/PriceTrendChart";
+import { PriceTrendChartSection } from "@/components/charts/PriceTrendChartSection";
 import { PropertyTypeBreakdown } from "@/components/area/PropertyTypeBreakdown";
 import { DevelopmentsSection } from "@/components/area/DevelopmentsSection";
-import { generateMedianPriceData } from "@/lib/chartData";
 import { AreaMapWithButton } from "@/components/area/AreaMapWithButton";
 import { StickyReportCTA } from "@/components/area/StickyReportCTA";
 
@@ -311,27 +310,7 @@ export default async function AreaPage({ params }: PageProps) {
       {/* Price chart */}
       {stats && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-stone-900 mb-2">
-                Price Trend Analysis
-              </h2>
-              <p className="text-stone-600">
-                Deep dive into price movements, seasonal patterns, and market
-                cycles. Hover over the chart to see detailed values at each point in time.
-              </p>
-            </div>
-            <PriceTrendChart
-              data={generateMedianPriceData(
-                stats.medianPrice,
-                stats.priceChangeYoY,
-                5
-              )}
-              areaName={area.name}
-              currentPrice={stats.medianPrice}
-              priceChangeYoY={stats.priceChangeYoY}
-            />
-          </div>
+          <PriceTrendChartSection stats={stats} areaName={area.name} />
         </section>
       )}
 

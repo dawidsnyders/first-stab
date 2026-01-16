@@ -1,73 +1,80 @@
-import { Area } from '@/types';
+import { Area } from "@/types";
 
 // Sample data for Western Cape MVP
 // In production, this would come from a database
 
+// Get current date in YYYY-MM-DD format for up-to-date timestamps
+const getCurrentDate = (): string => {
+  return new Date().toISOString().split("T")[0];
+};
+
+const TODAY = getCurrentDate();
+
 export const sampleAreas: Area[] = [
   // Province
   {
-    id: 'wc',
-    name: 'Western Cape',
-    slug: 'western-cape',
-    level: 'province',
+    id: "wc",
+    name: "Western Cape",
+    slug: "western-cape",
+    level: "province",
     stats: {
       avgPrice: 2_450_000,
       medianPrice: 1_850_000,
       priceChangeYoY: 4.2,
       salesCount: 45_000,
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   // Cities
   {
-    id: 'cpt',
-    name: 'Cape Town',
-    slug: 'cape-town',
-    level: 'city',
-    parentId: 'wc',
+    id: "cpt",
+    name: "Cape Town",
+    slug: "cape-town",
+    level: "city",
+    parentId: "wc",
     stats: {
       avgPrice: 3_200_000,
       medianPrice: 2_400_000,
       priceChangeYoY: 5.8,
       salesCount: 28_000,
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   {
-    id: 'paarl',
-    name: 'Paarl',
-    slug: 'paarl',
-    level: 'city',
-    parentId: 'wc',
+    id: "paarl",
+    name: "Paarl",
+    slug: "paarl",
+    level: "city",
+    parentId: "wc",
     stats: {
       avgPrice: 4_100_000,
       medianPrice: 3_200_000,
       priceChangeYoY: 8.5,
       salesCount: 1_200,
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   {
-    id: 'stellenbosch',
-    name: 'Stellenbosch',
-    slug: 'stellenbosch',
-    level: 'city',
-    parentId: 'wc',
+    id: "stellenbosch",
+    name: "Stellenbosch",
+    slug: "stellenbosch",
+    level: "city",
+    parentId: "wc",
     stats: {
       avgPrice: 4_800_000,
       medianPrice: 3_800_000,
       priceChangeYoY: 7.2,
       salesCount: 950,
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   // Cape Town Suburbs
   {
-    id: 'camps-bay',
-    name: 'Camps Bay',
-    slug: 'camps-bay',
-    level: 'suburb',
-    parentId: 'cpt',
+    id: "camps-bay",
+    name: "Camps Bay",
+    slug: "camps-bay",
+    level: "suburb",
+    parentId: "cpt",
     stats: {
       avgPrice: 18_500_000,
       medianPrice: 15_000_000,
@@ -79,15 +86,15 @@ export const sampleAreas: Area[] = [
         apartments: 28,
         land: 2,
       },
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   {
-    id: 'sea-point',
-    name: 'Sea Point',
-    slug: 'sea-point',
-    level: 'suburb',
-    parentId: 'cpt',
+    id: "sea-point",
+    name: "Sea Point",
+    slug: "sea-point",
+    level: "suburb",
+    parentId: "cpt",
     stats: {
       avgPrice: 4_200_000,
       medianPrice: 3_500_000,
@@ -99,15 +106,15 @@ export const sampleAreas: Area[] = [
         apartments: 82,
         land: 3,
       },
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   {
-    id: 'green-point',
-    name: 'Green Point',
-    slug: 'green-point',
-    level: 'suburb',
-    parentId: 'cpt',
+    id: "green-point",
+    name: "Green Point",
+    slug: "green-point",
+    level: "suburb",
+    parentId: "cpt",
     stats: {
       avgPrice: 4_800_000,
       medianPrice: 4_100_000,
@@ -119,15 +126,15 @@ export const sampleAreas: Area[] = [
         apartments: 78,
         land: 2,
       },
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   {
-    id: 'woodstock',
-    name: 'Woodstock',
-    slug: 'woodstock',
-    level: 'suburb',
-    parentId: 'cpt',
+    id: "woodstock",
+    name: "Woodstock",
+    slug: "woodstock",
+    level: "suburb",
+    parentId: "cpt",
     stats: {
       avgPrice: 2_100_000,
       medianPrice: 1_800_000,
@@ -139,15 +146,15 @@ export const sampleAreas: Area[] = [
         apartments: 60,
         land: 5,
       },
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   {
-    id: 'observatory',
-    name: 'Observatory',
-    slug: 'observatory',
-    level: 'suburb',
-    parentId: 'cpt',
+    id: "observatory",
+    name: "Observatory",
+    slug: "observatory",
+    level: "suburb",
+    parentId: "cpt",
     stats: {
       avgPrice: 2_400_000,
       medianPrice: 2_100_000,
@@ -159,15 +166,15 @@ export const sampleAreas: Area[] = [
         apartments: 42,
         land: 3,
       },
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   {
-    id: 'claremont',
-    name: 'Claremont',
-    slug: 'claremont',
-    level: 'suburb',
-    parentId: 'cpt',
+    id: "claremont",
+    name: "Claremont",
+    slug: "claremont",
+    level: "suburb",
+    parentId: "cpt",
     stats: {
       avgPrice: 5_200_000,
       medianPrice: 4_500_000,
@@ -179,15 +186,15 @@ export const sampleAreas: Area[] = [
         apartments: 52,
         land: 3,
       },
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   {
-    id: 'constantia',
-    name: 'Constantia',
-    slug: 'constantia',
-    level: 'suburb',
-    parentId: 'cpt',
+    id: "constantia",
+    name: "Constantia",
+    slug: "constantia",
+    level: "suburb",
+    parentId: "cpt",
     stats: {
       avgPrice: 12_500_000,
       medianPrice: 9_800_000,
@@ -199,16 +206,16 @@ export const sampleAreas: Area[] = [
         apartments: 10,
         land: 5,
       },
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   // Paarl Suburbs
   {
-    id: 'val-de-vie',
-    name: 'Val de Vie Estate',
-    slug: 'val-de-vie',
-    level: 'suburb',
-    parentId: 'paarl',
+    id: "val-de-vie",
+    name: "Val de Vie Estate",
+    slug: "val-de-vie",
+    level: "suburb",
+    parentId: "paarl",
     stats: {
       avgPrice: 11_850_000,
       medianPrice: 9_500_000,
@@ -220,15 +227,15 @@ export const sampleAreas: Area[] = [
         apartments: 10,
         land: 25,
       },
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   {
-    id: 'pearl-valley',
-    name: 'Pearl Valley',
-    slug: 'pearl-valley',
-    level: 'suburb',
-    parentId: 'paarl',
+    id: "pearl-valley",
+    name: "Pearl Valley",
+    slug: "pearl-valley",
+    level: "suburb",
+    parentId: "paarl",
     stats: {
       avgPrice: 8_200_000,
       medianPrice: 6_800_000,
@@ -240,16 +247,16 @@ export const sampleAreas: Area[] = [
         apartments: 5,
         land: 25,
       },
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
   // Stellenbosch Suburbs
   {
-    id: 'de-zalze',
-    name: 'De Zalze',
-    slug: 'de-zalze',
-    level: 'suburb',
-    parentId: 'stellenbosch',
+    id: "de-zalze",
+    name: "De Zalze",
+    slug: "de-zalze",
+    level: "suburb",
+    parentId: "stellenbosch",
     stats: {
       avgPrice: 9_500_000,
       medianPrice: 7_800_000,
@@ -261,7 +268,7 @@ export const sampleAreas: Area[] = [
         apartments: 10,
         land: 15,
       },
-      lastUpdated: '2025-01-01',
+      lastUpdated: TODAY,
     },
   },
 ];
@@ -271,7 +278,7 @@ export const getAreaBySlug = (slug: string): Area | undefined => {
   return sampleAreas.find((a) => a.slug === slug);
 };
 
-export const getAreasByLevel = (level: Area['level']): Area[] => {
+export const getAreasByLevel = (level: Area["level"]): Area[] => {
   return sampleAreas.filter((a) => a.level === level);
 };
 
@@ -281,7 +288,5 @@ export const getChildAreas = (parentId: string): Area[] => {
 
 export const searchAreas = (query: string): Area[] => {
   const lowerQuery = query.toLowerCase();
-  return sampleAreas.filter((a) =>
-    a.name.toLowerCase().includes(lowerQuery)
-  );
+  return sampleAreas.filter((a) => a.name.toLowerCase().includes(lowerQuery));
 };

@@ -85,13 +85,55 @@ const PriceTooltip = ({
   return null;
 };
 
+interface PriceTrendChartPeriodSelectorProps {
+  timePeriod: TimePeriod;
+  onPeriodChange: (period: TimePeriod) => void;
+}
+
+export function PriceTrendChartPeriodSelector({
+  timePeriod,
+  onPeriodChange,
+}: PriceTrendChartPeriodSelectorProps) {
+  return (
+    <div className="flex items-center gap-2">
+      {([5, 10, 15] as TimePeriod[]).map((period) => (
+        <button
+          key={period}
+          onClick={() => onPeriodChange(period)}
+          className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+            timePeriod === period
+              ? "bg-sage-600 text-white shadow-sm"
+              : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+          }`}
+        >
+          {period} Years
+        </button>
+      ))}
+    </div>
+  );
+}
+
 export function PriceTrendChart({
   data: initialData,
   areaName,
   currentPrice,
   priceChangeYoY,
-}: PriceTrendChartProps) {
-  const [timePeriod, setTimePeriod] = useState<TimePeriod>(5);
+  timePeriod: externalTimePeriod,
+  onTimePeriodChange,
+}: PriceTrendChartProps & {
+  timePeriod?: TimePeriod;
+  onTimePeriodChange?: (period: TimePeriod) => void;
+}) {
+  const [internalTimePeriod, setInternalTimePeriod] = useState<TimePeriod>(5);
+  const timePeriod = externalTimePeriod ?? internalTimePeriod;
+  
+  const handleTimePeriodChange = (period: TimePeriod) => {
+    if (onTimePeriodChange) {
+      onTimePeriodChange(period);
+    } else {
+      setInternalTimePeriod(period);
+    }
+  };
 
   // Generate data based on selected time period
   const chartData = generateMedianPriceData(
@@ -139,30 +181,6 @@ export function PriceTrendChart({
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="w-full"
     >
-      {/* Time period selector */}
-      <div className="flex items-center justify-between mb-4">
-        <div>
-          <h3 className="text-sm font-medium text-stone-600">
-            Historical Price Trend
-          </h3>
-        </div>
-        <div className="flex items-center gap-2">
-          {([5, 10, 15] as TimePeriod[]).map((period) => (
-            <button
-              key={period}
-              onClick={() => setTimePeriod(period)}
-              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
-                timePeriod === period
-                  ? "bg-sage-600 text-white shadow-sm"
-                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
-              }`}
-            >
-              {period} Years
-            </button>
-          ))}
-        </div>
-      </div>
-
       <ResponsiveContainer width="100%" height={400}>
         <AreaChart
           data={enhancedData}
