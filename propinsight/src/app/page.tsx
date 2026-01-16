@@ -154,14 +154,14 @@ export default function Home() {
             </motion.div>
           </div>
 
-          {/* Map preview - sticking out at bottom */}
+          {/* Map preview - sticking out at bottom, full width */}
           <motion.div
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-            className="relative mt-auto -mb-20 md:-mb-28 lg:-mb-36"
+            className="relative mt-auto -mb-20 md:-mb-28 lg:-mb-36 w-full"
           >
-            <div className="relative max-w-6xl mx-auto px-4">
+            <div className="relative w-full px-4 sm:px-6 lg:px-8">
               <div className="bg-white rounded-2xl border border-stone-200 shadow-2xl overflow-hidden">
                 <div className="h-[350px] md:h-[450px] lg:h-[550px]">
                   <MapView initialLevel="suburb" />
