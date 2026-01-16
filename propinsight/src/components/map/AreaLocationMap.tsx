@@ -7,7 +7,7 @@ import { getAreaBoundaryPolygon } from "@/data/areaBoundaries";
 import { getBoundaryForArea } from "@/lib/geojson-boundaries";
 import "leaflet/dist/leaflet.css";
 
-// Coordinates for all Western Cape areas
+// Coordinates for all Western Cape areas [lng, lat] format
 const AREA_COORDINATES: Record<string, [number, number]> = {
   // Province
   "western-cape": [22.0, -20.0],
@@ -15,6 +15,7 @@ const AREA_COORDINATES: Record<string, [number, number]> = {
   "cape-town": [18.4241, -33.9249],
   paarl: [18.9752, -33.7342],
   stellenbosch: [18.8602, -33.9322],
+  franschhoek: [19.1233, -33.9094],
   // Cape Town Suburbs
   "camps-bay": [18.3756, -33.9508],
   "sea-point": [18.3889, -33.9167],
@@ -23,11 +24,47 @@ const AREA_COORDINATES: Record<string, [number, number]> = {
   observatory: [18.4722, -33.9389],
   claremont: [18.4722, -33.9806],
   constantia: [18.4167, -34.0278],
-  // Paarl Suburbs
+  // Paarl Estates
   "val-de-vie": [18.9667, -33.7333],
   "pearl-valley": [18.9833, -33.75],
-  // Stellenbosch Suburbs
+  boschendal: [18.945, -33.72],
+  boschenmeer: [18.96, -33.74],
+  "winelands-estate-paarl": [18.95, -33.73],
+  "sante-wine-estate": [18.955, -33.725],
+  "kleine-parys": [18.94, -33.735],
+  "paarl-valleij": [18.98, -33.745],
+  // Paarl Suburbs
+  courtrai: [18.97, -33.72],
+  lemoenkloof: [18.975, -33.73],
+  groenvlei: [18.965, -33.74],
+  "charleston-hill": [18.96, -33.725],
+  "de-zoete-inval": [18.955, -33.732],
+  "klein-nederburg": [18.95, -33.728],
+  denneburg: [18.945, -33.735],
+  vrykyk: [18.94, -33.738],
+  // Stellenbosch Estates
   "de-zalze": [18.8667, -34.0167],
+  devonvale: [18.85, -33.98],
+  devonbosch: [18.87, -33.96],
+  koelenbosch: [18.855, -33.975],
+  "devon-valley": [18.845, -33.985],
+  // Stellenbosch Suburbs
+  "stellenbosch-central": [18.8602, -33.9322],
+  dalsig: [18.855, -33.93],
+  welgevonden: [18.865, -33.935],
+  mostertsdrift: [18.85, -33.928],
+  // Franschhoek Estates
+  "domaine-des-anges": [19.12, -33.91],
+  "fransche-hoek": [19.125, -33.915],
+  "winelands-estate-franschhoek": [19.115, -33.905],
+  "delta-crest": [19.13, -33.92],
+  "la-petite-provence": [19.118, -33.912],
+  // Franschhoek Suburbs
+  "franschhoek-village": [19.1233, -33.9094],
+  "franschhoek-rural": [19.11, -33.9],
+  "groendal-franschhoek": [19.128, -33.908],
+  langrug: [19.135, -33.91],
+  "la-motte": [19.105, -33.902],
 };
 
 function getAreaCoordinates(area: Area): [number, number] {
@@ -46,19 +83,27 @@ async function getAreaBoundaryAsync(area: Area): Promise<[number, number][]> {
     const geoJSONBoundary = await getBoundaryForArea(area.slug);
     if (geoJSONBoundary && geoJSONBoundary.length > 10) {
       // Only use API boundary if it has sufficient detail (more than 10 points)
-      console.log(`Using API boundary for ${area.slug} with ${geoJSONBoundary.length} points`);
+      console.log(
+        `Using API boundary for ${area.slug} with ${geoJSONBoundary.length} points`
+      );
       return geoJSONBoundary;
     } else if (geoJSONBoundary) {
-      console.warn(`API boundary for ${area.slug} has only ${geoJSONBoundary.length} points, may be incomplete`);
+      console.warn(
+        `API boundary for ${area.slug} has only ${geoJSONBoundary.length} points, may be incomplete`
+      );
     } else {
-      console.warn(`API boundary not found for ${area.slug}, falling back to static data`);
+      console.warn(
+        `API boundary not found for ${area.slug}, falling back to static data`
+      );
     }
   }
 
   // Fallback: Try static boundary data (these are simplified and may be inaccurate)
   const staticBoundary = getAreaBoundaryPolygon(area.slug);
   if (staticBoundary) {
-    console.warn(`Using simplified static boundary for ${area.slug} - this may be inaccurate`);
+    console.warn(
+      `Using simplified static boundary for ${area.slug} - this may be inaccurate`
+    );
     return staticBoundary;
   }
 
@@ -147,7 +192,8 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
           const bounds = polygon.getBounds();
           map.fitBounds(bounds, {
             padding: [60, 60], // Increased padding to zoom out more - ensures entire area is visible with more context
-            maxZoom: area.level === "province" ? 9 : area.level === "city" ? 12 : 13,
+            maxZoom:
+              area.level === "province" ? 9 : area.level === "city" ? 12 : 13,
           });
         }
 
@@ -173,7 +219,10 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
 
   return (
     <div className="relative w-full h-[400px] rounded-2xl overflow-hidden border border-stone-200 bg-stone-50 pointer-events-none z-0">
-      <div ref={mapRef} className="w-full h-full pointer-events-none relative z-0" />
+      <div
+        ref={mapRef}
+        className="w-full h-full pointer-events-none relative z-0"
+      />
 
       {/* Custom CSS for map styling - matching main map */}
       <style jsx global>{`
