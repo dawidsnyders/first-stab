@@ -91,14 +91,13 @@ export async function GET(request: NextRequest) {
       clifton: { name: "Clifton", source: "capeTown" },
       bakoven: { name: "Bakoven", source: "capeTown" },
       // Stellenbosch areas
-      stellenbosch: { name: "Stellenbosch", source: "stellenbosch" },
+      stellenbosch: { name: "Stellenbosch", source: "openstreetmap", searchTerms: ["Stellenbosch, Western Cape, South Africa"] },
       "stellenbosch-central": {
         name: "Stellenbosch",
-        source: "stellenbosch",
+        source: "openstreetmap",
         searchTerms: [
-          "Stellenbosch Central",
-          "Stellenbosch Town",
-          "Stellenbosch CBD",
+          "Stellenbosch, Western Cape, South Africa",
+          "Stellenbosch Central, Western Cape",
         ],
       },
       dalsig: { name: "Dalsig", source: "stellenbosch" },
@@ -238,20 +237,19 @@ export async function GET(request: NextRequest) {
         searchTerms: ["Vrykyk, Paarl"],
       },
       // Franschhoek - part of Stellenbosch municipality
-      franschhoek: { name: "Franschhoek", source: "stellenbosch" },
+      franschhoek: { name: "Franschhoek", source: "openstreetmap", searchTerms: ["Franschhoek, Western Cape, South Africa"] },
       "franschhoek-village": {
         name: "Franschhoek",
-        source: "stellenbosch",
+        source: "openstreetmap",
         searchTerms: [
-          "Franschhoek Village",
-          "Franschhoek Town",
-          "Franschhoek Central",
+          "Franschhoek, Western Cape, South Africa",
+          "Franschhoek Village, Western Cape",
         ],
       },
       "franschhoek-rural": {
         name: "Franschhoek",
-        source: "stellenbosch",
-        searchTerms: ["Franschhoek Rural", "Franschhoek Valley"],
+        source: "openstreetmap",
+        searchTerms: ["Franschhoek, Western Cape, South Africa"],
       },
       "groendal-franschhoek": {
         name: "Groendal",
@@ -377,27 +375,66 @@ export async function GET(request: NextRequest) {
                 const osmData: GeoJSONResponse = await osmResponse.json();
                 // OpenStreetMap returns FeatureCollection directly
                 if (osmData.features && osmData.features.length > 0) {
-                  const feature = osmData.features[0];
-                  // Check if it has a proper polygon geometry (not just a point)
-                  if (
-                    feature.geometry &&
-                    (feature.geometry.type === "Polygon" ||
-                      feature.geometry.type === "MultiPolygon") &&
-                    feature.geometry.coordinates
-                  ) {
+                  // Try all features and pick the smallest/most specific one
+                  let bestFeature = null;
+                  let smallestArea = Infinity;
+                  
+                  for (const feature of osmData.features) {
+                    // Check if it has a proper polygon geometry (not just a point)
+                    if (
+                      feature.geometry &&
+                      (feature.geometry.type === "Polygon" ||
+                        feature.geometry.type === "MultiPolygon") &&
+                      feature.geometry.coordinates
+                    ) {
+                      // Calculate approximate bounding box area to filter out overly large polygons
+                      const coords = feature.geometry.type === "Polygon" 
+                        ? feature.geometry.coordinates[0]
+                        : feature.geometry.coordinates[0][0];
+                      
+                      if (coords && coords.length > 0) {
+                        const lngs = coords.map((c: number[]) => c[0]);
+                        const lats = coords.map((c: number[]) => c[1]);
+                        const minLng = Math.min(...lngs);
+                        const maxLng = Math.max(...lngs);
+                        const minLat = Math.min(...lats);
+                        const maxLat = Math.max(...lats);
+                        
+                        // Approximate area in square degrees (rough conversion: 1° ≈ 111km)
+                        const area = (maxLng - minLng) * (maxLat - minLat) * 111 * 111; // km²
+                        
+                        // Reject polygons larger than 500 km² (suburbs/estates should be much smaller)
+                        // Also ensure it's in the right geographic area (Western Cape)
+                        const isInWesternCape = minLat >= -36 && maxLat <= -31 && minLng >= 16 && maxLng <= 26;
+                        
+                        if (area < 500 && isInWesternCape && area < smallestArea) {
+                          bestFeature = feature;
+                          smallestArea = area;
+                        } else if (area >= 500) {
+                          console.warn(
+                            `Rejecting overly large polygon for "${searchTerm}": ${area.toFixed(2)} km² (max 500 km² for suburbs/estates)`
+                          );
+                        } else if (!isInWesternCape) {
+                          console.warn(
+                            `Rejecting polygon outside Western Cape for "${searchTerm}": bbox [${minLat}, ${minLng}] to [${maxLat}, ${maxLng}]`
+                          );
+                        }
+                      }
+                    }
+                  }
+                  
+                  if (bestFeature) {
                     data = {
                       type: "FeatureCollection",
-                      features: [feature],
+                      features: [bestFeature],
                     };
                     console.log(
-                      `Successfully fetched boundary from OpenStreetMap for "${searchTerm}" with ${feature.geometry.type}`
+                      `Successfully fetched boundary from OpenStreetMap for "${searchTerm}" with ${bestFeature.geometry.type} (area: ${smallestArea.toFixed(2)} km²)`
                     );
                     break;
                   } else {
                     console.warn(
-                      `OpenStreetMap returned ${
-                        feature.geometry?.type || "no geometry"
-                      } for "${searchTerm}" - not a polygon`
+                      `No suitable polygon found in OpenStreetMap results for "${searchTerm}" - all were too large or outside Western Cape`
                     );
                   }
                 }

@@ -306,7 +306,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                           <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-2 font-medium">
                             5-Year Price Trend
                           </div>
-                          <div className="h-20 w-full">
+                          <div className="h-20 w-full bg-stone-50 rounded-lg p-2">
                             <ResponsiveContainer width="100%" height="100%">
                               <LineChart
                                 data={generateMedianPriceData(
@@ -386,7 +386,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                             <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-2 font-medium">
                               5-Year Price per m²
                             </div>
-                            <div className="h-20 w-full">
+                            <div className="h-20 w-full bg-stone-50 rounded-lg p-2">
                               <ResponsiveContainer width="100%" height="100%">
                                 <LineChart
                                   data={generatePricePerSqmData(
