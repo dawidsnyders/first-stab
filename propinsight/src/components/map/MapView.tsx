@@ -47,19 +47,30 @@ export function MapView({ initialLevel = "suburb" }: MapViewProps) {
 
   const handleAreaClick = useCallback(
     (area: Area) => {
+      // Instant selection - no delay for map interaction
       if (selectedArea?.id === area.id) {
+        // Deselect if clicking the same area
         setSelectedArea(null);
+        setIsLoading(false);
         return;
       }
 
-      // Simulate loading for smooth transition
-      setIsLoading(true);
-      setSelectedArea(null);
-
-      setTimeout(() => {
+      // When switching areas, panel stays visible but shows skeleton during transition
+      const isSwitchingArea = selectedArea !== null && selectedArea.id !== area.id;
+      
+      if (isSwitchingArea) {
+        // Show skeleton briefly while content updates (for smooth UX)
+        setIsLoading(true);
+        setSelectedArea(area);
+        // Data is available immediately, but brief loading state for visual smoothness
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 100); // Very brief - just for transition effect
+      } else {
+        // First selection - instant
         setSelectedArea(area);
         setIsLoading(false);
-      }, 150);
+      }
     },
     [selectedArea]
   );

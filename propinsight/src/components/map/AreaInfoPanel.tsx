@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Area, formatPrice, formatPriceChange, formatNumber } from "@/types";
@@ -17,19 +18,33 @@ export function AreaInfoPanel({
   isLoading,
   onClose,
 }: AreaInfoPanelProps) {
+  // Track if panel was previously visible to handle smooth transitions
+  const [wasVisible, setWasVisible] = useState(false);
+
+  useEffect(() => {
+    if (area || isLoading) {
+      setWasVisible(true);
+    }
+  }, [area, isLoading]);
+
+  const isVisible = area || isLoading;
+
+  // Debug: log visibility state
+  if (typeof window !== 'undefined' && (area || isLoading)) {
+    console.log('AreaInfoPanel visibility:', { area: area?.name, isLoading, isVisible });
+  }
+
   return (
-    <AnimatePresence mode="wait">
-      {(area || isLoading) && (
+    <AnimatePresence>
+      {isVisible && (
         <motion.div
-          key={area?.id || "loading"}
+          key="info-panel" // Use fixed key so panel doesn't unmount when switching areas
           initial={{ x: "100%", opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: "100%", opacity: 0 }}
           transition={{
-            type: "spring",
-            stiffness: 300,
-            damping: 30,
-            duration: 0.2,
+            duration: 0.2, // 200ms animation
+            ease: [0.4, 0, 0.2, 1], // Smooth easing
           }}
           className="absolute top-0 right-0 h-full w-96 max-w-[90vw] bg-white shadow-2xl border-l border-stone-200 overflow-y-auto z-20"
         >
@@ -56,11 +71,30 @@ export function AreaInfoPanel({
             </svg>
           </motion.button>
 
-          {isLoading ? (
-            <AreaInfoPanelSkeleton />
-          ) : area ? (
-            <AreaInfoContent area={area} />
-          ) : null}
+          {/* Content area - shows skeleton when loading, content when ready */}
+          <AnimatePresence mode="wait">
+            {isLoading ? (
+              <motion.div
+                key="skeleton"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.15 }}
+              >
+                <AreaInfoPanelSkeleton />
+              </motion.div>
+            ) : area ? (
+              <motion.div
+                key={`content-${area.id}`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <AreaInfoContent area={area} />
+              </motion.div>
+            ) : null}
+          </AnimatePresence>
         </motion.div>
       )}
     </AnimatePresence>
