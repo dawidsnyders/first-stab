@@ -48,6 +48,8 @@ function slugToSuburbName(slug: string): string {
     observatory: "Observatory",
     claremont: "Claremont",
     constantia: "Constantia",
+    clifton: "Clifton",
+    bakoven: "Bakoven",
     "val-de-vie": "Val de Vie", // May not be in city data
     "pearl-valley": "Pearl Valley", // May not be in city data
     "de-zalze": "De Zalze", // May not be in city data
@@ -87,6 +89,7 @@ export async function fetchSuburbBoundaries(): Promise<
     url.searchParams.append("returnGeometry", "true");
     url.searchParams.append("f", "geojson");
     url.searchParams.append("outSR", "4326"); // WGS84 coordinate system
+    url.searchParams.append("geometryPrecision", "6"); // High precision for granular boundaries
 
     const response = await fetch(url.toString());
     if (!response.ok) {
