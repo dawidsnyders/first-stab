@@ -99,10 +99,10 @@ export async function GET(request: NextRequest) {
       constantia: { name: "Constantia", source: "capeTown" },
       clifton: { name: "Clifton", source: "westernCape" },
       bakoven: { name: "Bakoven", source: "westernCape" },
-      // Stellenbosch - Use Western Cape Spatial Data Warehouse
+      // Stellenbosch - Use Stellenbosch Municipality API (most accurate for city boundaries)
       stellenbosch: {
         name: "Stellenbosch",
-        source: "westernCape",
+        source: "stellenbosch",
         searchTerms: ["Stellenbosch"],
       },
       // De Zalze Estate - use OpenStreetMap
@@ -115,8 +115,8 @@ export async function GET(request: NextRequest) {
           "De Zalze, Stellenbosch",
         ],
       },
-      // Paarl - Use Western Cape Spatial Data Warehouse
-      paarl: { name: "Paarl", source: "westernCape", searchTerms: ["Paarl"] },
+      // Paarl - Use National/Provincial API (Drakenstein Local Municipality - most accurate)
+      paarl: { name: "Paarl", source: "national", searchTerms: ["Paarl", "Drakenstein"] },
       // Val de Vie Estate (merged from Val de Vie and Pearl Valley) - use OpenStreetMap
       "val-de-vie": {
         name: "Val de Vie",
@@ -205,8 +205,11 @@ export async function GET(request: NextRequest) {
           url.searchParams.append("returnExceededLimitFeatures", "true");
           url.searchParams.append("geometryPrecision", "8");
         } else if (source === "national") {
-          url.searchParams.append("where", `NAME = '${suburbName}'`);
-          url.searchParams.append("outFields", "NAME");
+          // National API - query all and filter in code (more reliable for municipality matching)
+          // Paarl is in Drakenstein Local Municipality, so we need flexible matching
+          console.log(`Querying National API for "${suburbName}" (search terms: ${searchTerms.join(", ")})`);
+          url.searchParams.append("where", "1=1"); // Get all, filter in code
+          url.searchParams.append("outFields", "*");
           url.searchParams.append("returnGeometry", "true");
           url.searchParams.append("f", "geojson");
           url.searchParams.append("outSR", "4326");
@@ -386,12 +389,16 @@ export async function GET(request: NextRequest) {
               }
 
               const props = f.properties;
-              // Western Cape Spatial Data Warehouse uses SUBURB, NAME, or SUBURB_NAME fields
+              // Western Cape/Stellenbosch/National APIs use various field names
+              // Check multiple possible field names for flexible matching
               const nameField = String(
                 props.SUBURB ||
                   props.NAME ||
                   props.SUBURB_NAME ||
                   props.OFC_SBRB_NAME ||
+                  props.MUNICIPALITY ||
+                  props.MUNICIPALITY_NAME ||
+                  props.LOCAL_MUNICIPALITY ||
                   props.name ||
                   ""
               );

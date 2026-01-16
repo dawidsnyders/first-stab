@@ -226,7 +226,7 @@ export const sampleAreas: Area[] = [
   // Estates
   {
     id: "val-de-vie",
-    name: "Val de Vie Estate",
+    name: "Val de Vie",
     slug: "val-de-vie",
     level: "suburb",
     parentId: "paarl",
