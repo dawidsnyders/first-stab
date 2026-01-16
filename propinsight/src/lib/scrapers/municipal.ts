@@ -50,13 +50,23 @@ export async function scrapeMunicipalValuations(
 
   await new Promise((resolve) => setTimeout(resolve, 500));
 
-  // Return mock data for MVP
+  // Generate current dates - use today for most recent valuations
+  const now = new Date();
+  const today = now.toISOString().split("T")[0]; // YYYY-MM-DD
+  const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+
+  // Return mock data for MVP with current dates
   const mockValuations: MunicipalValuation[] = [
     {
       erfNumber: "ERF-001",
       address: `${areaName} Street 1`,
       valuation: 2_200_000,
-      valuationDate: "2022-07-01",
+      valuationDate: today, // Most recent valuation
       propertyType: "Residential",
       erfSize: 500,
     },
@@ -64,7 +74,7 @@ export async function scrapeMunicipalValuations(
       erfNumber: "ERF-002",
       address: `${areaName} Avenue 2`,
       valuation: 1_500_000,
-      valuationDate: "2022-07-01",
+      valuationDate: oneWeekAgo, // Recent valuation
       propertyType: "Residential",
       erfSize: 300,
     },

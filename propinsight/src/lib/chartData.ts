@@ -5,6 +5,9 @@ export interface ChartDataPoint {
   date: string;
   value: number;
   label: string;
+  // For outperformance charts, include both area and national average
+  areaValue?: number;
+  nationalValue?: number;
 }
 
 /**
@@ -120,6 +123,7 @@ export function generatePricePerSqmData(
 
 /**
  * Generate historical data for vs National Avg chart
+ * Shows two lines: area performance and national average performance over time
  * @param currentOutperformance - Current outperformance percentage
  * @param priceChangeYoY - Year-over-year price change percentage
  * @param years - Number of years of data to generate (default: 3)
@@ -142,22 +146,30 @@ export function generateOutperformanceData(
     const yearsAgo = monthsAgo / 12;
     const annualGrowthRate = priceChangeYoY / 100;
 
-    // Calculate area's growth rate at this point in time
+    // Calculate area's growth rate at this point in time (reverse from current)
+    // Current area growth = national + outperformance
+    const currentAreaGrowth = nationalBenchmark + currentOutperformance / 100;
+
+    // Reverse calculate: past area growth = current / (1 + rate)^years
+    // But we need to account for the outperformance changing over time
     const areaGrowthRate =
-      nationalBenchmark +
-      (currentOutperformance / 100) *
-        Math.pow(1 + annualGrowthRate * 0.1, yearsAgo);
+      currentAreaGrowth / Math.pow(1 + annualGrowthRate * 0.1, yearsAgo);
 
-    // Calculate outperformance
-    const outperformance = (areaGrowthRate - nationalBenchmark) * 100;
+    // National average is constant (or can have slight variation)
+    const nationalGrowthRate = nationalBenchmark;
 
-    // Add variation
-    const variation = (Math.random() - 0.5) * 2;
-    const finalValue = outperformance + variation;
+    // Add realistic variation to both
+    const areaVariation = (Math.random() - 0.5) * 0.5; // ±0.25% variation
+    const nationalVariation = (Math.random() - 0.5) * 0.3; // ±0.15% variation (less volatile)
+
+    const finalAreaValue = areaGrowthRate + areaVariation;
+    const finalNationalValue = nationalGrowthRate + nationalVariation;
 
     data.push({
       date: date.toISOString().split("T")[0],
-      value: Number(finalValue.toFixed(1)),
+      value: Number(finalAreaValue.toFixed(1)), // Keep value for backward compatibility
+      areaValue: Number(finalAreaValue.toFixed(1)), // Area performance %
+      nationalValue: Number(finalNationalValue.toFixed(1)), // National average %
       label: date.toLocaleDateString("en-ZA", {
         month: "short",
         year: "numeric",

@@ -166,7 +166,7 @@ export function PriceTrendChart({
       <ResponsiveContainer width="100%" height={400}>
         <AreaChart
           data={enhancedData}
-          margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
+          margin={{ top: 20, right: 30, left: 20, bottom: 40 }}
         >
           <defs>
             <linearGradient id="price-gradient" x1="0" y1="0" x2="0" y2="1">
@@ -236,7 +236,7 @@ export function PriceTrendChart({
       </ResponsiveContainer>
 
       {/* Chart Stats */}
-      <div className="mt-6 grid grid-cols-3 gap-4 pt-6 border-t border-stone-200">
+      <div className="mt-4 grid grid-cols-3 gap-4 pt-4 border-t border-stone-200">
         <div>
           <p className="text-xs text-stone-500 uppercase tracking-wide mb-1">
             Current Price

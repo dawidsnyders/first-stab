@@ -64,16 +64,39 @@ export async function scrapeDeedsOffice(
 
   await new Promise((resolve) => setTimeout(resolve, 1200));
 
-  // Return mock data for MVP
+  // Generate current dates - use very recent dates for transfers
+  const now = new Date();
+  const currentYear = now.getFullYear();
+  const today = now.toISOString().split("T")[0]; // YYYY-MM-DD
+  const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const twoMonthsAgo = new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const threeMonthsAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const sixMonthsAgo = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+
+  // Return mock data for MVP with current dates
   // In production, this would be real scraped data
   const mockRecords: DeedsOfficeRecord[] = [
     {
-      deedNumber: "T12345/2023",
+      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(5, "0")}/${currentYear}`,
       erfNumber: "ERF-001",
       address: `${areaName} Street 1`,
       suburb: areaName,
       municipality: "Cape Town",
-      transferDate: "2023-05-15",
+      transferDate: oneWeekAgo, // Very recent transfer
       purchasePrice: 2_350_000,
       propertyType: "Residential",
       erfSize: 500,
@@ -81,12 +104,12 @@ export async function scrapeDeedsOffice(
       bondHolder: "Standard Bank",
     },
     {
-      deedNumber: "T12346/2023",
+      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(5, "0")}/${currentYear}`,
       erfNumber: "ERF-002",
       address: `${areaName} Avenue 2`,
       suburb: areaName,
       municipality: "Cape Town",
-      transferDate: "2023-08-20",
+      transferDate: twoWeeksAgo, // Recent transfer
       purchasePrice: 1_750_000,
       propertyType: "Residential",
       erfSize: 350,
@@ -94,12 +117,12 @@ export async function scrapeDeedsOffice(
       bondHolder: "FNB",
     },
     {
-      deedNumber: "T12347/2024",
+      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(5, "0")}/${currentYear}`,
       erfNumber: "ERF-003",
       address: `${areaName} Road 3`,
       suburb: areaName,
       municipality: "Cape Town",
-      transferDate: "2024-01-10",
+      transferDate: oneMonthAgo, // Recent transfer
       purchasePrice: 3_100_000,
       propertyType: "Residential",
       erfSize: 600,
@@ -107,17 +130,30 @@ export async function scrapeDeedsOffice(
       bondHolder: "Nedbank",
     },
     {
-      deedNumber: "T12348/2022",
+      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(5, "0")}/${currentYear}`,
       erfNumber: "ERF-004",
       address: `${areaName} Close 4`,
       suburb: areaName,
       municipality: "Cape Town",
-      transferDate: "2022-11-30",
+      transferDate: threeMonthsAgo, // Recent transfer (within last year)
       purchasePrice: 2_100_000,
       propertyType: "Residential",
       erfSize: 450,
       bondAmount: 1_600_000,
       bondHolder: "Absa",
+    },
+    {
+      deedNumber: `T${String(Math.floor(Math.random() * 99999)).padStart(5, "0")}/${currentYear}`,
+      erfNumber: "ERF-005",
+      address: `${areaName} Drive 5`,
+      suburb: areaName,
+      municipality: "Cape Town",
+      transferDate: sixMonthsAgo, // Recent transfer (within last year)
+      purchasePrice: 2_800_000,
+      propertyType: "Residential",
+      erfSize: 550,
+      bondAmount: 2_200_000,
+      bondHolder: "Standard Bank",
     },
   ];
 

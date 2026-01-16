@@ -64,7 +64,32 @@ export async function scrapeLightstone(
 
   await new Promise((resolve) => setTimeout(resolve, 800));
 
-  // Return mock data for MVP
+  // Generate current dates - use today and recent dates
+  const now = new Date();
+  const today = now.toISOString().split("T")[0]; // YYYY-MM-DD
+  const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const oneMonthAgo = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const threeMonthsAgo = new Date(now.getTime() - 90 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const sixMonthsAgo = new Date(now.getTime() - 180 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const oneYearAgo = new Date(now.getTime() - 365 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+  const twoYearsAgo = new Date(now.getTime() - 730 * 24 * 60 * 60 * 1000)
+    .toISOString()
+    .split("T")[0];
+
+  // Return mock data for MVP with current dates
   // In production, this would be real scraped data
   const mockProperties: LightstoneProperty[] = [
     {
@@ -74,11 +99,11 @@ export async function scrapeLightstone(
       municipality: "Cape Town",
       propertyType: "Residential",
       valuation: 2_400_000,
-      valuationDate: "2022-07-01",
+      valuationDate: today, // Current valuation
       lastSalePrice: 2_200_000,
-      lastSaleDate: "2021-03-15",
+      lastSaleDate: threeMonthsAgo, // Recent sale
       previousSalePrice: 1_800_000,
-      previousSaleDate: "2018-06-20",
+      previousSaleDate: twoYearsAgo, // Previous sale
       erfSize: 500,
       buildingSize: 180,
     },
@@ -89,11 +114,11 @@ export async function scrapeLightstone(
       municipality: "Cape Town",
       propertyType: "Residential",
       valuation: 1_800_000,
-      valuationDate: "2022-07-01",
+      valuationDate: oneWeekAgo, // Recent valuation
       lastSalePrice: 1_650_000,
-      lastSaleDate: "2020-11-10",
+      lastSaleDate: sixMonthsAgo, // Recent sale
       previousSalePrice: 1_400_000,
-      previousSaleDate: "2017-02-28",
+      previousSaleDate: twoYearsAgo, // Previous sale
       erfSize: 350,
       buildingSize: 120,
     },
@@ -104,9 +129,9 @@ export async function scrapeLightstone(
       municipality: "Cape Town",
       propertyType: "Residential",
       valuation: 3_200_000,
-      valuationDate: "2022-07-01",
+      valuationDate: today, // Current valuation
       lastSalePrice: 2_950_000,
-      lastSaleDate: "2022-01-20",
+      lastSaleDate: oneMonthAgo, // Recent sale
       erfSize: 600,
       buildingSize: 220,
     },

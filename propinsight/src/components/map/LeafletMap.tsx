@@ -413,15 +413,14 @@ export function LeafletMap({
       isUpdatingStylesRef.current = false;
     }, 50);
 
-      // Focus on selected area
-      if (isSelected) {
-        const coords = getAreaCoordinates(area);
-        mapInstanceRef.current.setView([coords[1], coords[0]], 12, {
-          animate: true,
-          duration: 0.3,
-        });
-      }
-    });
+    // Focus on selected area
+    if (selectedArea) {
+      const coords = getAreaCoordinates(selectedArea);
+      mapInstanceRef.current.setView([coords[1], coords[0]], 12, {
+        animate: true,
+        duration: 0.3,
+      });
+    }
   }, [selectedArea?.id, isMapReady]); // Only depend on selectedArea.id, not the whole object or areas array
 
   return (

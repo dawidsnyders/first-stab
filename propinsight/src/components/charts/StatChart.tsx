@@ -11,6 +11,7 @@ import {
   BarChart,
   Bar,
   ReferenceLine,
+  Legend,
 } from "recharts";
 import { ChartDataPoint } from "@/lib/chartData";
 import { formatPrice, formatNumber } from "@/types";
@@ -35,6 +36,77 @@ const CustomTooltip = ({
   type: StatChartProps["type"];
 }) => {
   if (active && payload && payload.length) {
+    // For outperformance, show both area and national values
+    if (type === "outperformance" && payload.length >= 2) {
+      const areaPayload = payload.find((p) => p.dataKey === "areaValue");
+      const nationalPayload = payload.find(
+        (p) => p.dataKey === "nationalValue"
+      );
+
+      const areaValue = areaPayload?.value;
+      const nationalValue = nationalPayload?.value;
+
+      return (
+        <motion.div
+          initial={{ opacity: 0, y: -5, scale: 0.95 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          className="bg-white p-4 rounded-xl shadow-xl border border-stone-200 backdrop-blur-sm"
+        >
+          <p className="text-xs font-medium text-stone-500 uppercase tracking-wide mb-3">
+            {label}
+          </p>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-sage-600"></div>
+                <span className="text-sm font-medium text-stone-600">
+                  Area Performance
+                </span>
+              </div>
+              <span className="text-lg font-bold text-sage-600">
+                {areaValue !== undefined
+                  ? `${areaValue > 0 ? "+" : ""}${areaValue.toFixed(1)}%`
+                  : "N/A"}
+              </span>
+            </div>
+            <div className="flex items-center justify-between gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-stone-400"></div>
+                <span className="text-sm font-medium text-stone-600">
+                  National Average
+                </span>
+              </div>
+              <span className="text-lg font-bold text-stone-700">
+                {nationalValue !== undefined
+                  ? `${nationalValue > 0 ? "+" : ""}${nationalValue.toFixed(
+                      1
+                    )}%`
+                  : "N/A"}
+              </span>
+            </div>
+            {areaValue !== undefined && nationalValue !== undefined && (
+              <div className="pt-2 mt-2 border-t border-stone-200">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs text-stone-500">Outperformance</span>
+                  <span
+                    className={`text-sm font-semibold ${
+                      areaValue - nationalValue >= 0
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {areaValue - nationalValue >= 0 ? "+" : ""}
+                    {(areaValue - nationalValue).toFixed(1)}%
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        </motion.div>
+      );
+    }
+
+    // For other chart types, use original tooltip
     const value = payload[0].value;
     let formattedValue = "N/A";
     let change = null;
@@ -158,11 +230,36 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
   };
 
   const colors = getColor();
-  const showReferenceLine = type === "outperformance";
+  const showReferenceLine = false; // Removed - we now show two lines instead
   const isBarChart = type === "sales";
+  const isDualLineChart = type === "outperformance";
 
   // Calculate dynamic Y-axis domain to ensure data spans at least 50% of Y-axis
   const calculateYAxisDomain = () => {
+    // For outperformance with dual lines, include both areaValue and nationalValue
+    if (type === "outperformance") {
+      const allValues = [
+        ...data
+          .map((d) => d.areaValue)
+          .filter((v) => typeof v === "number" && !isNaN(v)),
+        ...data
+          .map((d) => d.nationalValue)
+          .filter((v) => typeof v === "number" && !isNaN(v)),
+      ];
+      if (allValues.length === 0) return [-5, 10];
+
+      const minValue = Math.min(...allValues);
+      const maxValue = Math.max(...allValues);
+      const range = maxValue - minValue;
+
+      // Ensure data spans at least 50% of the Y-axis
+      const minDomain = minValue - range * 0.25;
+      const maxDomain = maxValue + range * 0.25;
+
+      return [minDomain, maxDomain];
+    }
+
+    // For other chart types
     const values = data
       .map((d) => d.value)
       .filter((v) => typeof v === "number" && !isNaN(v));
@@ -175,14 +272,6 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
     // Ensure data spans at least 50% of the Y-axis
     const minDomain = minValue - range * 0.25; // Extend 25% below
     const maxDomain = maxValue + range * 0.25; // Extend 25% above
-
-    // For outperformance, ensure we show zero line
-    if (type === "outperformance") {
-      return [
-        Math.min(minDomain, -Math.abs(maxValue) * 0.1),
-        Math.max(maxDomain, Math.abs(minValue) * 0.1),
-      ];
-    }
 
     // For other types, ensure minimum is not negative (unless data is negative)
     return [Math.max(0, minDomain), maxDomain];
@@ -306,37 +395,74 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
                 opacity: 0.3,
               }}
             />
-            {showReferenceLine && (
-              <ReferenceLine
-                y={0}
-                stroke="#78716c"
-                strokeDasharray="5 5"
-                strokeWidth={2}
-                label={{
-                  value: "National Avg",
-                  position: "insideTopRight",
-                  fill: "#78716c",
-                  fontSize: 11,
+            {isDualLineChart ? (
+              <>
+                {/* Area Performance Line */}
+                <Area
+                  type="monotone"
+                  dataKey="areaValue"
+                  name="Area Performance"
+                  stroke={colors.main}
+                  strokeWidth={3}
+                  fill={`url(#gradient-${type})`}
+                  dot={false}
+                  activeDot={{
+                    r: 6,
+                    fill: colors.main,
+                    strokeWidth: 3,
+                    stroke: "#fff",
+                    style: { filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" },
+                  }}
+                  animationDuration={1000}
+                  animationBegin={0}
+                />
+                {/* National Average Line */}
+                <Area
+                  type="monotone"
+                  dataKey="nationalValue"
+                  name="National Average"
+                  stroke="#78716c"
+                  strokeWidth={2.5}
+                  strokeDasharray="5 5"
+                  fill="transparent"
+                  dot={false}
+                  activeDot={{
+                    r: 5,
+                    fill: "#78716c",
+                    strokeWidth: 2,
+                    stroke: "#fff",
+                    style: { filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" },
+                  }}
+                  animationDuration={1000}
+                  animationBegin={200}
+                />
+                <Legend
+                  wrapperStyle={{ paddingTop: "20px" }}
+                  iconType="line"
+                  formatter={(value) => (
+                    <span className="text-xs text-stone-600">{value}</span>
+                  )}
+                />
+              </>
+            ) : (
+              <Area
+                type="monotone"
+                dataKey="value"
+                stroke={colors.main}
+                strokeWidth={3}
+                fill={`url(#gradient-${type})`}
+                dot={false}
+                activeDot={{
+                  r: 6,
+                  fill: colors.main,
+                  strokeWidth: 3,
+                  stroke: "#fff",
+                  style: { filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" },
                 }}
+                animationDuration={1000}
+                animationBegin={0}
               />
             )}
-            <Area
-              type="monotone"
-              dataKey="value"
-              stroke={colors.main}
-              strokeWidth={3}
-              fill={`url(#gradient-${type})`}
-              dot={false}
-              activeDot={{
-                r: 6,
-                fill: colors.main,
-                strokeWidth: 3,
-                stroke: "#fff",
-                style: { filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" },
-              }}
-              animationDuration={1000}
-              animationBegin={0}
-            />
           </AreaChart>
         )}
       </ResponsiveContainer>
