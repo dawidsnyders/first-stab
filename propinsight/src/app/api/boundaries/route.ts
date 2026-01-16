@@ -298,10 +298,9 @@ export async function GET(request: NextRequest) {
                         // Reject polygons larger than 5 km² (suburbs should be much smaller)
                         // Most suburbs should be < 3 km²
                         // Use different limits based on what we're searching for
-                        // Towns like Paarl and Stellenbosch should be < 10 km² (actual town boundary)
-                        // Suburbs/estates should be < 5 km²
+                        // 5x larger limits: Towns 50 km², Suburbs/estates 25 km²
                         const isTown = suburbName === "Paarl" || suburbName === "Stellenbosch" || suburbName === "Franschhoek";
-                        const maxArea = isTown ? 10 : 5; // km² - strict limits for precision
+                        const maxArea = isTown ? 50 : 25; // km² - 5x larger limits
                         // Also ensure it's in the right geographic area (Western Cape)
                         const isInWesternCape =
                           minLat >= -36 &&
@@ -480,16 +479,14 @@ export async function GET(request: NextRequest) {
                   maxLng <= 26;
 
                 // Use different area limits for cities vs suburbs/estates
-                // Cities should be much smaller - actual town/city boundaries, not entire municipalities
-                // Paarl and Stellenbosch are towns, not huge municipalities - they should be < 10 km²
+                // Increased by 5x to allow larger boundaries
                 const isCity =
                   suburbName === "Paarl" ||
                   suburbName === "Stellenbosch" ||
                   suburbName === "Franschhoek" ||
                   suburbName === "Cape Town";
-                // Much stricter: cities/towns should be < 10 km² (actual built-up area), not entire municipality
-                // Cape Town is the only exception as it's a large metropolitan area
-                const maxArea = suburbName === "Cape Town" ? 30 : suburbName === "Franschhoek" ? 5 : 10; // km² - strict limits for precision
+                // 5x larger limits: Cape Town 150 km², Paarl/Stellenbosch 50 km², Franschhoek 25 km²
+                const maxArea = suburbName === "Cape Town" ? 150 : suburbName === "Franschhoek" ? 25 : 50; // km² - 5x larger limits
                 if (area < maxArea && isInWesternCape && area < smallestArea) {
                   matchingFeature = candidate;
                   smallestArea = area;
@@ -770,9 +767,9 @@ export async function GET(request: NextRequest) {
                     maxLat <= -31 &&
                     minLng >= 16 &&
                     maxLng <= 26;
-                  // For fallback, be more lenient - accept up to 15 km² (3x normal limit)
-                  // This ensures we get boundaries even if they're slightly larger than ideal
-                  const maxArea = 15; // km² for suburbs in fallback (more lenient)
+                  // For fallback, be more lenient - accept up to 75 km² (5x normal limit)
+                  // This ensures we get boundaries even if they're larger
+                  const maxArea = 75; // km² for suburbs in fallback (5x larger)
                   if (
                     area < maxArea &&
                     isInWesternCape &&
