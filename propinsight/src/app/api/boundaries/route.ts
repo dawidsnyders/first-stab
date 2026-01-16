@@ -123,7 +123,12 @@ export async function GET(request: NextRequest) {
       paarl: {
         name: "Paarl",
         source: "openstreetmap",
-        searchTerms: ["Paarl", "Paarl, Western Cape", "Paarl town", "Paarl, Drakenstein"],
+        searchTerms: [
+          "Paarl",
+          "Paarl, Western Cape",
+          "Paarl town",
+          "Paarl, Drakenstein",
+        ],
       },
       // Val de Vie Estate (merged from Val de Vie and Pearl Valley) - use OpenStreetMap
       "val-de-vie": {
@@ -319,11 +324,18 @@ export async function GET(request: NextRequest) {
                           maxLng <= 26;
 
                         // Log all candidates for debugging
-                        const featureName = feature.properties?.display_name || feature.properties?.name || "unknown";
+                        const featureName =
+                          feature.properties?.display_name ||
+                          feature.properties?.name ||
+                          "unknown";
                         console.log(
-                          `  Candidate: "${featureName}" - area: ${area.toFixed(2)} km², in WC: ${isInWesternCape}, within limit: ${area < maxArea}`
+                          `  Candidate: "${featureName}" - area: ${area.toFixed(
+                            2
+                          )} km², in WC: ${isInWesternCape}, within limit: ${
+                            area < maxArea
+                          }`
                         );
-                        
+
                         if (
                           area < maxArea &&
                           isInWesternCape &&
@@ -331,20 +343,26 @@ export async function GET(request: NextRequest) {
                         ) {
                           bestFeature = feature;
                           smallestArea = area;
-                          console.log(
-                            `  ✓ Selected as best candidate so far`
-                          );
+                          console.log(`  ✓ Selected as best candidate so far`);
                         } else if (area >= maxArea) {
                           console.warn(
-                            `  ✗ Rejecting: area ${area.toFixed(2)} km² exceeds max ${maxArea} km²`
+                            `  ✗ Rejecting: area ${area.toFixed(
+                              2
+                            )} km² exceeds max ${maxArea} km²`
                           );
                         } else if (!isInWesternCape) {
                           console.warn(
-                            `  ✗ Rejecting: outside Western Cape (bbox [${minLat.toFixed(2)}, ${minLng.toFixed(2)}] to [${maxLat.toFixed(2)}, ${maxLng.toFixed(2)}])`
+                            `  ✗ Rejecting: outside Western Cape (bbox [${minLat.toFixed(
+                              2
+                            )}, ${minLng.toFixed(2)}] to [${maxLat.toFixed(
+                              2
+                            )}, ${maxLng.toFixed(2)}])`
                           );
                         } else if (area >= smallestArea) {
                           console.log(
-                            `  ✗ Rejecting: larger than current best (${area.toFixed(2)} vs ${smallestArea.toFixed(2)} km²)`
+                            `  ✗ Rejecting: larger than current best (${area.toFixed(
+                              2
+                            )} vs ${smallestArea.toFixed(2)} km²)`
                           );
                         }
                       }
@@ -367,9 +385,13 @@ export async function GET(request: NextRequest) {
                       `No suitable polygon found in OpenStreetMap results for "${searchTerm}" - tried ${osmData.features.length} features, all were rejected (too large, outside WC, or wrong type)`
                     );
                     // Log what types we got
-                    const geometryTypes = osmData.features.map(f => f.geometry?.type).filter(Boolean);
+                    const geometryTypes = osmData.features
+                      .map((f) => f.geometry?.type)
+                      .filter(Boolean);
                     console.warn(
-                      `  Geometry types found: ${[...new Set(geometryTypes)].join(", ")}`
+                      `  Geometry types found: ${[
+                        ...new Set(geometryTypes),
+                      ].join(", ")}`
                     );
                   }
                 }
