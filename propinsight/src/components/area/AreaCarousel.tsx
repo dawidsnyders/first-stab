@@ -4,7 +4,10 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Area, formatPrice, formatPriceChange, formatNumber } from "@/types";
 import { AreaLocationMap } from "@/components/map/AreaLocationMap";
-import { generateMedianPriceData, generatePricePerSqmData } from "@/lib/chartData";
+import {
+  generateMedianPriceData,
+  generatePricePerSqmData,
+} from "@/lib/chartData";
 import {
   LineChart,
   Line,
@@ -222,7 +225,11 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
               className="mb-3 last:mb-0"
               style={{ height: "400px" }}
             >
-              <div className="w-full h-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden flex">
+              <Link
+                href={`/area/${area.slug}`}
+                className="block w-full h-full group"
+              >
+                <div className="w-full h-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden flex transition-all duration-200 group-hover:shadow-md group-hover:border-sage-300 group-hover:scale-[1.01] cursor-pointer">
                 {/* Left Side - Title and Info */}
                 <div className="flex-1 flex flex-col px-6 py-4">
                   {/* Area Name Header */}
@@ -305,7 +312,12 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                                   stats.priceChangeYoY,
                                   5
                                 )}
-                                margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                                margin={{
+                                  top: 5,
+                                  right: 5,
+                                  left: 5,
+                                  bottom: 5,
+                                }}
                               >
                                 <defs>
                                   <linearGradient
@@ -380,7 +392,12 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                                     stats.priceChangeYoY,
                                     5
                                   )}
-                                  margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                                  margin={{
+                                    top: 5,
+                                    right: 5,
+                                    left: 5,
+                                    bottom: 5,
+                                  }}
                                 >
                                   <defs>
                                     <linearGradient
@@ -445,10 +462,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
 
                       {/* CTA Link */}
                       <div className="mt-auto pt-4 border-t border-stone-200">
-                        <Link
-                          href={`/area/${area.slug}`}
-                          className="inline-flex items-center gap-2 text-sage-600 hover:text-sage-700 font-semibold text-xs transition-colors duration-200 group"
-                        >
+                        <div className="inline-flex items-center gap-2 text-sage-600 group-hover:text-sage-700 font-semibold text-xs transition-colors duration-200">
                           <span>View Full Market Analysis</span>
                           <svg
                             className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-1"
@@ -463,7 +477,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                               d="M9 5l7 7-7 7"
                             />
                           </svg>
-                        </Link>
+                        </div>
                       </div>
                     </div>
                   )}
@@ -475,7 +489,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                     <AreaLocationMap area={area} />
                   </div>
                 </div>
-              </div>
+              </Link>
             </section>
           );
         })}
