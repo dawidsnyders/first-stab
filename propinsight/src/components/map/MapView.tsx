@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import dynamic from "next/dynamic";
 import { Area } from "@/types";
 import { AreaInfoPanel } from "./AreaInfoPanel";
@@ -43,7 +43,8 @@ export function MapView({ initialLevel = "suburb" }: MapViewProps) {
   const [hoveredArea, setHoveredArea] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const areas = getAreasByLevel(initialLevel);
+  // Memoize areas array to prevent unnecessary re-renders
+  const areas = useMemo(() => getAreasByLevel(initialLevel), [initialLevel]);
 
   const handleAreaClick = useCallback(
     (area: Area) => {
@@ -89,14 +90,22 @@ export function MapView({ initialLevel = "suburb" }: MapViewProps) {
           areas={areas}
           selectedArea={selectedArea}
           onAreaClick={handleAreaClick}
-          onAreaHover={(area) => setHoveredArea(area?.id || null)}
+          onAreaHover={useCallback((area) => {
+            // Hover callback - currently not used but kept for API compatibility
+            // State update is isolated and shouldn't cause map re-renders
+            setHoveredArea(area?.id || null);
+          }, [])}
         />
       ) : (
         <LeafletMap
           areas={areas}
           selectedArea={selectedArea}
           onAreaClick={handleAreaClick}
-          onAreaHover={(area) => setHoveredArea(area?.id || null)}
+          onAreaHover={useCallback((area) => {
+            // Hover callback - currently not used but kept for API compatibility
+            // State update is isolated and shouldn't cause map re-renders
+            setHoveredArea(area?.id || null);
+          }, [])}
         />
       )}
 

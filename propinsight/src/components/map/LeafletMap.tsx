@@ -108,6 +108,9 @@ export function LeafletMap({
     onAreaHoverRef.current = onAreaHover;
   }, [onAreaClick, onAreaHover]);
 
+  // Track if we're currently updating styles to prevent recursive updates
+  const isUpdatingStylesRef = useRef(false);
+
   // Initialize map once
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
@@ -169,9 +172,23 @@ export function LeafletMap({
     prefetchBoundaries();
   }, []);
 
+  // Track areas to prevent unnecessary recreation
+  const areasIdsRef = useRef<string>("");
+  
   // Add/update polygons when map is ready and areas change
   useEffect(() => {
     if (!mapInstanceRef.current || !isMapReady || areas.length === 0) return;
+
+    // Create stable ID string from area IDs to detect actual changes
+    const currentAreasIds = areas.map(a => a.id).sort().join(",");
+    
+    // Only recreate polygons if areas actually changed (different IDs)
+    if (areasIdsRef.current === currentAreasIds && polygonsRef.current.size > 0) {
+      // Areas haven't changed, just update styles if needed
+      return;
+    }
+    
+    areasIdsRef.current = currentAreasIds;
 
     // Clear existing polygons
     polygonsRef.current.forEach((polygon) => {
@@ -261,48 +278,54 @@ export function LeafletMap({
         });
 
         // Add hover handlers - only update the specific polygon, not state
+        // Completely isolated from React state to prevent any re-renders
         polygon.on("mouseover", (e) => {
-          // Stop event propagation to prevent triggering on parent elements
+          // Stop ALL event propagation to prevent any side effects
           if (e.originalEvent) {
             e.originalEvent.stopPropagation();
+            e.originalEvent.stopImmediatePropagation();
           }
-          // Update hover state for callback (but don't cause re-renders)
-          onAreaHoverRef.current?.(area);
+          // DO NOT call onAreaHover callback - it causes re-renders and flashing
+          // Hover is purely visual, no state updates needed
+          
           // Show tooltip and update style for THIS polygon only
+          // Use direct style update without any React involvement
           polygon.openTooltip();
           if (!isSelected) {
-            polygon.setStyle({ 
+            // Direct style update - no batching needed, Leaflet handles it efficiently
+            polygon.setStyle({
               fillOpacity: 0.35,
               fillColor: "#d1d9cc", // sage-200 for hover
               color: "#5d7350", // sage-500
-              weight: 2.5
+              weight: 2.5,
             });
           }
         });
 
         polygon.on("mouseout", (e) => {
-          // Stop event propagation
+          // Stop ALL event propagation
           if (e.originalEvent) {
             e.originalEvent.stopPropagation();
+            e.originalEvent.stopImmediatePropagation();
           }
-          // Clear hover callback
-          onAreaHoverRef.current?.(null);
+          // DO NOT call onAreaHover callback - it causes re-renders and flashing
+          
           // Hide tooltip and restore original style for THIS polygon only
           polygon.closeTooltip();
-          // Restore original style based on selection state
+          // Direct style update - no React involvement
           if (!isSelected) {
-            polygon.setStyle({ 
+            polygon.setStyle({
               fillOpacity: 0.1,
               fillColor: "#a8b89d", // sage-300 default
               color: "#5d7350", // sage-500
-              weight: 2
+              weight: 2,
             });
           } else {
-            polygon.setStyle({ 
+            polygon.setStyle({
               fillOpacity: 0.6,
               fillColor: "#e8ede6", // sage-100 selected
               color: "#4a5c3f", // sage-600
-              weight: 3.5
+              weight: 3.5,
             });
           }
         });
@@ -320,11 +343,27 @@ export function LeafletMap({
         });
       }
     });
-  }, [areas, isMapReady, selectedArea]); // Re-run when areas change or map becomes ready (removed hoveredArea to prevent flashing)
+  }, [areas.length, isMapReady, selectedArea?.id]); // Use stable dependencies - only length and IDs, not full objects/arrays
+
+  // Track previous selected area ID to prevent unnecessary updates
+  const prevSelectedAreaIdRef = useRef<string | null>(null);
 
   // Update polygon styles when selection changes (NOT on hover - hover is handled in event handlers)
   useEffect(() => {
     if (!mapInstanceRef.current || !isMapReady) return;
+    
+    const currentSelectedId = selectedArea?.id || null;
+    
+    // Only update if selection actually changed
+    if (prevSelectedAreaIdRef.current === currentSelectedId) {
+      return; // No change, skip update
+    }
+    
+    prevSelectedAreaIdRef.current = currentSelectedId;
+    
+    // Prevent recursive updates during style changes
+    if (isUpdatingStylesRef.current) return;
+    isUpdatingStylesRef.current = true;
 
     polygonsRef.current.forEach((polygon, areaId) => {
       const area = areas.find((a) => a.id === areaId);
@@ -351,13 +390,28 @@ export function LeafletMap({
       // Note: Hover state is NOT handled here - it's handled in mouseover/mouseout handlers
       // to prevent all polygons from updating when hovering
 
-      polygon.setStyle({
-        color: borderColor,
-        weight: borderWidth,
-        fillColor: fillColor,
-        fillOpacity: fillOpacity,
-        cursor: "pointer",
-      });
+      // Only update if style actually changed to avoid unnecessary updates
+      const currentStyle = (polygon as any).options;
+      if (
+        currentStyle.fillColor !== fillColor ||
+        currentStyle.color !== borderColor ||
+        currentStyle.weight !== borderWidth ||
+        currentStyle.fillOpacity !== fillOpacity
+      ) {
+        polygon.setStyle({
+          color: borderColor,
+          weight: borderWidth,
+          fillColor: fillColor,
+          fillOpacity: fillOpacity,
+          cursor: "pointer",
+        });
+      }
+    });
+
+    // Reset flag after a brief delay to allow hover handlers to work
+    setTimeout(() => {
+      isUpdatingStylesRef.current = false;
+    }, 50);
 
       // Focus on selected area
       if (isSelected) {
@@ -368,7 +422,7 @@ export function LeafletMap({
         });
       }
     });
-  }, [selectedArea, isMapReady, areas]); // Removed hoveredArea to prevent flashing - hover is handled in event handlers
+  }, [selectedArea?.id, isMapReady]); // Only depend on selectedArea.id, not the whole object or areas array
 
   return (
     <div className="relative w-full h-full">
