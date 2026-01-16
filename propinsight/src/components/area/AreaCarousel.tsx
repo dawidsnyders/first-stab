@@ -60,31 +60,31 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
   };
 
   return (
-    <div className="flex gap-6">
+    <div className="flex gap-8">
       {/* Left Sidebar - Area Names with Dots (Canopy Style) */}
-      <div className="w-56 flex-shrink-0 sticky top-24 self-start">
-        <nav className="space-y-0.5">
+      <div className="w-64 flex-shrink-0 sticky top-24 self-start">
+        <nav className="space-y-1">
           {areas.map((area, index) => {
             const isActive = index === activeIndex;
             return (
               <button
                 key={area.id}
                 onClick={() => scrollToSection(index)}
-                className={`w-full text-left px-4 py-2.5 rounded-md transition-all duration-200 flex items-center gap-3 ${
+                className={`w-full text-left px-3 py-2.5 transition-all duration-200 flex items-center gap-3 group ${
                   isActive
-                    ? "text-stone-900 font-semibold"
+                    ? "text-stone-900 font-medium"
                     : "text-stone-500 hover:text-stone-700"
                 }`}
               >
-                {/* Dot indicator */}
+                {/* Dot indicator - Always visible, changes color when active */}
                 <div
                   className={`w-2 h-2 rounded-full flex-shrink-0 transition-all duration-200 ${
                     isActive
-                      ? "bg-sage-600 scale-125"
-                      : "bg-stone-300 hover:bg-stone-400"
+                      ? "bg-blue-600"
+                      : "bg-stone-300 group-hover:bg-stone-400"
                   }`}
                 />
-                <span className="text-sm">{area.name}</span>
+                <span className="text-sm leading-relaxed">{area.name}</span>
               </button>
             );
           })}
@@ -92,7 +92,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
       </div>
 
       {/* Right Side - Scrollable Sections */}
-      <div className="flex-1 space-y-0">
+      <div className="flex-1">
         {areas.map((area, index) => {
           const { stats } = area;
           const isPositive = stats && stats.priceChangeYoY >= 0;
@@ -103,7 +103,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
               ref={(el) => {
                 sectionRefs.current[index] = el;
               }}
-              className="min-h-screen flex items-center py-24"
+              className="min-h-screen flex items-center py-16 mb-0"
             >
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
