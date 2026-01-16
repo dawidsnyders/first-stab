@@ -286,9 +286,7 @@ export default async function AreaPage({ params }: PageProps) {
             {stats && (
               <div className="lg:col-span-1 space-y-6">
                 {/* Location Map */}
-                <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm overflow-hidden">
-                  <AreaLocationMap area={area} />
-                </div>
+                <AreaLocationMap area={area} />
 
                 {/* Market Activity */}
                 {interestingInfo.length > 0 && (

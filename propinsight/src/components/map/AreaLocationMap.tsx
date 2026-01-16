@@ -156,7 +156,7 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
   }, [area]);
 
   return (
-    <div className="relative w-full h-[400px] rounded-lg overflow-hidden bg-stone-50 pointer-events-none z-0">
+    <div className="relative w-full h-[400px] rounded-2xl overflow-hidden border border-stone-200 bg-stone-50 pointer-events-none z-0">
       <div ref={mapRef} className="w-full h-full pointer-events-none relative z-0" />
 
       {/* Custom CSS for map styling - matching main map */}
