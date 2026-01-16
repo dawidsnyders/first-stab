@@ -272,37 +272,18 @@ export async function GET(request: NextRequest) {
                   console.log(
                     `OpenStreetMap returned ${osmData.features.length} features for "${searchTerm}"`
                   );
-                  
-                  // Filter out Point geometries first - we only want polygons
-                  const polygonFeatures = osmData.features.filter(
-                    (f) =>
-                      f.geometry &&
-                      (f.geometry.type === "Polygon" ||
-                        f.geometry.type === "MultiPolygon") &&
-                      f.geometry.coordinates
-                  );
-                  
-                  if (polygonFeatures.length === 0) {
-                    const geometryTypes = osmData.features
-                      .map((f) => f.geometry?.type)
-                      .filter(Boolean);
-                    console.warn(
-                      `OpenStreetMap returned ${osmData.features.length} features for "${searchTerm}", but none are polygons (types: ${[...new Set(geometryTypes)].join(", ")})`
-                    );
-                    // For Paarl, this means we need to use the fallback
-                    if (suburbName === "Paarl") {
-                      console.log(
-                        `Paarl: OpenStreetMap only returned Point geometries, will try Western Cape API fallback`
-                      );
-                    }
-                    continue; // Try next search term
-                  }
-                  
-                  // Try all polygon features and pick the smallest/most specific one
+                  // Try all features and pick the smallest/most specific one
                   let bestFeature = null;
                   let smallestArea = Infinity;
 
-                  for (const feature of polygonFeatures) {
+                  for (const feature of osmData.features) {
+                    // Check if it has a proper polygon geometry (not just a point)
+                    if (
+                      feature.geometry &&
+                      (feature.geometry.type === "Polygon" ||
+                        feature.geometry.type === "MultiPolygon") &&
+                      feature.geometry.coordinates
+                    ) {
                       // Calculate approximate bounding box area to filter out overly large polygons
                       let coords: number[][] = [];
                       if (feature.geometry.type === "Polygon") {
@@ -404,13 +385,18 @@ export async function GET(request: NextRequest) {
                     break;
                   } else {
                     console.warn(
-                      `No suitable polygon found in OpenStreetMap results for "${searchTerm}" - tried polygon features, all were rejected (too large, outside WC, or wrong type)`
+                      `No suitable polygon found in OpenStreetMap results for "${searchTerm}" - tried ${osmData.features.length} features, all were rejected (too large, outside WC, or wrong type)`
+                    );
+                    // Log what types we got
+                    const geometryTypes = osmData.features
+                      .map((f) => f.geometry?.type)
+                      .filter(Boolean);
+                    console.warn(
+                      `  Geometry types found: ${[
+                        ...new Set(geometryTypes),
+                      ].join(", ")}`
                     );
                   }
-                } else {
-                  console.warn(
-                    `OpenStreetMap returned no features for "${searchTerm}"`
-                  );
                 }
               } else {
                 console.warn(
