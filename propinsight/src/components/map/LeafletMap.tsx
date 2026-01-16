@@ -259,8 +259,19 @@ export function LeafletMap({
         }
         // Hover state is NOT set here - it's handled in mouseover/mouseout handlers only
 
+        // Validate boundary coordinates are in correct format [lat, lng]
+        // Check first coordinate to ensure it's in Western Cape range
+        if (boundary.length > 0) {
+          const [firstLat, firstLng] = boundary[0];
+          if (firstLat < -36 || firstLat > -31 || firstLng < 16 || firstLng > 26) {
+            console.error(
+              `⚠ WARNING: ${area.name} boundary coordinates seem incorrect. First point: [${firstLat}, ${firstLng}]. Expected Western Cape range: lat -36 to -31, lng 16 to 26`
+            );
+          }
+        }
+        
         console.log(
-          `Adding polygon for ${area.name} (${area.slug}) with ${boundary.length} points`
+          `Adding polygon for ${area.name} (${area.slug}) with ${boundary.length} points. First coord: [${boundary[0]?.[0]}, ${boundary[0]?.[1]}], Last coord: [${boundary[boundary.length - 1]?.[0]}, ${boundary[boundary.length - 1]?.[1]}]`
         );
         const polygon = L.default
           .polygon(boundary, {
@@ -271,8 +282,13 @@ export function LeafletMap({
             className: `area-polygon area-${area.id}`,
             interactive: true,
             bubblingMouseEvents: false,
+            // Ensure polygon is clickable
+            clickable: true,
           })
           .addTo(mapInstanceRef.current);
+        
+        // Store polygon reference for debugging
+        polygonsRef.current.set(area.id, polygon);
 
         // Add tooltip with area name - nice looking tooltip
         const tooltipContent = `
@@ -297,6 +313,7 @@ export function LeafletMap({
 
         // Add click handler - use refs to get latest callbacks
         polygon.on("click", (e) => {
+          console.log(`✓ Click detected on ${area.name} (${area.slug}) polygon`);
           if (e.originalEvent) {
             e.originalEvent.stopPropagation();
             // Prevent focus on the element to avoid blue outline
@@ -311,6 +328,11 @@ export function LeafletMap({
             polygonElement.style.outline = "none";
           }
           onAreaClickRef.current(area);
+        });
+        
+        // Also add mouseover to verify polygon is interactive
+        polygon.on("mouseover", () => {
+          console.log(`✓ Mouseover detected on ${area.name} (${area.slug}) polygon`);
         });
 
         // Add hover handlers - only update the specific polygon, not state

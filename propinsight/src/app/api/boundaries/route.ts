@@ -103,7 +103,11 @@ export async function GET(request: NextRequest) {
       stellenbosch: {
         name: "Stellenbosch",
         source: "openstreetmap",
-        searchTerms: ["Stellenbosch", "Stellenbosch, Western Cape", "Stellenbosch town"],
+        searchTerms: [
+          "Stellenbosch",
+          "Stellenbosch, Western Cape",
+          "Stellenbosch town",
+        ],
       },
       // De Zalze Estate - use OpenStreetMap
       "de-zalze": {
@@ -299,7 +303,10 @@ export async function GET(request: NextRequest) {
                         // Most suburbs should be < 3 km²
                         // Use different limits based on what we're searching for
                         // 5x larger limits: Towns 50 km², Suburbs/estates 25 km²
-                        const isTown = suburbName === "Paarl" || suburbName === "Stellenbosch" || suburbName === "Franschhoek";
+                        const isTown =
+                          suburbName === "Paarl" ||
+                          suburbName === "Stellenbosch" ||
+                          suburbName === "Franschhoek";
                         const maxArea = isTown ? 50 : 25; // km² - 5x larger limits
                         // Also ensure it's in the right geographic area (Western Cape)
                         const isInWesternCape =
@@ -486,7 +493,12 @@ export async function GET(request: NextRequest) {
                   suburbName === "Franschhoek" ||
                   suburbName === "Cape Town";
                 // 5x larger limits: Cape Town 150 km², Paarl/Stellenbosch 50 km², Franschhoek 25 km²
-                const maxArea = suburbName === "Cape Town" ? 150 : suburbName === "Franschhoek" ? 25 : 50; // km² - 5x larger limits
+                const maxArea =
+                  suburbName === "Cape Town"
+                    ? 150
+                    : suburbName === "Franschhoek"
+                    ? 25
+                    : 50; // km² - 5x larger limits
                 if (area < maxArea && isInWesternCape && area < smallestArea) {
                   matchingFeature = candidate;
                   smallestArea = area;
@@ -714,7 +726,7 @@ export async function GET(request: NextRequest) {
               );
               const nameLower = nameField.toLowerCase().trim();
               if (!nameLower) return false;
-              
+
               // Try matching with all search terms
               return searchTerms.some((term) => {
                 const termLower = term.toLowerCase().trim();
@@ -726,9 +738,13 @@ export async function GET(request: NextRequest) {
                 );
               });
             }) || [];
-          
+
           console.log(
-            `Western Cape fallback found ${candidates.length} polygon candidates for "${suburbName}" (from ${responseData.features?.length || 0} total features)`
+            `Western Cape fallback found ${
+              candidates.length
+            } polygon candidates for "${suburbName}" (from ${
+              responseData.features?.length || 0
+            } total features)`
           );
 
           if (candidates.length > 0) {
