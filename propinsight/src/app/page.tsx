@@ -27,6 +27,7 @@ import {
   NATIONAL_BENCHMARKS,
 } from "@/lib/constants";
 import { formatNumber } from "@/types";
+import { handleSmoothScroll } from "@/lib/smoothScroll";
 
 export default function Home() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
@@ -155,18 +156,21 @@ export default function Home() {
             <nav className="hidden md:flex items-center gap-1 absolute left-1/2 -translate-x-1/2">
               <a
                 href="#features"
+                onClick={(e) => handleSmoothScroll(e, "features", 100)}
                 className="px-4 py-2 text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-all duration-200"
               >
                 Features
               </a>
               <a
                 href="#explore"
+                onClick={(e) => handleSmoothScroll(e, "explore", 100)}
                 className="px-4 py-2 text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-all duration-200"
               >
                 Explore
               </a>
               <a
                 href="#pricing"
+                onClick={(e) => handleSmoothScroll(e, "pricing", 100)}
                 className="px-4 py-2 text-sm font-medium text-stone-600 hover:text-stone-900 hover:bg-stone-100 rounded-lg transition-all duration-200"
               >
                 Pricing
