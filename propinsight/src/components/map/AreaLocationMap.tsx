@@ -139,8 +139,8 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
         if (boundary && boundary.length > 0) {
           const bounds = polygon.getBounds();
           map.fitBounds(bounds, {
-            padding: [40, 40], // Increased padding to zoom out more - ensures entire area is visible
-            maxZoom: area.level === "province" ? 9 : area.level === "city" ? 12 : 14,
+            padding: [60, 60], // Increased padding to zoom out more - ensures entire area is visible with more context
+            maxZoom: area.level === "province" ? 9 : area.level === "city" ? 12 : 13,
           });
         }
 
