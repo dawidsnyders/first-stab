@@ -183,7 +183,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
             >
               <div className="w-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
                 {/* Area Name Header - Large, Dark Gray */}
-                <div className="px-6 py-3 border-b border-stone-200">
+                <div className="px-6 py-4 border-b border-stone-200 flex-shrink-0">
                   <h2 className="text-2xl font-bold text-stone-900 mb-1">
                     {area.name}
                   </h2>
@@ -207,16 +207,16 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                 </div>
 
                 {/* Map View - Takes significant space */}
-                <div className="px-6 py-3 border-b border-stone-200">
-                  <div className="h-[180px] rounded-lg overflow-hidden bg-stone-50">
+                <div className="px-6 py-4 border-b border-stone-200 flex-shrink-0">
+                  <div className="h-[280px] rounded-lg overflow-hidden bg-stone-50">
                     <AreaLocationMap area={area} />
                   </div>
                 </div>
 
                 {/* Key Info - Clean Grid Below Map */}
                 {stats && (
-                  <div className="px-6 py-3 bg-stone-50/30">
-                    <div className="grid grid-cols-3 gap-4">
+                  <div className="px-6 py-4 bg-stone-50/30 flex-1 flex flex-col">
+                    <div className="grid grid-cols-3 gap-4 flex-shrink-0">
                       <div>
                         <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                           Average Price
@@ -255,7 +255,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                     </div>
 
                     {/* CTA Link */}
-                    <div className="mt-3 pt-3 border-t border-stone-200">
+                    <div className="mt-auto pt-3 border-t border-stone-200 flex-shrink-0">
                       <Link
                         href={`/area/${area.slug}`}
                         className="inline-flex items-center gap-2 text-sage-600 hover:text-sage-700 font-semibold text-xs transition-colors duration-200 group"

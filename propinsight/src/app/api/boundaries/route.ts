@@ -65,7 +65,13 @@ export async function GET(request: NextRequest) {
     }
 
     // Comprehensive slug to official name mapping for all areas
-    const slugMap: Record<string, { name: string; source: 'capeTown' | 'stellenbosch' | 'national' | 'custom' }> = {
+    const slugMap: Record<
+      string,
+      {
+        name: string;
+        source: "capeTown" | "stellenbosch" | "national" | "custom";
+      }
+    > = {
       // Cape Town suburbs
       "camps-bay": { name: "Camps Bay", source: "capeTown" },
       "sea-point": { name: "Sea Point", source: "capeTown" },
@@ -108,7 +114,7 @@ export async function GET(request: NextRequest) {
     for (const endpoint of endpoints) {
       try {
         const url = new URL(endpoint);
-        
+
         // Build query based on source type
         if (source === "capeTown") {
           url.searchParams.append("where", `OFC_SBRB_NAME = '${suburbName}'`);
@@ -121,7 +127,7 @@ export async function GET(request: NextRequest) {
           url.searchParams.append("where", `NAME = '${suburbName}'`);
           url.searchParams.append("outFields", "NAME");
         }
-        
+
         url.searchParams.append("returnGeometry", "true");
         url.searchParams.append("f", "geojson");
         url.searchParams.append("outSR", "4326"); // WGS84
@@ -151,10 +157,14 @@ export async function GET(request: NextRequest) {
         if (source === "stellenbosch" || source === "national") {
           matchingFeature = responseData.features?.find((f) => {
             const props = f.properties;
-            const nameField = String(props.NAME || props.OFC_SBRB_NAME || props.name || "");
+            const nameField = String(
+              props.NAME || props.OFC_SBRB_NAME || props.name || ""
+            );
             const nameLower = nameField.toLowerCase();
             const suburbLower = suburbName.toLowerCase();
-            return nameLower.includes(suburbLower) || suburbLower.includes(nameLower);
+            return (
+              nameLower.includes(suburbLower) || suburbLower.includes(nameLower)
+            );
           });
         } else {
           matchingFeature = responseData.features?.[0];
@@ -199,7 +209,7 @@ export async function GET(request: NextRequest) {
 
     // Get the feature (already matched for stellenbosch/national, or first for capeTown)
     const feature = data.features[0];
-    
+
     if (!feature) {
       return NextResponse.json(
         { error: `No matching feature found for "${suburbName}"` },
@@ -228,7 +238,7 @@ export async function GET(request: NextRequest) {
     if (feature.geometry.type === "MultiPolygon") {
       // For MultiPolygon, use the largest polygon (first one)
       // MultiPolygon coordinates are number[][][][], first element is number[][][]
-      coordinates = (feature.geometry.coordinates[0] as unknown) as number[][][];
+      coordinates = feature.geometry.coordinates[0] as unknown as number[][][];
     } else {
       // Polygon coordinates are number[][][]
       coordinates = feature.geometry.coordinates as number[][][];
