@@ -95,12 +95,12 @@ export function PriceTrendChartPeriodSelector({
   onPeriodChange,
 }: PriceTrendChartPeriodSelectorProps) {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 flex-nowrap whitespace-nowrap">
       {([5, 10, 15] as TimePeriod[]).map((period) => (
         <button
           key={period}
           onClick={() => onPeriodChange(period)}
-          className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+          className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 flex-shrink-0 ${
             timePeriod === period
               ? "bg-sage-600 text-white shadow-sm"
               : "bg-stone-100 text-stone-600 hover:bg-stone-200"

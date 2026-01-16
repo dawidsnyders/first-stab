@@ -21,159 +21,130 @@ export interface AggregatedData {
 }
 
 /**
- * Calculate average price from multiple sources
+ * Calculate all statistics in a single pass for efficiency
+ * This reduces O(n) operations from multiple passes to a single pass
  */
-function calculateAveragePrice(properties: NormalizedProperty[]): number {
-  const prices: number[] = [];
-
-  for (const prop of properties) {
-    // Prefer asking price (current market), then sale price, then valuation
-    const price = prop.askingPrice || prop.lastSalePrice || prop.valuation;
-    if (price) prices.push(price);
-  }
-
-  if (prices.length === 0) return 0;
-  return prices.reduce((a, b) => a + b, 0) / prices.length;
+interface AggregationStats {
+  prices: number[];
+  pricesPerSqm: number[];
+  currentPrices: number[];
+  oldPrices: number[];
+  salesLast12Months: number;
+  typeCounts: {
+    house: number;
+    apartment: number;
+    townhouse: number;
+    land: number;
+    other: number;
+  };
+  valuations: number;
+  sales: number;
+  listings: number;
 }
 
-/**
- * Calculate median price
- */
-function calculateMedianPrice(properties: NormalizedProperty[]): number {
-  const prices: number[] = [];
-
-  for (const prop of properties) {
-    const price = prop.askingPrice || prop.lastSalePrice || prop.valuation;
-    if (price) prices.push(price);
-  }
-
-  if (prices.length === 0) return 0;
-
-  const sorted = [...prices].sort((a, b) => a - b);
-  const mid = Math.floor(sorted.length / 2);
-
-  return sorted.length % 2 === 0
-    ? (sorted[mid - 1] + sorted[mid]) / 2
-    : sorted[mid];
-}
-
-/**
- * Calculate average price per square meter
- */
-function calculateAveragePricePerSqm(
+function calculateAllStats(
   properties: NormalizedProperty[]
-): number | undefined {
-  const validPrices: number[] = [];
-
-  for (const prop of properties) {
-    const price = prop.askingPrice || prop.lastSalePrice || prop.valuation;
-    const size = prop.erfSize || prop.buildingSize;
-
-    if (price && size && size > 0) {
-      validPrices.push(price / size);
-    }
-  }
-
-  if (validPrices.length === 0) return undefined;
-
-  return validPrices.reduce((a, b) => a + b, 0) / validPrices.length;
-}
-
-/**
- * Calculate year-over-year price change
- */
-function calculatePriceChangeYoY(properties: NormalizedProperty[]): number {
+): AggregationStats {
   const now = new Date();
   const oneYearAgo = new Date(
     now.getFullYear() - 1,
     now.getMonth(),
     now.getDate()
   );
-
-  const currentPrices: number[] = [];
-  const oldPrices: number[] = [];
-
-  for (const prop of properties) {
-    const price = prop.lastSalePrice || prop.valuation;
-    if (!price) continue;
-
-    const date = prop.lastSaleDate
-      ? new Date(prop.lastSaleDate)
-      : prop.valuationDate
-      ? new Date(prop.valuationDate)
-      : null;
-
-    if (!date) continue;
-
-    if (date >= oneYearAgo) {
-      currentPrices.push(price);
-    } else if (
-      date < oneYearAgo &&
-      date >= new Date(now.getFullYear() - 2, now.getMonth(), now.getDate())
-    ) {
-      oldPrices.push(price);
-    }
-  }
-
-  if (currentPrices.length === 0 || oldPrices.length === 0) {
-    // Fallback: estimate based on available data
-    return 0; // Will be calculated from historical data if available
-  }
-
-  const currentAvg =
-    currentPrices.reduce((a, b) => a + b, 0) / currentPrices.length;
-  const oldAvg = oldPrices.reduce((a, b) => a + b, 0) / oldPrices.length;
-
-  return ((currentAvg - oldAvg) / oldAvg) * 100;
-}
-
-/**
- * Count sales in last 12 months
- */
-function countSalesLast12Months(properties: NormalizedProperty[]): number {
-  const now = new Date();
-  const twelveMonthsAgo = new Date(
-    now.getFullYear() - 1,
+  const twoYearsAgo = new Date(
+    now.getFullYear() - 2,
     now.getMonth(),
     now.getDate()
   );
 
-  return properties.filter((prop) => {
-    if (!prop.lastSaleDate) return false;
-    const saleDate = new Date(prop.lastSaleDate);
-    return saleDate >= twelveMonthsAgo;
-  }).length;
+  const stats: AggregationStats = {
+    prices: [],
+    pricesPerSqm: [],
+    currentPrices: [],
+    oldPrices: [],
+    salesLast12Months: 0,
+    typeCounts: {
+      house: 0,
+      apartment: 0,
+      townhouse: 0,
+      land: 0,
+      other: 0,
+    },
+    valuations: 0,
+    sales: 0,
+    listings: 0,
+  };
+
+  // Single pass through all properties
+  for (const prop of properties) {
+    // Price extraction (prefer asking > sale > valuation)
+    const price = prop.askingPrice || prop.lastSalePrice || prop.valuation;
+    if (price) {
+      stats.prices.push(price);
+    }
+
+    // Price per sqm
+    const size = prop.erfSize || prop.buildingSize;
+    if (price && size && size > 0) {
+      stats.pricesPerSqm.push(price / size);
+    }
+
+    // YoY price change data
+    if (price && (prop.lastSalePrice || prop.valuation)) {
+      const date = prop.lastSaleDate
+        ? new Date(prop.lastSaleDate)
+        : prop.valuationDate
+        ? new Date(prop.valuationDate)
+        : null;
+
+      if (date) {
+        if (date >= oneYearAgo) {
+          stats.currentPrices.push(price);
+        } else if (date < oneYearAgo && date >= twoYearsAgo) {
+          stats.oldPrices.push(price);
+        }
+      }
+    }
+
+    // Sales in last 12 months
+    if (prop.lastSaleDate) {
+      const saleDate = new Date(prop.lastSaleDate);
+      if (saleDate >= oneYearAgo) {
+        stats.salesLast12Months++;
+      }
+    }
+
+    // Property type breakdown
+    stats.typeCounts[prop.propertyType] =
+      (stats.typeCounts[prop.propertyType] || 0) + 1;
+
+    // Coverage counts
+    if (prop.valuation) stats.valuations++;
+    if (prop.lastSalePrice && prop.lastSaleDate) stats.sales++;
+    if (prop.askingPrice) stats.listings++;
+  }
+
+  return stats;
 }
 
 /**
- * Calculate property type breakdown
+ * Calculate average from array (optimized)
  */
-function calculatePropertyTypeBreakdown(
-  properties: NormalizedProperty[]
-): { houses: number; apartments: number; land: number } | undefined {
-  if (properties.length === 0) return undefined;
+function calculateAverage(values: number[]): number {
+  if (values.length === 0) return 0;
+  return values.reduce((a, b) => a + b, 0) / values.length;
+}
 
-  const typeCounts = {
-    house: 0,
-    apartment: 0,
-    townhouse: 0,
-    land: 0,
-    other: 0,
-  };
-
-  for (const prop of properties) {
-    typeCounts[prop.propertyType] = (typeCounts[prop.propertyType] || 0) + 1;
-  }
-
-  const total = properties.length;
-
-  return {
-    houses: Math.round(
-      ((typeCounts.house + typeCounts.townhouse) / total) * 100
-    ),
-    apartments: Math.round((typeCounts.apartment / total) * 100),
-    land: Math.round((typeCounts.land / total) * 100),
-  };
+/**
+ * Calculate median from array (optimized)
+ */
+function calculateMedian(values: number[]): number {
+  if (values.length === 0) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 === 0
+    ? (sorted[mid - 1] + sorted[mid]) / 2
+    : sorted[mid];
 }
 
 /**

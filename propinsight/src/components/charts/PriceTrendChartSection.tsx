@@ -3,7 +3,10 @@
 import { useState } from "react";
 import { Area } from "@/types";
 import { generateMedianPriceData } from "@/lib/chartData";
-import { PriceTrendChart, PriceTrendChartPeriodSelector } from "./PriceTrendChart";
+import {
+  PriceTrendChart,
+  PriceTrendChartPeriodSelector,
+} from "./PriceTrendChart";
 
 interface PriceTrendChartSectionProps {
   stats: NonNullable<Area["stats"]>;
@@ -18,20 +21,23 @@ export function PriceTrendChartSection({
 
   return (
     <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
-      <div className="mb-6 flex items-center justify-between">
-        <div>
+      <div className="mb-6 flex items-center justify-between gap-6">
+        <div className="flex-1 max-w-2xl">
           <h2 className="text-2xl font-bold text-stone-900 mb-2">
             Price Trend Analysis
           </h2>
           <p className="text-stone-600">
             Deep dive into price movements, seasonal patterns, and market
-            cycles. Hover over the chart to see detailed values at each point in time.
+            cycles. Hover over the chart to see detailed values at each point in
+            time.
           </p>
         </div>
-        <PriceTrendChartPeriodSelector
-          timePeriod={timePeriod}
-          onPeriodChange={setTimePeriod}
-        />
+        <div className="flex-shrink-0">
+          <PriceTrendChartPeriodSelector
+            timePeriod={timePeriod}
+            onPeriodChange={setTimePeriod}
+          />
+        </div>
       </div>
       <div className="-mx-8 px-8">
         <PriceTrendChart
