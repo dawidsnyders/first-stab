@@ -158,7 +158,11 @@ export async function GET(request: NextRequest) {
       franschhoek: {
         name: "Franschhoek",
         source: "openstreetmap",
-        searchTerms: ["Franschhoek", "Franschhoek, Western Cape", "Franschhoek town"],
+        searchTerms: [
+          "Franschhoek",
+          "Franschhoek, Western Cape",
+          "Franschhoek town",
+        ],
       },
     };
 
@@ -182,7 +186,9 @@ export async function GET(request: NextRequest) {
 
     // If Cape Town API fails, fallback to Western Cape API for Cape Town suburbs
     // If OpenStreetMap fails for Paarl (only returns Point), fallback to Western Cape API
-    const shouldTryFallback = source === "capeTown" || (source === "openstreetmap" && suburbName === "Paarl");
+    const shouldTryFallback =
+      source === "capeTown" ||
+      (source === "openstreetmap" && suburbName === "Paarl");
     const fallbackEndpoints = shouldTryFallback
       ? API_ENDPOINTS.westernCape
       : [];
@@ -705,9 +711,10 @@ export async function GET(request: NextRequest) {
 
     // If primary source failed and we have a fallback, try it
     if (!data && shouldTryFallback && fallbackEndpoints.length > 0) {
-      const fallbackReason = source === "capeTown" 
-        ? "Cape Town API failed" 
-        : "OpenStreetMap only returned Point geometries";
+      const fallbackReason =
+        source === "capeTown"
+          ? "Cape Town API failed"
+          : "OpenStreetMap only returned Point geometries";
       console.log(
         `${fallbackReason} for "${suburbName}", trying Western Cape API as fallback...`
       );
@@ -784,7 +791,7 @@ export async function GET(request: NextRequest) {
               const allSearchTerms = [...searchTerms, suburbName].map((t) =>
                 t.toLowerCase().trim()
               );
-              
+
               // Check if any of the possible names match any search term
               return possibleNames.some((nameLower) =>
                 allSearchTerms.some((termLower) => {
@@ -805,9 +812,13 @@ export async function GET(request: NextRequest) {
               responseData.features?.length || 0
             } total features)`
           );
-          
+
           // Debug: Log sample feature properties to understand the data structure
-          if (candidates.length === 0 && responseData.features && responseData.features.length > 0) {
+          if (
+            candidates.length === 0 &&
+            responseData.features &&
+            responseData.features.length > 0
+          ) {
             const sampleFeature = responseData.features[0];
             console.log(
               `Debug: Sample feature properties for "${suburbName}":`,
