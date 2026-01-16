@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { CalendarIcon, BoltIcon } from "@heroicons/react/24/outline";
+import { CalendarIcon, BoltIcon, CurrencyDollarIcon } from "@heroicons/react/24/outline";
 import { getAreaBySlug, getChildAreas, sampleAreas } from "@/data/areas";
 import { getDevelopmentsByArea } from "@/data/developments";
 import { formatPrice, formatPriceChange, formatNumber } from "@/types";
@@ -77,6 +77,16 @@ export default async function AreaPage({ params }: PageProps) {
         label: "Sales/Month",
         value: marketVelocity.toString(),
         Icon: BoltIcon,
+      });
+    }
+
+    // Annual Sales Volume
+    const annualSalesVolume = stats.medianPrice * stats.salesCount;
+    if (annualSalesVolume > 0) {
+      info.push({
+        label: "Annual Sales Volume",
+        value: formatPrice(annualSalesVolume),
+        Icon: CurrencyDollarIcon,
       });
     }
 
