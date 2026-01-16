@@ -8,17 +8,22 @@ export interface ChartDataPoint {
 }
 
 /**
- * Generate historical data for median price chart (3 years)
+ * Generate historical data for median price chart
+ * @param currentMedianPrice - Current median price
+ * @param priceChangeYoY - Year-over-year price change percentage
+ * @param years - Number of years of data to generate (default: 3)
  */
 export function generateMedianPriceData(
   currentMedianPrice: number,
-  priceChangeYoY: number
+  priceChangeYoY: number,
+  years: number = 3
 ): ChartDataPoint[] {
   const data: ChartDataPoint[] = [];
   const now = new Date();
+  const months = years * 12;
 
-  // Generate 36 months of data (3 years)
-  for (let i = 35; i >= 0; i--) {
+  // Generate data for specified number of years
+  for (let i = months - 1; i >= 0; i--) {
     const date = new Date(now);
     date.setMonth(date.getMonth() - i);
 
@@ -50,20 +55,25 @@ export function generateMedianPriceData(
 }
 
 /**
- * Generate historical data for sales count chart (3 years)
+ * Generate historical data for sales count chart
+ * @param currentSalesCount - Current sales count
+ * @param priceChangeYoY - Year-over-year price change percentage
+ * @param years - Number of years of data to generate (default: 3)
  */
 export function generateSalesData(
   currentSalesCount: number,
-  priceChangeYoY: number
+  priceChangeYoY: number,
+  years: number = 3
 ): ChartDataPoint[] {
   const data: ChartDataPoint[] = [];
   const now = new Date();
+  const months = years * 12;
 
   // Sales volume often correlates inversely with price growth
   // When prices rise fast, sales volume may decrease slightly
   const volumeChangeRate = (-priceChangeYoY * 0.3) / 100; // Inverse correlation
 
-  for (let i = 35; i >= 0; i--) {
+  for (let i = months - 1; i >= 0; i--) {
     const date = new Date(now);
     date.setMonth(date.getMonth() - i);
 
@@ -89,14 +99,18 @@ export function generateSalesData(
 }
 
 /**
- * Generate historical data for price per m² chart (3 years)
+ * Generate historical data for price per m² chart
+ * @param currentPricePerSqm - Current price per square meter
+ * @param priceChangeYoY - Year-over-year price change percentage
+ * @param years - Number of years of data to generate (default: 3)
  */
 export function generatePricePerSqmData(
   currentPricePerSqm: number,
-  priceChangeYoY: number
+  priceChangeYoY: number,
+  years: number = 3
 ): ChartDataPoint[] {
   // Similar to median price but tracks per square meter
-  return generateMedianPriceData(currentPricePerSqm, priceChangeYoY).map(
+  return generateMedianPriceData(currentPricePerSqm, priceChangeYoY, years).map(
     (point) => ({
       ...point,
       value: Math.round(point.value),
@@ -105,17 +119,22 @@ export function generatePricePerSqmData(
 }
 
 /**
- * Generate historical data for vs National Avg chart (3 years)
+ * Generate historical data for vs National Avg chart
+ * @param currentOutperformance - Current outperformance percentage
+ * @param priceChangeYoY - Year-over-year price change percentage
+ * @param years - Number of years of data to generate (default: 3)
  */
 export function generateOutperformanceData(
   currentOutperformance: number,
-  priceChangeYoY: number
+  priceChangeYoY: number,
+  years: number = 3
 ): ChartDataPoint[] {
   const data: ChartDataPoint[] = [];
   const now = new Date();
+  const months = years * 12;
   const nationalBenchmark = NATIONAL_BENCHMARKS.avgPropertyGrowth;
 
-  for (let i = 35; i >= 0; i--) {
+  for (let i = months - 1; i >= 0; i--) {
     const date = new Date(now);
     date.setMonth(date.getMonth() - i);
 

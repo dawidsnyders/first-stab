@@ -345,7 +345,8 @@ export default async function AreaPage({ params }: PageProps) {
             <PriceTrendChart
               data={generateMedianPriceData(
                 stats.medianPrice,
-                stats.priceChangeYoY
+                stats.priceChangeYoY,
+                5
               )}
               areaName={area.name}
               currentPrice={stats.medianPrice}

@@ -117,14 +117,14 @@ export default function Home() {
       </header>
 
       {/* Hero section - Left-aligned title, right-aligned search */}
-      <section className="relative bg-white text-stone-900 flex flex-col overflow-hidden">
+      <section className="relative bg-white text-stone-900 flex flex-col overflow-hidden min-h-screen">
         {/* Subtle background decoration */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-br from-sage-100/30 to-transparent rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-gradient-to-tr from-moss-100/20 to-transparent rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[400px] pb-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: Title and Subtitle */}
             <div className="space-y-6">
@@ -194,7 +194,7 @@ export default function Home() {
       {/* Product Showcase - Ondo-Style Carousel */}
       <section
         id="features"
-        className="relative bg-gradient-to-b from-white to-stone-100 pt-8 md:pt-12 pb-12 md:pb-16 overflow-hidden"
+        className="relative bg-gradient-to-b from-white to-stone-100 pt-0 pb-12 md:pb-16 overflow-visible -mt-[85vh] z-10"
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.03)_1px,transparent_0)] bg-[size:32px_32px]"></div>

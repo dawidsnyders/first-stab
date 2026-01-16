@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   XAxis,
   YAxis,
@@ -11,7 +12,7 @@ import {
   ReferenceLine,
   Legend,
 } from "recharts";
-import { ChartDataPoint } from "@/lib/chartData";
+import { ChartDataPoint, generateMedianPriceData } from "@/lib/chartData";
 import { formatPrice } from "@/types";
 import { NATIONAL_BENCHMARKS } from "@/lib/constants";
 import { motion } from "framer-motion";
@@ -22,6 +23,8 @@ interface PriceTrendChartProps {
   currentPrice: number;
   priceChangeYoY: number;
 }
+
+type TimePeriod = 5 | 10 | 15;
 
 const PriceTooltip = ({
   active,
@@ -74,17 +77,44 @@ const PriceTooltip = ({
 };
 
 export function PriceTrendChart({
-  data,
+  data: initialData,
   areaName,
   currentPrice,
   priceChangeYoY,
 }: PriceTrendChartProps) {
-  // Calculate 3-year average for reference line
+  const [timePeriod, setTimePeriod] = useState<TimePeriod>(5);
+
+  // Generate data based on selected time period
+  const chartData = generateMedianPriceData(
+    currentPrice,
+    priceChangeYoY,
+    timePeriod
+  );
+
+  // Calculate average for reference line
   const avgPrice =
-    data.reduce((sum, point) => sum + point.value, 0) / data.length;
+    chartData.reduce((sum, point) => sum + point.value, 0) / chartData.length;
+
+  // Calculate dynamic Y-axis domain (50% coverage)
+  const calculateYAxisDomain = () => {
+    const values = chartData.map((d) => d.value).filter((v) => typeof v === "number" && !isNaN(v));
+    if (values.length === 0) return [0, currentPrice * 2];
+
+    const minValue = Math.min(...values);
+    const maxValue = Math.max(...values);
+    const range = maxValue - minValue;
+
+    // Ensure data spans at least 50% of the Y-axis
+    const minDomain = Math.max(0, minValue - range * 0.25);
+    const maxDomain = maxValue + range * 0.25;
+
+    return [minDomain, maxDomain];
+  };
+
+  const yAxisDomain = calculateYAxisDomain();
 
   // Enhance data with average price
-  const enhancedData = data.map((point) => ({
+  const enhancedData = chartData.map((point) => ({
     ...point,
     avgPrice,
   }));
@@ -100,6 +130,30 @@ export function PriceTrendChart({
       transition={{ duration: 0.4, ease: "easeOut" }}
       className="w-full"
     >
+      {/* Time period selector */}
+      <div className="flex items-center justify-between mb-4">
+        <div>
+          <h3 className="text-sm font-medium text-stone-600">
+            Historical Price Trend
+          </h3>
+        </div>
+        <div className="flex items-center gap-2">
+          {([5, 10, 15] as TimePeriod[]).map((period) => (
+            <button
+              key={period}
+              onClick={() => setTimePeriod(period)}
+              className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                timePeriod === period
+                  ? "bg-sage-600 text-white shadow-sm"
+                  : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+              }`}
+            >
+              {period} Years
+            </button>
+          ))}
+        </div>
+      </div>
+
       <ResponsiveContainer width="100%" height={400}>
         <AreaChart
           data={enhancedData}
@@ -136,6 +190,7 @@ export function PriceTrendChart({
             tickFormatter={(value) => formatPrice(value)}
             width={90}
             tickMargin={8}
+            domain={yAxisDomain}
           />
           <Tooltip content={<PriceTooltip />} />
           <ReferenceLine
@@ -144,7 +199,7 @@ export function PriceTrendChart({
             strokeDasharray="5 5"
             strokeWidth={2}
             label={{
-              value: "3-Year Average",
+              value: `${timePeriod}-Year Average`,
               position: "insideTopRight",
               fill: avgColor,
               fontSize: 11,
@@ -183,7 +238,7 @@ export function PriceTrendChart({
         </div>
         <div>
           <p className="text-xs text-stone-500 uppercase tracking-wide mb-1">
-            3-Year Average
+            {timePeriod}-Year Average
           </p>
           <p className="text-lg font-bold text-stone-900">
             {formatPrice(Math.round(avgPrice))}
