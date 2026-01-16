@@ -5,7 +5,14 @@ import Link from "next/link";
 import { Area, formatPrice, formatPriceChange, formatNumber } from "@/types";
 import { AreaLocationMap } from "@/components/map/AreaLocationMap";
 import { generateMedianPriceData } from "@/lib/chartData";
-import { LineChart, Line, ResponsiveContainer, XAxis, YAxis, Tooltip } from "recharts";
+import {
+  LineChart,
+  Line,
+  ResponsiveContainer,
+  XAxis,
+  YAxis,
+  Tooltip,
+} from "recharts";
 
 interface AreaCarouselProps {
   areas: Area[];
@@ -113,18 +120,19 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
   // Calculate overall scroll progress through all sections
   const calculateOverallProgress = () => {
     if (sectionRefs.current.length === 0) return 0;
-    
+
     const firstSection = sectionRefs.current[0];
     const lastSection = sectionRefs.current[sectionRefs.current.length - 1];
-    
+
     if (!firstSection || !lastSection) return 0;
-    
+
     const firstTop = firstSection.getBoundingClientRect().top + window.scrollY;
-    const lastBottom = lastSection.getBoundingClientRect().bottom + window.scrollY;
+    const lastBottom =
+      lastSection.getBoundingClientRect().bottom + window.scrollY;
     const totalHeight = lastBottom - firstTop;
     const scrollPosition = window.scrollY + window.innerHeight / 2;
     const scrolled = scrollPosition - firstTop;
-    
+
     return Math.max(0, Math.min(1, scrolled / totalHeight));
   };
 
@@ -134,11 +142,11 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
     const updateProgress = () => {
       setOverallProgress(calculateOverallProgress());
     };
-    
+
     updateProgress();
     window.addEventListener("scroll", updateProgress, { passive: true });
     window.addEventListener("resize", updateProgress);
-    
+
     return () => {
       window.removeEventListener("scroll", updateProgress);
       window.removeEventListener("resize", updateProgress);
@@ -160,14 +168,14 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
               }}
             />
           </div>
-          
+
           {/* Area Indicators */}
           <nav className="relative z-10 flex flex-col items-center gap-2 py-2">
             {areas.map((area, index) => {
               const isActive = index === activeIndex;
               const progress = index / (areas.length - 1);
               const isPast = progress <= overallProgress;
-              
+
               return (
                 <button
                   key={area.id}
@@ -185,7 +193,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                         : "bg-white border-stone-300 group-hover:border-sage-400"
                     }`}
                   />
-                  
+
                   {/* Tooltip on hover */}
                   <div className="absolute left-full ml-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none whitespace-nowrap">
                     <div className="bg-stone-900 text-white text-xs px-2 py-1 rounded shadow-lg">
@@ -212,7 +220,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                 sectionRefs.current[index] = el as HTMLDivElement | null;
               }}
               className="mb-3 last:mb-0"
-              style={{ height: "450px" }}
+              style={{ height: "400px" }}
             >
               <div className="w-full h-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden flex">
                 {/* Left Side - Title and Info */}
@@ -241,10 +249,10 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                     </div>
                   </div>
 
-                  {/* Key Info - Grid Below Title */}
+                  {/* Key Info - Single Line Below Title */}
                   {stats && (
                     <div className="flex-1 flex flex-col">
-                      <div className="grid grid-cols-2 gap-4 mb-4">
+                      <div className="flex items-center gap-6 mb-4">
                         <div>
                           <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                             Average Price
@@ -298,9 +306,23 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                               margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
                             >
                               <defs>
-                                <linearGradient id={`priceMini-${area.id}`} x1="0" y1="0" x2="0" y2="1">
-                                  <stop offset="5%" stopColor="#5d7350" stopOpacity={0.3} />
-                                  <stop offset="95%" stopColor="#5d7350" stopOpacity={0} />
+                                <linearGradient
+                                  id={`priceMini-${area.id}`}
+                                  x1="0"
+                                  y1="0"
+                                  x2="0"
+                                  y2="1"
+                                >
+                                  <stop
+                                    offset="5%"
+                                    stopColor="#5d7350"
+                                    stopOpacity={0.3}
+                                  />
+                                  <stop
+                                    offset="95%"
+                                    stopColor="#5d7350"
+                                    stopOpacity={0}
+                                  />
                                 </linearGradient>
                               </defs>
                               <XAxis
@@ -316,7 +338,9 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                                     return (
                                       <div className="bg-white p-2 rounded shadow-lg border border-stone-200 text-xs">
                                         <p className="font-semibold text-stone-900">
-                                          {formatPrice(payload[0].value as number)}
+                                          {formatPrice(
+                                            payload[0].value as number
+                                          )}
                                         </p>
                                         <p className="text-stone-500 text-[10px]">
                                           {payload[0].payload.label}

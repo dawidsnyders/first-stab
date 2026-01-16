@@ -22,9 +22,7 @@ const API_ENDPOINTS = {
     "https://dpmegis.dpme.gov.za/arcgis/rest/services/Hosted/Boundaries/FeatureServer/2/query", // Local Municipality
   ],
   // OpenStreetMap Nominatim - For estates and suburbs not in municipal APIs
-  openstreetmap: [
-    "https://nominatim.openstreetmap.org/search",
-  ],
+  openstreetmap: ["https://nominatim.openstreetmap.org/search"],
 };
 
 interface GeoJSONFeature {
@@ -73,7 +71,12 @@ export async function GET(request: NextRequest) {
       string,
       {
         name: string;
-        source: "capeTown" | "stellenbosch" | "national" | "openstreetmap" | "custom";
+        source:
+          | "capeTown"
+          | "stellenbosch"
+          | "national"
+          | "openstreetmap"
+          | "custom";
         searchTerms?: string[]; // Alternative search terms for flexible matching
       }
     > = {
@@ -89,176 +92,213 @@ export async function GET(request: NextRequest) {
       bakoven: { name: "Bakoven", source: "capeTown" },
       // Stellenbosch areas
       stellenbosch: { name: "Stellenbosch", source: "stellenbosch" },
-      "stellenbosch-central": { 
-        name: "Stellenbosch", 
+      "stellenbosch-central": {
+        name: "Stellenbosch",
         source: "stellenbosch",
-        searchTerms: ["Stellenbosch Central", "Stellenbosch Town", "Stellenbosch CBD"]
+        searchTerms: [
+          "Stellenbosch Central",
+          "Stellenbosch Town",
+          "Stellenbosch CBD",
+        ],
       },
       dalsig: { name: "Dalsig", source: "stellenbosch" },
       welgevonden: { name: "Welgevonden", source: "stellenbosch" },
       mostertsdrift: { name: "Mostertsdrift", source: "stellenbosch" },
       // Stellenbosch Estates - use OpenStreetMap (not in municipal boundaries)
-      "de-zalze": { 
-        name: "De Zalze", 
+      "de-zalze": {
+        name: "De Zalze",
         source: "openstreetmap",
-        searchTerms: ["De Zalze Golf Estate", "De Zalze Wine Estate", "De Zalze, Stellenbosch"]
+        searchTerms: [
+          "De Zalze Golf Estate",
+          "De Zalze Wine Estate",
+          "De Zalze, Stellenbosch",
+        ],
       },
-      devonvale: { 
-        name: "Devonvale", 
+      devonvale: {
+        name: "Devonvale",
         source: "openstreetmap",
-        searchTerms: ["Devonvale Golf Estate", "Devonvale, Stellenbosch"]
+        searchTerms: ["Devonvale Golf Estate", "Devonvale, Stellenbosch"],
       },
-      devonbosch: { 
-        name: "Devonbosch", 
+      devonbosch: {
+        name: "Devonbosch",
         source: "openstreetmap",
-        searchTerms: ["Devonbosch Estate", "Devonbosch, Stellenbosch"]
+        searchTerms: ["Devonbosch Estate", "Devonbosch, Stellenbosch"],
       },
-      koelenbosch: { 
-        name: "Koelenbosch", 
+      koelenbosch: {
+        name: "Koelenbosch",
         source: "openstreetmap",
-        searchTerms: ["Koelenbosch Country Estate", "Koelenbosch, Stellenbosch"]
+        searchTerms: [
+          "Koelenbosch Country Estate",
+          "Koelenbosch, Stellenbosch",
+        ],
       },
-      "devon-valley": { 
-        name: "Devon Valley", 
+      "devon-valley": {
+        name: "Devon Valley",
         source: "openstreetmap",
-        searchTerms: ["Devon Valley, Stellenbosch", "Devon Valley Wine Estate"]
+        searchTerms: ["Devon Valley, Stellenbosch", "Devon Valley Wine Estate"],
       },
       // Paarl/Drakenstein - use national municipality boundary for city
       paarl: { name: "Drakenstein", source: "national" },
       // Paarl Estates - use OpenStreetMap (private estates not in municipal boundaries)
-      "val-de-vie": { 
-        name: "Val de Vie", 
+      "val-de-vie": {
+        name: "Val de Vie",
         source: "openstreetmap",
-        searchTerms: ["Val de Vie Estate", "Val de Vie, Paarl", "Val de Vie Polo Estate"]
+        searchTerms: [
+          "Val de Vie Estate",
+          "Val de Vie, Paarl",
+          "Val de Vie Polo Estate",
+        ],
       },
-      "pearl-valley": { 
-        name: "Pearl Valley", 
+      "pearl-valley": {
+        name: "Pearl Valley",
         source: "openstreetmap",
-        searchTerms: ["Pearl Valley Golf Estate", "Pearl Valley, Paarl", "Pearl Valley Country Estate"]
+        searchTerms: [
+          "Pearl Valley Golf Estate",
+          "Pearl Valley, Paarl",
+          "Pearl Valley Country Estate",
+        ],
       },
-      boschendal: { 
-        name: "Boschendal", 
+      boschendal: {
+        name: "Boschendal",
         source: "openstreetmap",
-        searchTerms: ["Boschendal Estate", "Boschendal, Paarl", "Boschendal Wine Estate"]
+        searchTerms: [
+          "Boschendal Estate",
+          "Boschendal, Paarl",
+          "Boschendal Wine Estate",
+        ],
       },
-      boschenmeer: { 
-        name: "Boschenmeer", 
+      boschenmeer: {
+        name: "Boschenmeer",
         source: "openstreetmap",
-        searchTerms: ["Boschenmeer Golf Estate", "Boschenmeer, Paarl", "Boschenmeer Country Estate"]
+        searchTerms: [
+          "Boschenmeer Golf Estate",
+          "Boschenmeer, Paarl",
+          "Boschenmeer Country Estate",
+        ],
       },
-      "winelands-estate-paarl": { 
-        name: "Winelands Estate", 
+      "winelands-estate-paarl": {
+        name: "Winelands Estate",
         source: "openstreetmap",
-        searchTerms: ["Winelands Estate, Paarl", "Winelands Estate"]
+        searchTerms: ["Winelands Estate, Paarl", "Winelands Estate"],
       },
-      "sante-wine-estate": { 
-        name: "Sante Wine Estate", 
+      "sante-wine-estate": {
+        name: "Sante Wine Estate",
         source: "openstreetmap",
-        searchTerms: ["Sante Wine Estate, Paarl", "Sante Estate"]
+        searchTerms: ["Sante Wine Estate, Paarl", "Sante Estate"],
       },
-      "kleine-parys": { 
-        name: "Kleine Parys", 
+      "kleine-parys": {
+        name: "Kleine Parys",
         source: "openstreetmap",
-        searchTerms: ["Kleine Parys, Paarl", "Kleine Parys Estate"]
+        searchTerms: ["Kleine Parys, Paarl", "Kleine Parys Estate"],
       },
-      "paarl-valleij": { 
-        name: "Paarl Valleij", 
+      "paarl-valleij": {
+        name: "Paarl Valleij",
         source: "openstreetmap",
-        searchTerms: ["Paarl Valleij Lifestyle Estate", "Paarl Valleij, Paarl"]
+        searchTerms: ["Paarl Valleij Lifestyle Estate", "Paarl Valleij, Paarl"],
       },
       // Paarl Suburbs - try municipal first, fallback to OpenStreetMap
-      courtrai: { 
-        name: "Courtrai", 
+      courtrai: {
+        name: "Courtrai",
         source: "openstreetmap",
-        searchTerms: ["Courtrai, Paarl", "Courtrai"]
+        searchTerms: ["Courtrai, Paarl", "Courtrai"],
       },
-      lemoenkloof: { 
-        name: "Lemoenkloof", 
+      lemoenkloof: {
+        name: "Lemoenkloof",
         source: "openstreetmap",
-        searchTerms: ["Lemoenkloof, Paarl"]
+        searchTerms: ["Lemoenkloof, Paarl"],
       },
-      groenvlei: { 
-        name: "Groenvlei", 
+      groenvlei: {
+        name: "Groenvlei",
         source: "openstreetmap",
-        searchTerms: ["Groenvlei, Paarl"]
+        searchTerms: ["Groenvlei, Paarl"],
       },
-      "charleston-hill": { 
-        name: "Charleston Hill", 
+      "charleston-hill": {
+        name: "Charleston Hill",
         source: "openstreetmap",
-        searchTerms: ["Charleston Hill, Paarl"]
+        searchTerms: ["Charleston Hill, Paarl"],
       },
-      "de-zoete-inval": { 
-        name: "De Zoete Inval", 
+      "de-zoete-inval": {
+        name: "De Zoete Inval",
         source: "openstreetmap",
-        searchTerms: ["De Zoete Inval, Paarl"]
+        searchTerms: ["De Zoete Inval, Paarl"],
       },
-      "klein-nederburg": { 
-        name: "Klein Nederburg", 
+      "klein-nederburg": {
+        name: "Klein Nederburg",
         source: "openstreetmap",
-        searchTerms: ["Klein Nederburg, Paarl"]
+        searchTerms: ["Klein Nederburg, Paarl"],
       },
-      denneburg: { 
-        name: "Denneburg", 
+      denneburg: {
+        name: "Denneburg",
         source: "openstreetmap",
-        searchTerms: ["Denneburg, Paarl"]
+        searchTerms: ["Denneburg, Paarl"],
       },
-      vrykyk: { 
-        name: "Vrykyk", 
+      vrykyk: {
+        name: "Vrykyk",
         source: "openstreetmap",
-        searchTerms: ["Vrykyk, Paarl"]
+        searchTerms: ["Vrykyk, Paarl"],
       },
       // Franschhoek - part of Stellenbosch municipality
       franschhoek: { name: "Franschhoek", source: "stellenbosch" },
-      "franschhoek-village": { 
-        name: "Franschhoek", 
+      "franschhoek-village": {
+        name: "Franschhoek",
         source: "stellenbosch",
-        searchTerms: ["Franschhoek Village", "Franschhoek Town", "Franschhoek Central"]
+        searchTerms: [
+          "Franschhoek Village",
+          "Franschhoek Town",
+          "Franschhoek Central",
+        ],
       },
-      "franschhoek-rural": { 
-        name: "Franschhoek", 
+      "franschhoek-rural": {
+        name: "Franschhoek",
         source: "stellenbosch",
-        searchTerms: ["Franschhoek Rural", "Franschhoek Valley"]
+        searchTerms: ["Franschhoek Rural", "Franschhoek Valley"],
       },
-      "groendal-franschhoek": { 
-        name: "Groendal", 
+      "groendal-franschhoek": {
+        name: "Groendal",
         source: "openstreetmap",
-        searchTerms: ["Groendal, Franschhoek", "Groendal Franschhoek"]
+        searchTerms: ["Groendal, Franschhoek", "Groendal Franschhoek"],
       },
-      langrug: { 
-        name: "Langrug", 
+      langrug: {
+        name: "Langrug",
         source: "openstreetmap",
-        searchTerms: ["Langrug, Franschhoek"]
+        searchTerms: ["Langrug, Franschhoek"],
       },
-      "la-motte": { 
-        name: "La Motte", 
+      "la-motte": {
+        name: "La Motte",
         source: "openstreetmap",
-        searchTerms: ["La Motte, Franschhoek", "La Motte Wine Estate"]
+        searchTerms: ["La Motte, Franschhoek", "La Motte Wine Estate"],
       },
       // Franschhoek Estates - use OpenStreetMap
-      "domaine-des-anges": { 
-        name: "Domaine des Anges", 
+      "domaine-des-anges": {
+        name: "Domaine des Anges",
         source: "openstreetmap",
-        searchTerms: ["Domaine des Anges, Franschhoek", "Domaine des Anges Estate"]
+        searchTerms: [
+          "Domaine des Anges, Franschhoek",
+          "Domaine des Anges Estate",
+        ],
       },
-      "fransche-hoek": { 
-        name: "Fransche Hoek", 
+      "fransche-hoek": {
+        name: "Fransche Hoek",
         source: "openstreetmap",
-        searchTerms: ["Fransche Hoek, Franschhoek", "Fransche Hoek Estate"]
+        searchTerms: ["Fransche Hoek, Franschhoek", "Fransche Hoek Estate"],
       },
-      "winelands-estate-franschhoek": { 
-        name: "Winelands Estate", 
+      "winelands-estate-franschhoek": {
+        name: "Winelands Estate",
         source: "openstreetmap",
-        searchTerms: ["Winelands Estate, Franschhoek"]
+        searchTerms: ["Winelands Estate, Franschhoek"],
       },
-      "delta-crest": { 
-        name: "Delta Crest", 
+      "delta-crest": {
+        name: "Delta Crest",
         source: "openstreetmap",
-        searchTerms: ["Delta Crest, Franschhoek", "Delta Crest Estate"]
+        searchTerms: ["Delta Crest, Franschhoek", "Delta Crest Estate"],
       },
-      "la-petite-provence": { 
-        name: "La Petite Provence", 
+      "la-petite-provence": {
+        name: "La Petite Provence",
         source: "openstreetmap",
-        searchTerms: ["La Petite Provence, Franschhoek", "La Petite Provence Estate"]
+        searchTerms: [
+          "La Petite Provence, Franschhoek",
+          "La Petite Provence Estate",
+        ],
       },
     };
 
@@ -314,13 +354,16 @@ export async function GET(request: NextRequest) {
           for (const searchTerm of searchTerms) {
             try {
               const osmUrl = new URL(endpoint);
-              osmUrl.searchParams.append("q", `${searchTerm}, Western Cape, South Africa`);
+              osmUrl.searchParams.append(
+                "q",
+                `${searchTerm}, Western Cape, South Africa`
+              );
               osmUrl.searchParams.append("format", "geojson");
               osmUrl.searchParams.append("polygon_geojson", "1");
               osmUrl.searchParams.append("countrycodes", "za");
               osmUrl.searchParams.append("limit", "1");
               osmUrl.searchParams.append("addressdetails", "1");
-              
+
               const osmResponse = await fetch(osmUrl.toString(), {
                 method: "GET",
                 headers: {
@@ -336,24 +379,38 @@ export async function GET(request: NextRequest) {
                 if (osmData.features && osmData.features.length > 0) {
                   const feature = osmData.features[0];
                   // Check if it has a proper polygon geometry (not just a point)
-                  if (feature.geometry && 
-                      (feature.geometry.type === "Polygon" || feature.geometry.type === "MultiPolygon") &&
-                      feature.geometry.coordinates) {
+                  if (
+                    feature.geometry &&
+                    (feature.geometry.type === "Polygon" ||
+                      feature.geometry.type === "MultiPolygon") &&
+                    feature.geometry.coordinates
+                  ) {
                     data = {
                       type: "FeatureCollection",
                       features: [feature],
                     };
-                    console.log(`Successfully fetched boundary from OpenStreetMap for "${searchTerm}" with ${feature.geometry.type}`);
+                    console.log(
+                      `Successfully fetched boundary from OpenStreetMap for "${searchTerm}" with ${feature.geometry.type}`
+                    );
                     break;
                   } else {
-                    console.warn(`OpenStreetMap returned ${feature.geometry?.type || 'no geometry'} for "${searchTerm}" - not a polygon`);
+                    console.warn(
+                      `OpenStreetMap returned ${
+                        feature.geometry?.type || "no geometry"
+                      } for "${searchTerm}" - not a polygon`
+                    );
                   }
                 }
               } else {
-                console.warn(`OpenStreetMap returned ${osmResponse.status} for "${searchTerm}"`);
+                console.warn(
+                  `OpenStreetMap returned ${osmResponse.status} for "${searchTerm}"`
+                );
               }
             } catch (osmError) {
-              console.warn(`Error fetching from OpenStreetMap for "${searchTerm}":`, osmError);
+              console.warn(
+                `Error fetching from OpenStreetMap for "${searchTerm}":`,
+                osmError
+              );
               continue;
             }
           }
@@ -389,9 +446,11 @@ export async function GET(request: NextRequest) {
             );
             const nameLower = nameField.toLowerCase();
             // Try matching against all search terms
-            return searchTerms.some(term => {
+            return searchTerms.some((term) => {
               const termLower = term.toLowerCase();
-              return nameLower.includes(termLower) || termLower.includes(nameLower);
+              return (
+                nameLower.includes(termLower) || termLower.includes(nameLower)
+              );
             });
           });
         } else {
@@ -439,20 +498,29 @@ export async function GET(request: NextRequest) {
     let feature = data.features[0];
 
     // For OpenStreetMap, try to find the best match
-    if (source === "openstreetmap" && data.features && data.features.length > 1) {
+    if (
+      source === "openstreetmap" &&
+      data.features &&
+      data.features.length > 1
+    ) {
       // Prefer features with higher importance or better name match
-      feature = data.features.find(f => {
-        const props = f.properties;
-        const name = String(props.display_name || props.name || "");
-        return searchTerms.some(term => 
-          name.toLowerCase().includes(term.toLowerCase())
-        );
-      }) || data.features[0];
+      feature =
+        data.features.find((f) => {
+          const props = f.properties;
+          const name = String(props.display_name || props.name || "");
+          return searchTerms.some((term) =>
+            name.toLowerCase().includes(term.toLowerCase())
+          );
+        }) || data.features[0];
     }
 
     if (!feature) {
       return NextResponse.json(
-        { error: `No matching feature found for "${suburbName}" (tried: ${searchTerms.join(", ")})` },
+        {
+          error: `No matching feature found for "${suburbName}" (tried: ${searchTerms.join(
+            ", "
+          )})`,
+        },
         { status: 404 }
       );
     }
