@@ -88,14 +88,15 @@ export async function GET(request: NextRequest) {
         searchTerms?: string[]; // Alternative search terms for flexible matching
       }
     > = {
-      // Cape Town suburbs - Use Western Cape Spatial Data Warehouse (most accurate, Property24 source)
-      "camps-bay": { name: "Camps Bay", source: "westernCape" },
-      "sea-point": { name: "Sea Point", source: "westernCape" },
-      "green-point": { name: "Green Point", source: "westernCape" },
-      woodstock: { name: "Woodstock", source: "westernCape" },
-      observatory: { name: "Observatory", source: "westernCape" },
-      claremont: { name: "Claremont", source: "westernCape" },
-      constantia: { name: "Constantia", source: "westernCape" },
+      // Cape Town suburbs - Use City of Cape Town API (has polygon boundaries)
+      // Western Cape API may only return Point centroids, not polygon boundaries
+      "camps-bay": { name: "Camps Bay", source: "capeTown" },
+      "sea-point": { name: "Sea Point", source: "capeTown" },
+      "green-point": { name: "Green Point", source: "capeTown" },
+      woodstock: { name: "Woodstock", source: "capeTown" },
+      observatory: { name: "Observatory", source: "capeTown" },
+      claremont: { name: "Claremont", source: "capeTown" },
+      constantia: { name: "Constantia", source: "capeTown" },
       clifton: { name: "Clifton", source: "westernCape" },
       bakoven: { name: "Bakoven", source: "westernCape" },
       // Stellenbosch - Use Western Cape Spatial Data Warehouse
