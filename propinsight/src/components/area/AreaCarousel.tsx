@@ -30,6 +30,8 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
 
   // Track which section is in view and scroll progress between sections
   useEffect(() => {
+    let rafId: number | null = null;
+    
     const updateScrollProgress = () => {
       const newProgress: number[] = new Array(areas.length - 1).fill(0);
       let newActiveIndex = 0;
@@ -98,13 +100,23 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
       setScrollProgress(newProgress);
     };
 
+    const throttledUpdate = () => {
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      rafId = requestAnimationFrame(updateScrollProgress);
+    };
+
     updateScrollProgress();
-    window.addEventListener("scroll", updateScrollProgress, { passive: true });
-    window.addEventListener("resize", updateScrollProgress);
+    window.addEventListener("scroll", throttledUpdate, { passive: true });
+    window.addEventListener("resize", throttledUpdate);
 
     return () => {
-      window.removeEventListener("scroll", updateScrollProgress);
-      window.removeEventListener("resize", updateScrollProgress);
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+      }
+      window.removeEventListener("scroll", throttledUpdate);
+      window.removeEventListener("resize", throttledUpdate);
     };
   }, [areas]);
 
