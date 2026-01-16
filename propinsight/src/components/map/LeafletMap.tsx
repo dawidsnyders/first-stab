@@ -137,31 +137,29 @@ export function LeafletMap({
       setIsMapReady(true);
 
       // Add area polygons
-      console.log(`Adding ${areas.length} areas to map`);
       areas.forEach((area) => {
-        const boundary = getAreaBoundary(area);
-        const coords = getAreaCoordinates(area);
-        console.log(`Adding polygon for ${area.name} at`, coords, "boundary:", boundary.length, "points");
+        const boundary = getAreaBoundary(area); // Returns [lat, lng] format
+        const coords = getAreaCoordinates(area); // Returns [lng, lat]
         
         const isSelected = selectedArea?.id === area.id;
         const isHovered = hoveredArea?.id === area.id;
 
         // Determine polygon style - make boundaries clearly visible
-        let fillColor = "rgba(93, 115, 80, 0.15)"; // sage-600 with visible opacity
-        let borderColor = "#5d7350"; // sage-600 - clearly visible
+        let fillColor = "#5d7350"; // sage-600 solid color
+        let borderColor = "#4a5c3f"; // sage-700 - darker border
         let borderWidth = 3;
-        let fillOpacity = 0.15;
+        let fillOpacity = 0.25; // More visible
 
         if (isSelected) {
-          fillColor = "rgba(93, 115, 80, 0.3)"; // sage-600
+          fillColor = "#7d9470"; // sage-500 brighter
           borderColor = "#5d7350"; // sage-600
-          borderWidth = 3;
-          fillOpacity = 0.3;
+          borderWidth = 4;
+          fillOpacity = 0.4;
         } else if (isHovered) {
-          fillColor = "rgba(93, 115, 80, 0.2)"; // sage-600 lighter
-          borderColor = "#7d9470"; // sage-500
-          borderWidth = 2.5;
-          fillOpacity = 0.2;
+          fillColor = "#6f8464"; // sage-500 lighter
+          borderColor = "#5d7350"; // sage-600
+          borderWidth = 3.5;
+          fillOpacity = 0.3;
         }
 
         const polygon = L.default.polygon(boundary, {
@@ -179,7 +177,6 @@ export function LeafletMap({
 
         // Add click handler - use refs to get latest callbacks
         polygon.on("click", (e) => {
-          console.log(`Polygon clicked for ${area.name}`);
           if (e.originalEvent) {
             e.originalEvent.stopPropagation();
           }
@@ -241,21 +238,21 @@ export function LeafletMap({
         const isHovered = hoveredArea?.id === area.id;
 
         // Determine polygon style - make boundaries clearly visible
-        let fillColor = "rgba(93, 115, 80, 0.1)";
-        let borderColor = "#5d7350"; // sage-600 - clearly visible
-        let borderWidth = 2.5;
-        let fillOpacity = 0.1;
+        let fillColor = "#5d7350"; // sage-600 solid
+        let borderColor = "#4a5c3f"; // sage-700 - darker border
+        let borderWidth = 3;
+        let fillOpacity = 0.25;
 
         if (isSelected) {
-          fillColor = "rgba(93, 115, 80, 0.3)";
-          borderColor = "#5d7350";
-          borderWidth = 3;
-          fillOpacity = 0.3;
+          fillColor = "#7d9470"; // sage-500 brighter
+          borderColor = "#5d7350"; // sage-600
+          borderWidth = 4;
+          fillOpacity = 0.4;
         } else if (isHovered) {
-          fillColor = "rgba(93, 115, 80, 0.2)";
-          borderColor = "#7d9470";
-          borderWidth = 2.5;
-          fillOpacity = 0.2;
+          fillColor = "#6f8464"; // sage-500 lighter
+          borderColor = "#5d7350"; // sage-600
+          borderWidth = 3.5;
+          fillOpacity = 0.3;
         }
 
         polygon.setStyle({
