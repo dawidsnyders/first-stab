@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   XAxis,
   YAxis,
@@ -31,9 +32,9 @@ const CustomTooltip = ({
   type,
 }: {
   active?: boolean;
-  payload?: Array<{ 
-    value?: number; 
-    name?: string; 
+  payload?: Array<{
+    value?: number;
+    name?: string;
     payload?: { previousValue?: number; [key: string]: unknown };
     [key: string]: unknown;
   }>;
@@ -128,7 +129,9 @@ const CustomTooltip = ({
     }
 
     // Calculate change from previous point if available
-    const payloadData = payload[0]?.payload as { previousValue?: number } | undefined;
+    const payloadData = payload[0]?.payload as
+      | { previousValue?: number }
+      | undefined;
     if (payloadData?.previousValue !== undefined && value !== undefined) {
       const prevValue = payloadData.previousValue;
       const percentChange = ((value - prevValue) / prevValue) * 100;
@@ -157,19 +160,23 @@ const CustomTooltip = ({
             {formattedValue}
           </p>
         </div>
-        {change !== null && payloadData?.previousValue !== undefined && value !== undefined && (
-          <p
-            className={`text-xs mt-1 font-medium ${
-              change ? "text-green-600" : "text-red-600"
-            }`}
-          >
-            {change ? "↑" : "↓"}{" "}
-            {Math.abs(
-              ((value - payloadData.previousValue) / payloadData.previousValue) * 100
-            ).toFixed(1)}
-            % from previous
-          </p>
-        )}
+        {change !== null &&
+          payloadData?.previousValue !== undefined &&
+          value !== undefined && (
+            <p
+              className={`text-xs mt-1 font-medium ${
+                change ? "text-green-600" : "text-red-600"
+              }`}
+            >
+              {change ? "↑" : "↓"}{" "}
+              {Math.abs(
+                ((value - payloadData.previousValue) /
+                  payloadData.previousValue) *
+                  100
+              ).toFixed(1)}
+              % from previous
+            </p>
+          )}
       </motion.div>
     );
   }
@@ -189,8 +196,8 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
       sample: data[0],
       hasAreaValue: data[0].areaValue !== undefined,
       hasNationalValue: data[0].nationalValue !== undefined,
-      areaValues: data.map(d => d.areaValue).slice(0, 5),
-      nationalValues: data.map(d => d.nationalValue).slice(0, 5),
+      areaValues: data.map((d) => d.areaValue).slice(0, 5),
+      nationalValues: data.map((d) => d.nationalValue).slice(0, 5),
     });
   }
 
@@ -303,7 +310,7 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
       <ResponsiveContainer width="100%" height={450}>
         {isBarChart ? (
           <BarChart
-            data={dataWithPrev}
+            data={chartData}
             margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
           >
             <defs>
@@ -358,7 +365,7 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
           </BarChart>
         ) : (
           <AreaChart
-            data={dataWithPrev}
+            data={chartData}
             margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
           >
             <defs>

@@ -26,8 +26,11 @@ type StatType =
   | "outperformance"
   | null;
 
+type TimePeriod = 5 | 10 | 15;
+
 export function StatsGrid({ stats, areaName }: StatsGridProps) {
   const [openModal, setOpenModal] = useState<StatType>(null);
+  const [timePeriod, setTimePeriod] = useState<TimePeriod>(5);
 
   const outperformance =
     stats.priceChangeYoY - NATIONAL_BENCHMARKS.avgPropertyGrowth;
@@ -40,19 +43,19 @@ export function StatsGrid({ stats, areaName }: StatsGridProps) {
     setOpenModal(null);
   };
 
-  const getChartData = (type: StatType) => {
+  const getChartData = (type: StatType, period: TimePeriod) => {
     if (!type) return [];
     switch (type) {
       case "medianPrice":
-        return generateMedianPriceData(stats.medianPrice, stats.priceChangeYoY);
+        return generateMedianPriceData(stats.medianPrice, stats.priceChangeYoY, period);
       case "sales":
-        return generateSalesData(stats.salesCount, stats.priceChangeYoY);
+        return generateSalesData(stats.salesCount, stats.priceChangeYoY, period);
       case "pricePerSqm":
         return stats.avgPricePerSqm
-          ? generatePricePerSqmData(stats.avgPricePerSqm, stats.priceChangeYoY)
+          ? generatePricePerSqmData(stats.avgPricePerSqm, stats.priceChangeYoY, period)
           : [];
       case "outperformance":
-        return generateOutperformanceData(outperformance, stats.priceChangeYoY);
+        return generateOutperformanceData(outperformance, stats.priceChangeYoY, period);
       default:
         return [];
     }
@@ -110,13 +113,31 @@ export function StatsGrid({ stats, areaName }: StatsGridProps) {
           title={getModalTitle(openModal)}
         >
           <div className="space-y-4">
-            <p className="text-gray-600 text-sm">
-              Historical trend data for{" "}
-              <span className="font-semibold">{areaName}</span> over the past 3
-              years. Hover over the chart to see detailed values.
-            </p>
+            <div className="flex items-center justify-between gap-4">
+              <p className="text-gray-600 text-sm flex-1">
+                Historical trend data for{" "}
+                <span className="font-semibold">{areaName}</span> over the past{" "}
+                {timePeriod} years. Hover over the chart to see detailed values.
+              </p>
+              {/* Period Selector */}
+              <div className="flex items-center gap-2 flex-shrink-0">
+                {([5, 10, 15] as TimePeriod[]).map((period) => (
+                  <button
+                    key={period}
+                    onClick={() => setTimePeriod(period)}
+                    className={`px-3 py-1.5 text-sm font-medium rounded-lg transition-all duration-200 ${
+                      timePeriod === period
+                        ? "bg-sage-600 text-white shadow-sm"
+                        : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                    }`}
+                  >
+                    {period} Years
+                  </button>
+                ))}
+              </div>
+            </div>
             <StatChart
-              data={getChartData(openModal)}
+              data={getChartData(openModal, timePeriod)}
               type={openModal}
               areaName={areaName}
             />
