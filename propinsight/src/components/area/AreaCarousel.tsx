@@ -52,13 +52,15 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
             const newRef = sectionRefs.current[newActiveIndex];
             if (!newRef) return false;
             const newRect = newRef.getBoundingClientRect();
-            return distanceFromCenter <
+            return (
+              distanceFromCenter <
               Math.abs(
                 newRect.top +
-                window.scrollY +
-                newRect.height / 2 -
-                viewportCenter
-              );
+                  window.scrollY +
+                  newRect.height / 2 -
+                  viewportCenter
+              )
+            );
           })()
         ) {
           newActiveIndex = index;
@@ -131,7 +133,8 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
 
     if (!firstSection || !lastSection) return 0;
 
-    const firstTop = firstSection.getBoundingClientRect().top + (window.scrollY || 0);
+    const firstTop =
+      firstSection.getBoundingClientRect().top + (window.scrollY || 0);
     const lastBottom =
       lastSection.getBoundingClientRect().bottom + (window.scrollY || 0);
     const totalHeight = lastBottom - firstTop;
@@ -232,165 +235,85 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                 className="block w-full h-full group"
               >
                 <div className="w-full h-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden flex transition-all duration-200 group-hover:shadow-md group-hover:border-sage-300 group-hover:scale-[1.01] cursor-pointer">
-                {/* Left Side - Title and Info */}
-                <div className="flex-1 flex flex-col px-6 py-4">
-                  {/* Area Name Header */}
-                  <div className="mb-4">
-                    <h2 className="text-2xl font-bold text-stone-900 mb-1">
-                      {area.name}
-                    </h2>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-stone-500 capitalize">
-                        {area.level}
-                      </span>
-                      {stats && (
-                        <>
-                          <span className="text-stone-300">•</span>
-                          <span
-                            className={`text-xs font-semibold ${
-                              isPositive ? "text-green-600" : "text-red-600"
-                            }`}
-                          >
-                            {formatPriceChange(stats.priceChangeYoY)} YoY
-                          </span>
-                        </>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Key Info - Single Line Below Title */}
-                  {stats && (
-                    <div className="flex-1 flex flex-col">
-                      <div className="flex items-center gap-6 mb-4">
-                        <div>
-                          <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
-                            Average Price
-                          </div>
-                          <div className="text-lg font-bold text-stone-900">
-                            {formatPrice(stats.avgPrice)}
-                          </div>
-                        </div>
-                        <div>
-                          <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
-                            Sales (12mo)
-                          </div>
-                          <div className="text-lg font-bold text-stone-900">
-                            {formatNumber(stats.salesCount)}
-                          </div>
-                        </div>
-                        {stats.avgPricePerSqm ? (
-                          <div>
-                            <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
-                              Price per m²
-                            </div>
-                            <div className="text-lg font-bold text-stone-900">
-                              {formatPrice(stats.avgPricePerSqm)}
-                            </div>
-                          </div>
-                        ) : (
-                          <div>
-                            <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
-                              Median Price
-                            </div>
-                            <div className="text-lg font-bold text-stone-900">
-                              {formatPrice(stats.medianPrice)}
-                            </div>
-                          </div>
+                  {/* Left Side - Title and Info */}
+                  <div className="flex-1 flex flex-col px-6 py-4">
+                    {/* Area Name Header */}
+                    <div className="mb-4">
+                      <h2 className="text-2xl font-bold text-stone-900 mb-1">
+                        {area.name}
+                      </h2>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-stone-500 capitalize">
+                          {area.level}
+                        </span>
+                        {stats && (
+                          <>
+                            <span className="text-stone-300">•</span>
+                            <span
+                              className={`text-xs font-semibold ${
+                                isPositive ? "text-green-600" : "text-red-600"
+                              }`}
+                            >
+                              {formatPriceChange(stats.priceChangeYoY)} YoY
+                            </span>
+                          </>
                         )}
                       </div>
+                    </div>
 
-                      {/* Price History Charts - Side by Side */}
-                      <div className="mb-4 grid grid-cols-2 gap-4">
-                        {/* Price Trend Chart */}
-                        <div>
-                          <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-2 font-medium">
-                            5-Year Price Trend
+                    {/* Key Info - Single Line Below Title */}
+                    {stats && (
+                      <div className="flex-1 flex flex-col">
+                        <div className="flex items-center gap-6 mb-4">
+                          <div>
+                            <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
+                              Average Price
+                            </div>
+                            <div className="text-lg font-bold text-stone-900">
+                              {formatPrice(stats.avgPrice)}
+                            </div>
                           </div>
-                          <div className="h-20 w-full bg-stone-50 rounded-lg p-2">
-                            <ResponsiveContainer width="100%" height="100%">
-                              <LineChart
-                                data={generateMedianPriceData(
-                                  stats.medianPrice,
-                                  stats.priceChangeYoY,
-                                  5
-                                )}
-                                margin={{
-                                  top: 5,
-                                  right: 5,
-                                  left: 5,
-                                  bottom: 5,
-                                }}
-                              >
-                                <defs>
-                                  <linearGradient
-                                    id={`priceMini-${area.id}`}
-                                    x1="0"
-                                    y1="0"
-                                    x2="0"
-                                    y2="1"
-                                  >
-                                    <stop
-                                      offset="5%"
-                                      stopColor="#5d7350"
-                                      stopOpacity={0.3}
-                                    />
-                                    <stop
-                                      offset="95%"
-                                      stopColor="#5d7350"
-                                      stopOpacity={0}
-                                    />
-                                  </linearGradient>
-                                </defs>
-                                <XAxis
-                                  dataKey="label"
-                                  hide
-                                  axisLine={false}
-                                  tickLine={false}
-                                />
-                                <YAxis hide />
-                                <Tooltip
-                                  content={({ active, payload }) => {
-                                    if (active && payload && payload.length) {
-                                      return (
-                                        <div className="bg-white p-2 rounded shadow-lg border border-stone-200 text-xs">
-                                          <p className="font-semibold text-stone-900">
-                                            {formatPrice(
-                                              payload[0].value as number
-                                            )}
-                                          </p>
-                                          <p className="text-stone-500 text-[10px]">
-                                            {payload[0].payload.label}
-                                          </p>
-                                        </div>
-                                      );
-                                    }
-                                    return null;
-                                  }}
-                                />
-                                <Line
-                                  type="monotone"
-                                  dataKey="value"
-                                  stroke="#5d7350"
-                                  strokeWidth={2}
-                                  dot={false}
-                                  activeDot={{ r: 4, fill: "#5d7350" }}
-                                />
-                              </LineChart>
-                            </ResponsiveContainer>
+                          <div>
+                            <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
+                              Sales (12mo)
+                            </div>
+                            <div className="text-lg font-bold text-stone-900">
+                              {formatNumber(stats.salesCount)}
+                            </div>
                           </div>
+                          {stats.avgPricePerSqm ? (
+                            <div>
+                              <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
+                                Price per m²
+                              </div>
+                              <div className="text-lg font-bold text-stone-900">
+                                {formatPrice(stats.avgPricePerSqm)}
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
+                                Median Price
+                              </div>
+                              <div className="text-lg font-bold text-stone-900">
+                                {formatPrice(stats.medianPrice)}
+                              </div>
+                            </div>
+                          )}
                         </div>
 
-                        {/* Price per m² Chart */}
-                        {stats.avgPricePerSqm && (
+                        {/* Price History Charts - Side by Side */}
+                        <div className="mb-4 grid grid-cols-2 gap-4">
+                          {/* Price Trend Chart */}
                           <div>
                             <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-2 font-medium">
-                              5-Year Price per m²
+                              5-Year Price Trend
                             </div>
                             <div className="h-20 w-full bg-stone-50 rounded-lg p-2">
                               <ResponsiveContainer width="100%" height="100%">
                                 <LineChart
-                                  data={generatePricePerSqmData(
-                                    stats.avgPricePerSqm,
+                                  data={generateMedianPriceData(
+                                    stats.medianPrice,
                                     stats.priceChangeYoY,
                                     5
                                   )}
@@ -403,7 +326,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                                 >
                                   <defs>
                                     <linearGradient
-                                      id={`pricePerSqmMini-${area.id}`}
+                                      id={`priceMini-${area.id}`}
                                       x1="0"
                                       y1="0"
                                       x2="0"
@@ -411,12 +334,12 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                                     >
                                       <stop
                                         offset="5%"
-                                        stopColor="#ed6b4a"
+                                        stopColor="#5d7350"
                                         stopOpacity={0.3}
                                       />
                                       <stop
                                         offset="95%"
-                                        stopColor="#ed6b4a"
+                                        stopColor="#5d7350"
                                         stopOpacity={0}
                                       />
                                     </linearGradient>
@@ -450,47 +373,131 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                                   <Line
                                     type="monotone"
                                     dataKey="value"
-                                    stroke="#ed6b4a"
+                                    stroke="#5d7350"
                                     strokeWidth={2}
                                     dot={false}
-                                    activeDot={{ r: 4, fill: "#ed6b4a" }}
+                                    activeDot={{ r: 4, fill: "#5d7350" }}
                                   />
                                 </LineChart>
                               </ResponsiveContainer>
                             </div>
                           </div>
-                        )}
-                      </div>
 
-                      {/* CTA Link */}
-                      <div className="mt-auto pt-4 border-t border-stone-200">
-                        <div className="inline-flex items-center gap-2 text-sage-600 group-hover:text-sage-700 font-semibold text-xs transition-colors duration-200">
-                          <span>View Full Market Analysis</span>
-                          <svg
-                            className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-1"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 5l7 7-7 7"
-                            />
-                          </svg>
+                          {/* Price per m² Chart */}
+                          {stats.avgPricePerSqm && (
+                            <div>
+                              <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-2 font-medium">
+                                5-Year Price per m²
+                              </div>
+                              <div className="h-20 w-full bg-stone-50 rounded-lg p-2">
+                                <ResponsiveContainer width="100%" height="100%">
+                                  <LineChart
+                                    data={generatePricePerSqmData(
+                                      stats.avgPricePerSqm,
+                                      stats.priceChangeYoY,
+                                      5
+                                    )}
+                                    margin={{
+                                      top: 5,
+                                      right: 5,
+                                      left: 5,
+                                      bottom: 5,
+                                    }}
+                                  >
+                                    <defs>
+                                      <linearGradient
+                                        id={`pricePerSqmMini-${area.id}`}
+                                        x1="0"
+                                        y1="0"
+                                        x2="0"
+                                        y2="1"
+                                      >
+                                        <stop
+                                          offset="5%"
+                                          stopColor="#ed6b4a"
+                                          stopOpacity={0.3}
+                                        />
+                                        <stop
+                                          offset="95%"
+                                          stopColor="#ed6b4a"
+                                          stopOpacity={0}
+                                        />
+                                      </linearGradient>
+                                    </defs>
+                                    <XAxis
+                                      dataKey="label"
+                                      hide
+                                      axisLine={false}
+                                      tickLine={false}
+                                    />
+                                    <YAxis hide />
+                                    <Tooltip
+                                      content={({ active, payload }) => {
+                                        if (
+                                          active &&
+                                          payload &&
+                                          payload.length
+                                        ) {
+                                          return (
+                                            <div className="bg-white p-2 rounded shadow-lg border border-stone-200 text-xs">
+                                              <p className="font-semibold text-stone-900">
+                                                {formatPrice(
+                                                  payload[0].value as number
+                                                )}
+                                              </p>
+                                              <p className="text-stone-500 text-[10px]">
+                                                {payload[0].payload.label}
+                                              </p>
+                                            </div>
+                                          );
+                                        }
+                                        return null;
+                                      }}
+                                    />
+                                    <Line
+                                      type="monotone"
+                                      dataKey="value"
+                                      stroke="#ed6b4a"
+                                      strokeWidth={2}
+                                      dot={false}
+                                      activeDot={{ r: 4, fill: "#ed6b4a" }}
+                                    />
+                                  </LineChart>
+                                </ResponsiveContainer>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+
+                        {/* CTA Link */}
+                        <div className="mt-auto pt-4 border-t border-stone-200">
+                          <div className="inline-flex items-center gap-2 text-sage-600 group-hover:text-sage-700 font-semibold text-xs transition-colors duration-200">
+                            <span>View Full Market Analysis</span>
+                            <svg
+                              className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-1"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  )}
-                </div>
-
-                {/* Right Side - Map (30% width, full height) */}
-                <div className="w-[30%] border-l border-stone-200">
-                  <div className="w-full h-full">
-                    <AreaLocationMap area={area} />
+                    )}
                   </div>
-                </div>
+
+                  {/* Right Side - Map (30% width, full height) */}
+                  <div className="w-[30%] border-l border-stone-200">
+                    <div className="w-full h-full">
+                      <AreaLocationMap area={area} />
+                    </div>
+                  </div>
                 </div>
               </Link>
             </section>

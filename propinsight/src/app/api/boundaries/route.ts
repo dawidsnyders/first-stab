@@ -388,13 +388,16 @@ export async function GET(request: NextRequest) {
                       feature.geometry.coordinates
                     ) {
                       // Calculate approximate bounding box area to filter out overly large polygons
-                      const coords = feature.geometry.type === "Polygon" 
-                        ? feature.geometry.coordinates[0]
-                        : feature.geometry.coordinates[0][0];
+                      let coords: number[][] = [];
+                      if (feature.geometry.type === "Polygon") {
+                        coords = feature.geometry.coordinates[0] as number[][];
+                      } else {
+                        coords = feature.geometry.coordinates[0][0] as number[][];
+                      }
                       
                       if (coords && coords.length > 0) {
-                        const lngs = coords.map((c: number[]) => c[0]);
-                        const lats = coords.map((c: number[]) => c[1]);
+                        const lngs = coords.map((c) => c[0]);
+                        const lats = coords.map((c) => c[1]);
                         const minLng = Math.min(...lngs);
                         const maxLng = Math.max(...lngs);
                         const minLat = Math.min(...lats);
@@ -476,7 +479,8 @@ export async function GET(request: NextRequest) {
         // For Stellenbosch/national, filter features by name match using all search terms
         let matchingFeature = null;
         if (source === "stellenbosch" || source === "national") {
-          matchingFeature = responseData.features?.find((f) => {
+          // Try to find matching features and pick the smallest one
+          const candidates = responseData.features?.filter((f) => {
             const props = f.properties;
             const nameField = String(
               props.NAME || props.OFC_SBRB_NAME || props.name || ""
@@ -489,7 +493,44 @@ export async function GET(request: NextRequest) {
                 nameLower.includes(termLower) || termLower.includes(nameLower)
               );
             });
-          });
+          }) || [];
+          
+          // Pick the smallest polygon (most specific boundary)
+          let smallestArea = Infinity;
+          for (const candidate of candidates) {
+            if (candidate.geometry && (candidate.geometry.type === "Polygon" || candidate.geometry.type === "MultiPolygon")) {
+              let coords: number[][] = [];
+              if (candidate.geometry.type === "Polygon") {
+                coords = candidate.geometry.coordinates[0] as number[][];
+              } else {
+                coords = candidate.geometry.coordinates[0][0] as number[][];
+              }
+              
+              if (coords && coords.length > 0) {
+                const lngs = coords.map((c) => c[0]);
+                const lats = coords.map((c) => c[1]);
+                const area = (Math.max(...lngs) - Math.min(...lngs)) * (Math.max(...lats) - Math.min(...lats)) * 111 * 111;
+                
+                // Reject overly large polygons (> 500 km²) and ensure it's in Western Cape
+                const minLat = Math.min(...lats);
+                const maxLat = Math.max(...lats);
+                const minLng = Math.min(...lngs);
+                const maxLng = Math.max(...lngs);
+                const isInWesternCape = minLat >= -36 && maxLat <= -31 && minLng >= 16 && maxLng <= 26;
+                
+                if (area < 500 && isInWesternCape && area < smallestArea) {
+                  matchingFeature = candidate;
+                  smallestArea = area;
+                }
+              }
+            }
+          }
+          
+          // Fallback to first match if no size validation passed
+          if (!matchingFeature && candidates.length > 0) {
+            matchingFeature = candidates[0];
+            console.warn(`Using first match for ${suburbName} without size validation`);
+          }
         } else {
           matchingFeature = responseData.features?.[0];
         }
