@@ -193,23 +193,20 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                   onClick={() => scrollToSection(index)}
                   className="group relative flex items-center gap-3"
                 >
-                  {/* Indicator Circle - Centered on line */}
+                  {/* Indicator Circle - Centered on line (line at 11px, dot center at 11px, so left edge at 9.5px) */}
                   <div
-                    className={`w-3 h-3 rounded-full border-2 flex-shrink-0 transition-all duration-200 relative -left-[2px] ${
+                    className={`w-3 h-3 rounded-full border-2 flex-shrink-0 transition-all duration-200 absolute left-[9.5px] -translate-x-1/2 ${
                       isActive
                         ? "bg-sage-600 border-sage-600 scale-125"
                         : isPast
                         ? "bg-sage-400 border-sage-400"
                         : "bg-white border-stone-300 group-hover:border-sage-400"
                     }`}
-                    style={{
-                      marginLeft: "0px",
-                    }}
                   />
 
-                  {/* Area Name */}
+                  {/* Area Name - Offset to account for absolute positioned dot */}
                   <span
-                    className={`text-sm transition-all duration-200 ${
+                    className={`text-sm transition-all duration-200 ml-4 ${
                       isActive
                         ? "text-stone-900 font-medium"
                         : "text-stone-500 group-hover:text-stone-700"
@@ -316,7 +313,6 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                     {/* Key Info */}
                     {stats && (
                       <div className="flex-1 flex flex-col">
-
                         {/* Price History Charts - Side by Side */}
                         <div className="mb-4 grid grid-cols-2 gap-4">
                           {/* Price Trend Chart */}
