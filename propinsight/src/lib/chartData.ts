@@ -138,10 +138,9 @@ export function generateOutperformanceData(
   const months = years * 12;
   const nationalBenchmark = NATIONAL_BENCHMARKS.avgPropertyGrowth;
 
-  // Current area growth rate = national benchmark + outperformance
-  // currentOutperformance is already in percentage form (e.g., 5.2 means 5.2%)
-  // But we need to convert it properly - if outperformance is 5.2%, that means area grows at nationalBenchmark + 5.2
-  const currentAreaGrowthRate = nationalBenchmark + (currentOutperformance / 100);
+  // currentOutperformance is already in percentage form (e.g., 10.0 means 10.0% above national)
+  // nationalBenchmark is also in percentage form (2.5 means 2.5%)
+  // So current area growth rate = 2.5% + 10.0% = 12.5%
 
   for (let i = months - 1; i >= 0; i--) {
     const date = new Date(now);
@@ -154,23 +153,24 @@ export function generateOutperformanceData(
     // Use a gradual approach: past values start closer to national average and trend toward current
     // This simulates the area gradually outperforming over time
     const progressToCurrent = Math.min(yearsAgo / years, 1); // 0 = 3 years ago, 1 = now
-    // currentOutperformance is in percentage (e.g., 5.2 means 5.2%), so divide by 100
+    // Both nationalBenchmark and currentOutperformance are in percentage form
+    // e.g., nationalBenchmark = 2.5 (2.5%), currentOutperformance = 10.0 (10.0%)
     const baseAreaGrowthRate =
-      nationalBenchmark + (currentOutperformance / 100) * progressToCurrent;
+      nationalBenchmark + currentOutperformance * progressToCurrent;
 
     // Add realistic monthly variation (±0.3% for area, ±0.15% for national)
     const areaVariation = (Math.random() - 0.5) * 0.6; // ±0.3% variation
     const nationalVariation = (Math.random() - 0.5) * 0.3; // ±0.15% variation (less volatile)
 
     // Ensure values are reasonable (growth rates typically between -10% and +20%)
-    // Convert to percentage for display
+    // Values are already in percentage form, so use directly
     const finalAreaValue = Math.max(
       -10,
-      Math.min(20, (baseAreaGrowthRate + areaVariation) * 100)
+      Math.min(20, baseAreaGrowthRate + areaVariation)
     );
     const finalNationalValue = Math.max(
       -5,
-      Math.min(10, (nationalBenchmark + nationalVariation) * 100)
+      Math.min(10, nationalBenchmark + nationalVariation)
     );
 
     data.push({
