@@ -147,55 +147,57 @@ export async function fetchSuburbBoundaries(): Promise<
 
 /**
  * Get boundary for a specific area slug
- * Fetches boundaries if not already cached, or uses cache
+ * Uses server-side API route to avoid CORS issues and ensure accurate data
  */
-let boundariesCache: Map<string, [number, number][]> | null = null;
-let fetchPromise: Promise<Map<string, [number, number][]>> | null = null;
+let boundariesCache: Map<string, [number, number][]> = new Map();
 
 export async function getBoundaryForArea(
   slug: string
 ): Promise<[number, number][] | null> {
   try {
-    // Ensure boundaries are loaded
-    if (!boundariesCache && !fetchPromise) {
-      fetchPromise = fetchSuburbBoundaries().then((boundaries) => {
-        boundariesCache = boundaries;
-        fetchPromise = null;
-        return boundaries;
-      });
+    // Check cache first
+    if (boundariesCache.has(slug)) {
+      return boundariesCache.get(slug)!;
     }
 
-    // Wait for fetch to complete if needed
-    const boundaries = boundariesCache || (await fetchPromise);
-    if (!boundaries || boundaries.size === 0) {
-      console.warn(`No boundaries loaded from API for ${slug}`);
+    // Fetch from our server-side API route (avoids CORS, ensures accuracy)
+    const response = await fetch(`/api/boundaries?slug=${encodeURIComponent(slug)}`, {
+      method: "GET",
+      headers: {
+        Accept: "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.warn(`Boundary not found for ${slug} via API`);
+        return null;
+      }
+      throw new Error(`API returned ${response.status}: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.success || !data.boundary || !Array.isArray(data.boundary)) {
+      console.error(`Invalid boundary data for ${slug}:`, data);
       return null;
     }
 
-    const suburbName = slugToSuburbName(slug);
-    const normalizedSlug = normalizeSuburbName(slug);
-    const normalizedSuburb = normalizeSuburbName(suburbName);
-
-    // Try multiple matching strategies
-    const boundary = 
-      boundaries.get(suburbName) || // Exact match with mapped name
-      boundaries.get(suburbName.toLowerCase()) || // Lowercase mapped name
-      boundaries.get(normalizedSlug) || // Normalized slug
-      boundaries.get(normalizedSuburb) || // Normalized mapped name
-      // Try finding by substring match (case-insensitive)
-      Array.from(boundaries.entries()).find(
-        ([name]) => name.includes(normalizedSlug) || normalizedSlug.includes(name)
-      )?.[1] ||
-      null;
-
-    if (!boundary) {
-      console.warn(`Boundary not found for ${slug} (tried: ${suburbName}, ${normalizedSlug}, ${normalizedSuburb})`);
-      // Log available boundaries for debugging
-      const availableNames = Array.from(boundaries.keys()).slice(0, 10);
-      console.log(`Available boundaries (first 10):`, availableNames);
+    // Validate boundary has sufficient detail
+    if (data.boundary.length < 10) {
+      console.warn(
+        `Boundary for ${slug} has only ${data.boundary.length} points - may be inaccurate`
+      );
+    } else {
+      console.log(
+        `Successfully loaded boundary for ${slug} with ${data.boundary.length} points`
+      );
     }
 
-    return boundary;
+    // Cache the result
+    boundariesCache.set(slug, data.boundary);
+
+    return data.boundary;
   } catch (error) {
     console.error(`Error getting boundary for ${slug}:`, error);
     return null;

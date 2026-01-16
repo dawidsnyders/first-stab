@@ -34,7 +34,7 @@ export function AreaInfoPanel({
             duration: 0.2, // 200ms animation
             ease: [0.4, 0, 0.2, 1], // Smooth easing
           }}
-          className="absolute top-4 right-4 bottom-4 w-96 max-w-[90vw] bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl border border-stone-200 overflow-y-auto z-[5000]"
+          className="absolute top-2 bottom-2 right-[4px] w-[420px] max-w-[90vw] bg-white/95 backdrop-blur-sm shadow-2xl rounded-2xl border border-stone-200 overflow-y-auto z-[5000]"
           style={{ 
             pointerEvents: 'auto',
             touchAction: 'pan-y',
@@ -169,27 +169,68 @@ function AreaInfoContent({ area }: { area: Area }) {
                 delay={0.4}
               />
             )}
-            {stats.propertyTypeBreakdown && (
-              <StatCard
-                label="Houses"
-                value={`${stats.propertyTypeBreakdown.houses}%`}
-                delay={0.45}
-              />
-            )}
           </motion.div>
+
+          {/* Houses vs Apartments Breakdown */}
+          {stats.propertyTypeBreakdown && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.45, duration: 0.2 }}
+              className="space-y-2 mb-4"
+            >
+              <div className="text-xs text-stone-500 font-medium uppercase tracking-wide">
+                Market Composition
+              </div>
+              {/* Single 100% stacked bar */}
+              <div className="h-6 bg-stone-200 rounded-full overflow-hidden flex">
+                <div
+                  className="h-full bg-sage-500 flex items-center justify-center transition-all duration-500"
+                  style={{ width: `${stats.propertyTypeBreakdown.houses}%` }}
+                >
+                  {stats.propertyTypeBreakdown.houses > 10 && (
+                    <span className="text-[10px] font-semibold text-white">
+                      {stats.propertyTypeBreakdown.houses}%
+                    </span>
+                  )}
+                </div>
+                <div
+                  className="h-full bg-terracotta-500 flex items-center justify-center transition-all duration-500"
+                  style={{ width: `${stats.propertyTypeBreakdown.apartments}%` }}
+                >
+                  {stats.propertyTypeBreakdown.apartments > 10 && (
+                    <span className="text-[10px] font-semibold text-white">
+                      {stats.propertyTypeBreakdown.apartments}%
+                    </span>
+                  )}
+                </div>
+              </div>
+              {/* Labels below bar */}
+              <div className="flex justify-between text-[10px] text-stone-600">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded bg-sage-500"></div>
+                  <span>Houses: {stats.propertyTypeBreakdown.houses}%</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2.5 h-2.5 rounded bg-terracotta-500"></div>
+                  <span>Apartments: {stats.propertyTypeBreakdown.apartments}%</span>
+                </div>
+              </div>
+            </motion.div>
+          )}
 
           {/* Mini chart */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5, duration: 0.2 }}
-            className="h-40 bg-stone-50 rounded-lg border border-stone-200 p-3"
+            className="h-40 bg-stone-50 rounded-lg border border-stone-200"
           >
-            <div className="text-xs text-stone-500 mb-2 font-medium">Price trend (3 years)</div>
-            <ResponsiveContainer width="100%" height="100%">
+            <div className="text-xs text-stone-500 mb-2 font-medium px-3 pt-3">Price trend (3 years)</div>
+            <ResponsiveContainer width="100%" height="calc(100% - 24px)">
               <AreaChart
                 data={generateMedianPriceData(stats.medianPrice, stats.priceChangeYoY, 3)}
-                margin={{ top: 5, right: 5, left: 0, bottom: 0 }}
+                margin={{ top: 0, right: 0, left: 0, bottom: 0 }}
               >
                 <defs>
                   <linearGradient id="miniPriceGradient" x1="0" y1="0" x2="0" y2="1">
