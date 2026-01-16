@@ -16,10 +16,7 @@ export function AreaPreviewCard({ area, delay = 0 }: AreaPreviewCardProps) {
   const isPositive = stats && stats.priceChangeYoY >= 0;
 
   return (
-    <Link
-      href={`/area/${area.slug}`}
-      className="block"
-    >
+    <Link href={`/area/${area.slug}`} className="block">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -38,7 +35,9 @@ export function AreaPreviewCard({ area, delay = 0 }: AreaPreviewCardProps) {
         <div className="p-6 space-y-4">
           {/* Header */}
           <div>
-            <h4 className="text-xl font-bold text-stone-900 mb-1">{area.name}</h4>
+            <h4 className="text-xl font-bold text-stone-900 mb-1">
+              {area.name}
+            </h4>
             <span className="text-sm text-stone-500 capitalize">
               {area.level}
             </span>

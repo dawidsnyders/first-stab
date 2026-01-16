@@ -262,7 +262,7 @@ export default function Home() {
       {/* Product Showcase - Ondo-Style Carousel */}
       <section
         id="features"
-        className="relative bg-gradient-to-b from-white to-stone-100 pt-0 pb-12 md:pb-16 overflow-visible -mt-[85vh] z-0"
+        className="relative bg-gradient-to-b from-white to-stone-100 pt-32 md:pt-40 pb-12 md:pb-16 overflow-visible z-10"
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.03)_1px,transparent_0)] bg-[size:32px_32px]"></div>
@@ -640,6 +640,13 @@ export default function Home() {
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 {/* Left: Quick Select + Search Bar */}
                 <div className="flex-1 min-w-0 max-w-md">
+                  {/* Title */}
+                  <div className="mb-3">
+                    <label className="text-[10px] font-semibold text-stone-500 uppercase tracking-wider">
+                      Select Area
+                    </label>
+                  </div>
+
                   {/* Quick Select Areas */}
                   <div className="mb-3">
                     <div className="flex flex-wrap gap-2">
@@ -652,13 +659,16 @@ export default function Home() {
                             onClick={() => handleAreaSelect(area)}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-100 ${
+                            className={`group relative px-4 py-2 text-xs font-medium rounded-lg transition-all duration-200 ${
                               selectedArea?.id === area.id
-                                ? "bg-sage-600 text-white shadow-md"
-                                : "bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-200"
+                                ? "bg-sage-600 text-white shadow-sm"
+                                : "bg-white text-stone-700 hover:text-stone-900 border border-stone-200 hover:border-sage-300 hover:shadow-sm"
                             }`}
                           >
-                            {area.name}
+                            {selectedArea?.id === area.id && (
+                              <div className="absolute inset-0 bg-gradient-to-br from-sage-500/20 to-transparent rounded-lg pointer-events-none"></div>
+                            )}
+                            <span className="relative">{area.name}</span>
                           </motion.button>
                         ))}
                     </div>
