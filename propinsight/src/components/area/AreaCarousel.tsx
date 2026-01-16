@@ -7,6 +7,7 @@ import { AreaLocationMap } from "@/components/map/AreaLocationMap";
 import {
   generateMedianPriceData,
   generatePricePerSqmData,
+  ChartDataPoint,
 } from "@/lib/chartData";
 import {
   LineChart,
@@ -23,14 +24,11 @@ interface AreaCarouselProps {
 
 export function AreaCarousel({ areas }: AreaCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [scrollProgress, setScrollProgress] = useState<number[]>(
-    new Array(areas.length - 1).fill(0)
-  );
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   // Pre-compute and memoize chart data for all areas to prevent regeneration on scroll
   const chartDataCache = useMemo(() => {
-    const cache: Record<string, { priceTrend: any[]; pricePerSqm: any[] }> = {};
+    const cache: Record<string, { priceTrend: ChartDataPoint[]; pricePerSqm: ChartDataPoint[] }> = {};
     areas.forEach((area) => {
       if (area.stats) {
         cache[area.id] = {
@@ -50,21 +48,13 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
       }
     });
     return cache;
-  }, [
-    areas
-      .map(
-        (a) =>
-          `${a.id}-${a.stats?.medianPrice}-${a.stats?.priceChangeYoY}-${a.stats?.avgPricePerSqm}`
-      )
-      .join(","),
-  ]);
+  }, [areas]);
 
-  // Track which section is in view and scroll progress between sections
+  // Track which section is in view
   useEffect(() => {
     let rafId: number | null = null;
 
     const updateScrollProgress = () => {
-      const newProgress: number[] = new Array(areas.length - 1).fill(0);
       let newActiveIndex = 0;
       const headerOffset = 100;
       const viewportCenter = window.scrollY + window.innerHeight / 2;
@@ -99,36 +89,9 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
           newActiveIndex = index;
         }
 
-        // Calculate progress for line between this section and next
-        if (index < areas.length - 1) {
-          const nextRef = sectionRefs.current[index + 1];
-          if (nextRef) {
-            const nextRect = nextRef.getBoundingClientRect();
-            const currentScrollTop = window.scrollY + headerOffset;
-
-            // Section boundaries
-            const currentSectionBottom = rect.bottom + window.scrollY;
-            const nextSectionTop = nextRect.top + window.scrollY;
-            const gap = nextSectionTop - currentSectionBottom;
-
-            // Calculate progress: 0 at current section bottom, 1 at next section top
-            if (
-              currentScrollTop >= currentSectionBottom &&
-              currentScrollTop <= nextSectionTop
-            ) {
-              const progress = (currentScrollTop - currentSectionBottom) / gap;
-              newProgress[index] = Math.min(1, Math.max(0, progress));
-            } else if (currentScrollTop > nextSectionTop) {
-              newProgress[index] = 1;
-            } else {
-              newProgress[index] = 0;
-            }
-          }
-        }
       });
 
       setActiveIndex(newActiveIndex);
-      setScrollProgress(newProgress);
     };
 
     const throttledUpdate = () => {
@@ -234,25 +197,25 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                 <button
                   key={area.id}
                   onClick={() => scrollToSection(index)}
-                  className="group relative flex items-center gap-3"
+                  className="group relative flex items-center gap-0 cursor-pointer transition-all duration-200 hover:scale-105"
                 >
-                  {/* Indicator Circle - Centered on line (line at 11px, dot center at 11px, so left edge at 9.5px) */}
+                  {/* Indicator Circle - Centered on line (line center at 11px, dot center at 11px) */}
                   <div
-                    className={`w-3 h-3 rounded-full border-2 flex-shrink-0 transition-all duration-200 absolute left-[9.5px] -translate-x-1/2 ${
+                    className={`w-3 h-3 rounded-full border-2 flex-shrink-0 transition-all duration-200 absolute left-[11px] -translate-x-1/2 ${
                       isActive
                         ? "bg-sage-600 border-sage-600 scale-125"
                         : isPast
-                        ? "bg-sage-400 border-sage-400"
-                        : "bg-white border-stone-300 group-hover:border-sage-400"
+                        ? "bg-sage-400 border-sage-400 group-hover:bg-sage-500 group-hover:border-sage-500 group-hover:scale-110"
+                        : "bg-white border-stone-300 group-hover:bg-sage-100 group-hover:border-sage-400 group-hover:scale-110"
                     }`}
                   />
 
-                  {/* Area Name - Offset to account for absolute positioned dot */}
+                  {/* Area Name - Increased padding from dot */}
                   <span
-                    className={`text-sm transition-all duration-200 ml-4 ${
+                    className={`text-sm transition-all duration-200 ml-7 ${
                       isActive
                         ? "text-stone-900 font-medium"
-                        : "text-stone-500 group-hover:text-stone-700"
+                        : "text-stone-500 group-hover:text-stone-700 group-hover:font-medium"
                     }`}
                   >
                     {area.name}
