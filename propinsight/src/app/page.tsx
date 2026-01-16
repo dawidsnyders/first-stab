@@ -17,6 +17,7 @@ import { MapModal } from "@/components/ui/MapModal";
 import { MapView } from "@/components/map/MapView";
 import { AreaCard } from "@/components/area/AreaCard";
 import { AreaPreviewCard } from "@/components/area/AreaPreviewCard";
+import { AreaCarousel } from "@/components/area/AreaCarousel";
 import { getAreasByLevel, searchAreas } from "@/data/areas";
 import { PurchaseModal } from "@/components/area/PurchaseModal";
 import { Area } from "@/types";
@@ -520,7 +521,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Featured suburbs */}
+      {/* Featured suburbs - Carousel Style */}
       <section className="bg-white py-24 border-t border-stone-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
@@ -532,11 +533,7 @@ export default function Home() {
               Western Cape
             </p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {featuredSuburbs.map((area) => (
-              <AreaCard key={area.id} area={area} />
-            ))}
-          </div>
+          <AreaCarousel areas={featuredSuburbs} />
         </div>
       </section>
 
