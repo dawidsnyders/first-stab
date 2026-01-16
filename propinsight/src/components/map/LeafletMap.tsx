@@ -90,8 +90,8 @@ export function LeafletMap({
   onAreaHover,
 }: LeafletMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
-  const polygonsRef = useRef<Map<string, any>>(new Map());
+  const mapInstanceRef = useRef<unknown>(null);
+  const polygonsRef = useRef<Map<string, unknown>>(new Map());
   const [isMapReady, setIsMapReady] = useState(false);
   // Removed hoveredArea state - hover is handled directly in event handlers to prevent flashing
 
@@ -429,7 +429,7 @@ export function LeafletMap({
       // to prevent all polygons from updating when hovering
 
       // Only update if style actually changed to avoid unnecessary updates
-      const currentStyle = (polygon as any).options;
+      const currentStyle = (polygon as { options?: { fillColor?: string; color?: string; weight?: number; fillOpacity?: number } }).options;
       if (
         currentStyle.fillColor !== fillColor ||
         currentStyle.color !== borderColor ||

@@ -72,13 +72,13 @@ interface AreaLocationMapProps {
 
 export function AreaLocationMap({ area }: AreaLocationMapProps) {
   const mapRef = useRef<HTMLDivElement>(null);
-  const mapInstanceRef = useRef<any>(null);
+  const mapInstanceRef = useRef<unknown>(null);
 
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
     // Check if container already has a map instance
-    if ((mapRef.current as any)._leaflet_id) {
+    if ((mapRef.current as { _leaflet_id?: number })._leaflet_id) {
       console.warn("Map container already initialized, skipping...");
       return;
     }
@@ -147,7 +147,7 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
           mapInstanceRef.current.remove();
           // Clear the leaflet ID from the container
           if (mapRef.current) {
-            delete (mapRef.current as any)._leaflet_id;
+            delete (mapRef.current as { _leaflet_id?: number })._leaflet_id;
           }
         } catch (e) {
           console.warn("Error removing map:", e);
