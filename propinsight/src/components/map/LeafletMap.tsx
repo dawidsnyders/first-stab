@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Area } from "@/types";
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/lib/constants";
+import { getAreaBoundary, hasBoundary } from "@/data/areaBoundaries";
 import "leaflet/dist/leaflet.css";
 
 // Coordinates for all Western Cape areas [lng, lat] format
@@ -28,27 +29,6 @@ const AREA_COORDINATES: Record<string, [number, number]> = {
   "de-zalze": [18.8667, -34.0167],
 };
 
-// Generate approximate polygon boundaries around coordinates
-// Leaflet uses [lat, lng] format, so we convert here
-function generateAreaBoundary(
-  center: [number, number], // [lng, lat] from our data
-  size: number = 0.02
-): [number, number][] {
-  const [lng, lat] = center;
-  // Create a regular hexagon polygon for consistent boundaries
-  const points: [number, number][] = [];
-  const sides = 6;
-  for (let i = 0; i <= sides; i++) {
-    const angle = (i * 2 * Math.PI) / sides;
-    const radius = size;
-    const pointLng = lng + radius * Math.cos(angle);
-    const pointLat = lat + radius * Math.sin(angle);
-    // Leaflet expects [lat, lng] format
-    points.push([pointLat, pointLng]);
-  }
-  return points;
-}
-
 function getAreaCoordinates(area: Area): [number, number] {
   return (
     AREA_COORDINATES[area.slug] || [
@@ -58,16 +38,42 @@ function getAreaCoordinates(area: Area): [number, number] {
   );
 }
 
-function getAreaBoundary(area: Area): [number, number][] {
-  const coords = getAreaCoordinates(area); // Returns [lng, lat]
-  // Adjust size based on area level - make suburbs clearly visible
+/**
+ * Get the boundary polygon for an area
+ * Uses predefined boundaries if available, otherwise generates a fallback
+ */
+function getAreaBoundaryPolygon(area: Area): [number, number][] {
+  // First, try to get predefined boundary from areaBoundaries
+  if (hasBoundary(area.slug)) {
+    const boundary = getAreaBoundary(area.slug);
+    if (boundary) {
+      return boundary;
+    }
+  }
+
+  // Fallback: generate a simple boundary if no predefined one exists
+  const coords = getAreaCoordinates(area); // [lng, lat]
+  const [lng, lat] = coords;
+  
+  // Generate a simple polygon based on area level
   const size =
     area.level === "province"
       ? 2.0
       : area.level === "city"
       ? 0.4
-      : 0.05; // suburb - increased for better visibility
-  return generateAreaBoundary(coords, size);
+      : 0.05;
+
+  const points: [number, number][] = [];
+  const sides = 8; // More sides for smoother polygons
+  for (let i = 0; i <= sides; i++) {
+    const angle = (i * 2 * Math.PI) / sides;
+    const radius = size;
+    const pointLng = lng + radius * Math.cos(angle);
+    const pointLat = lat + radius * Math.sin(angle);
+    // Leaflet expects [lat, lng] format
+    points.push([pointLat, pointLng]);
+  }
+  return points;
 }
 
 interface LeafletMapProps {
@@ -169,28 +175,34 @@ export function LeafletMap({
     import("leaflet").then((L) => {
       // Add area polygons
       areas.forEach((area) => {
-        const boundary = getAreaBoundary(area); // Returns [lat, lng] format
+        const boundary = getAreaBoundaryPolygon(area); // Returns [lat, lng] format
         const coords = getAreaCoordinates(area); // Returns [lng, lat]
+        
+        // Skip if no boundary available
+        if (!boundary || boundary.length < 3) {
+          console.warn(`No boundary available for ${area.name}`);
+          return;
+        }
 
         const isSelected = selectedArea?.id === area.id;
         const isHovered = hoveredArea?.id === area.id;
 
-        // Determine polygon style - make boundaries clearly visible
-        let fillColor = "#5d7350"; // sage-600 solid color
-        let borderColor = "#4a5c3f"; // sage-700 - darker border
-        let borderWidth = 3;
-        let fillOpacity = 0.25; // Clearly visible
+        // Determine polygon style - make boundaries clearly visible and Property24-like
+        let fillColor = "#5d7350"; // sage-600
+        let borderColor = "#4a5c3f"; // sage-700 - dark border for visibility
+        let borderWidth = 2.5;
+        let fillOpacity = 0.3; // More visible fill
 
         if (isSelected) {
-          fillColor = "#7d9470"; // sage-500 brighter
+          fillColor = "#7d9470"; // sage-500 brighter when selected
           borderColor = "#5d7350"; // sage-600
           borderWidth = 4;
-          fillOpacity = 0.4;
+          fillOpacity = 0.5;
         } else if (isHovered) {
-          fillColor = "#6f8464"; // sage-500 lighter
+          fillColor = "#6f8464"; // sage-500 lighter on hover
           borderColor = "#5d7350"; // sage-600
           borderWidth = 3.5;
-          fillOpacity = 0.35;
+          fillOpacity = 0.4;
         }
 
         const polygon = L.default.polygon(boundary, {
