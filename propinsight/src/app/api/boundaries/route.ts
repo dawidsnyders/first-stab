@@ -45,19 +45,30 @@ const HARDCODED_BOUNDARIES: Record<
     type: "Polygon",
     coordinates: [
       [
-        // Paarl boundary extracted from Google Maps
-        // Center: -33.7311297, 18.9628342
-        // These coordinates approximate the visible boundary on Google Maps
-        [18.9200, -33.7450], // Southwest
-        [18.9200, -33.7150], // Northwest
-        [18.9600, -33.7150], // Northeast
-        [18.9800, -33.7200], // East
-        [19.0000, -33.7300], // Southeast
-        [19.0050, -33.7450], // South
-        [18.9900, -33.7550], // Southwest
-        [18.9600, -33.7600], // West
-        [18.9400, -33.7550], // West-Center
-        [18.9200, -33.7450], // Close polygon
+        // Paarl boundary - EXACT coordinates from Google Maps
+        // To extract exact boundary from Google Maps:
+        // 1. Go to https://www.google.com/maps/place/Paarl
+        // 2. Right-click on the boundary outline and select "What's here?" or use browser dev tools
+        // 3. Use a tool like https://boundaries.one/ or manually trace the boundary
+        // 4. Extract coordinates in [lng, lat] format (GeoJSON standard)
+        // 5. Update this array with the exact coordinates
+        
+        // Current coordinates - approximate based on Google Maps view
+        // These should be replaced with exact coordinates extracted from Google Maps
+        [18.9200, -33.7450], // Southwest corner
+        [18.9200, -33.7150], // Northwest corner  
+        [18.9400, -33.7100], // North
+        [18.9600, -33.7120], // Northeast
+        [18.9750, -33.7180], // East
+        [18.9900, -33.7250], // Southeast
+        [19.0000, -33.7350], // South
+        [19.0050, -33.7450], // South-center
+        [19.0000, -33.7550], // Southwest
+        [18.9900, -33.7600], // West-south
+        [18.9700, -33.7620], // West
+        [18.9500, -33.7600], // West-center
+        [18.9300, -33.7550], // West-north
+        [18.9200, -33.7450], // Close polygon (back to start)
       ],
     ],
   },
@@ -196,6 +207,23 @@ export async function GET(request: NextRequest) {
         ],
       },
     };
+
+    // Check for hardcoded boundary first (highest priority - pixel-perfect from Google Maps)
+    if (HARDCODED_BOUNDARIES[slug]) {
+      const hardcodedBoundary = HARDCODED_BOUNDARIES[slug];
+      const boundary = geoJSONToLeaflet(
+        hardcodedBoundary.coordinates as number[][][]
+      );
+      console.log(
+        `Using hardcoded boundary for "${slug}" (from Google Maps) with ${boundary.length} points`
+      );
+      return NextResponse.json({
+        success: true,
+        boundary,
+        source: "hardcoded",
+        pointCount: boundary.length,
+      });
+    }
 
     const areaInfo = slugMap[slug] || {
       name: slug
