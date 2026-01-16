@@ -50,47 +50,10 @@ const AREA_COORDINATES: Record<string, [number, number]> = {
   observatory: [18.4722, -33.9389],
   claremont: [18.4722, -33.9806],
   constantia: [18.4167, -34.0278],
-  // Paarl Estates
-  "val-de-vie": [18.9667, -33.7333],
-  "pearl-valley": [18.9833, -33.75],
+  // Estates
+  "val-de-vie": [18.975, -33.7417], // Merged Val de Vie and Pearl Valley center
   boschendal: [18.945, -33.72],
-  boschenmeer: [18.96, -33.74],
-  "winelands-estate-paarl": [18.95, -33.73],
-  "sante-wine-estate": [18.955, -33.725],
-  "kleine-parys": [18.94, -33.735],
-  "paarl-valleij": [18.98, -33.745],
-  // Paarl Suburbs
-  courtrai: [18.97, -33.72],
-  lemoenkloof: [18.975, -33.73],
-  groenvlei: [18.965, -33.74],
-  "charleston-hill": [18.96, -33.725],
-  "de-zoete-inval": [18.955, -33.732],
-  "klein-nederburg": [18.95, -33.728],
-  denneburg: [18.945, -33.735],
-  vrykyk: [18.94, -33.738],
-  // Stellenbosch Estates
   "de-zalze": [18.8667, -34.0167],
-  devonvale: [18.85, -33.98],
-  devonbosch: [18.87, -33.96],
-  koelenbosch: [18.855, -33.975],
-  "devon-valley": [18.845, -33.985],
-  // Stellenbosch Suburbs
-  "stellenbosch-central": [18.8602, -33.9322],
-  dalsig: [18.855, -33.93],
-  welgevonden: [18.865, -33.935],
-  mostertsdrift: [18.85, -33.928],
-  // Franschhoek Estates
-  "domaine-des-anges": [19.12, -33.91],
-  "fransche-hoek": [19.125, -33.915],
-  "winelands-estate-franschhoek": [19.115, -33.905],
-  "delta-crest": [19.13, -33.92],
-  "la-petite-provence": [19.118, -33.912],
-  // Franschhoek Suburbs
-  "franschhoek-village": [19.1233, -33.9094],
-  "franschhoek-rural": [19.11, -33.9],
-  "groendal-franschhoek": [19.128, -33.908],
-  langrug: [19.135, -33.91],
-  "la-motte": [19.105, -33.902],
 };
 
 function getAreaCoordinates(area: Area): [number, number] {

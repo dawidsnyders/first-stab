@@ -98,21 +98,13 @@ export async function GET(request: NextRequest) {
       constantia: { name: "Constantia", source: "westernCape" },
       clifton: { name: "Clifton", source: "westernCape" },
       bakoven: { name: "Bakoven", source: "westernCape" },
-      // Stellenbosch areas - Use Western Cape Spatial Data Warehouse first
+      // Stellenbosch - Use Western Cape Spatial Data Warehouse
       stellenbosch: {
         name: "Stellenbosch",
         source: "westernCape",
         searchTerms: ["Stellenbosch"],
       },
-      "stellenbosch-central": {
-        name: "Stellenbosch",
-        source: "westernCape",
-        searchTerms: ["Stellenbosch"],
-      },
-      dalsig: { name: "Dalsig", source: "westernCape", searchTerms: ["Dalsig"] },
-      welgevonden: { name: "Welgevonden", source: "westernCape", searchTerms: ["Welgevonden"] },
-      mostertsdrift: { name: "Mostertsdrift", source: "westernCape", searchTerms: ["Mostertsdrift"] },
-      // Stellenbosch Estates - use OpenStreetMap (not in municipal boundaries)
+      // De Zalze Estate - use OpenStreetMap
       "de-zalze": {
         name: "De Zalze",
         source: "openstreetmap",
@@ -122,32 +114,9 @@ export async function GET(request: NextRequest) {
           "De Zalze, Stellenbosch",
         ],
       },
-      devonvale: {
-        name: "Devonvale",
-        source: "openstreetmap",
-        searchTerms: ["Devonvale Golf Estate", "Devonvale, Stellenbosch"],
-      },
-      devonbosch: {
-        name: "Devonbosch",
-        source: "openstreetmap",
-        searchTerms: ["Devonbosch Estate", "Devonbosch, Stellenbosch"],
-      },
-      koelenbosch: {
-        name: "Koelenbosch",
-        source: "openstreetmap",
-        searchTerms: [
-          "Koelenbosch Country Estate",
-          "Koelenbosch, Stellenbosch",
-        ],
-      },
-      "devon-valley": {
-        name: "Devon Valley",
-        source: "openstreetmap",
-        searchTerms: ["Devon Valley, Stellenbosch", "Devon Valley Wine Estate"],
-      },
-      // Paarl/Drakenstein - Use Western Cape Spatial Data Warehouse first
+      // Paarl - Use Western Cape Spatial Data Warehouse
       paarl: { name: "Paarl", source: "westernCape", searchTerms: ["Paarl"] },
-      // Paarl Estates - use OpenStreetMap (private estates not in municipal boundaries)
+      // Val de Vie Estate (merged from Val de Vie and Pearl Valley) - use OpenStreetMap
       "val-de-vie": {
         name: "Val de Vie",
         source: "openstreetmap",
@@ -155,17 +124,11 @@ export async function GET(request: NextRequest) {
           "Val de Vie Estate",
           "Val de Vie, Paarl",
           "Val de Vie Polo Estate",
-        ],
-      },
-      "pearl-valley": {
-        name: "Pearl Valley",
-        source: "openstreetmap",
-        searchTerms: [
           "Pearl Valley Golf Estate",
           "Pearl Valley, Paarl",
-          "Pearl Valley Country Estate",
         ],
       },
+      // Boschendal Estate - use OpenStreetMap
       boschendal: {
         name: "Boschendal",
         source: "openstreetmap",
@@ -175,138 +138,11 @@ export async function GET(request: NextRequest) {
           "Boschendal Wine Estate",
         ],
       },
-      boschenmeer: {
-        name: "Boschenmeer",
-        source: "openstreetmap",
-        searchTerms: [
-          "Boschenmeer Golf Estate",
-          "Boschenmeer, Paarl",
-          "Boschenmeer Country Estate",
-        ],
-      },
-      "winelands-estate-paarl": {
-        name: "Winelands Estate",
-        source: "openstreetmap",
-        searchTerms: ["Winelands Estate, Paarl", "Winelands Estate"],
-      },
-      "sante-wine-estate": {
-        name: "Sante Wine Estate",
-        source: "openstreetmap",
-        searchTerms: ["Sante Wine Estate, Paarl", "Sante Estate"],
-      },
-      "kleine-parys": {
-        name: "Kleine Parys",
-        source: "openstreetmap",
-        searchTerms: ["Kleine Parys, Paarl", "Kleine Parys Estate"],
-      },
-      "paarl-valleij": {
-        name: "Paarl Valleij",
-        source: "openstreetmap",
-        searchTerms: ["Paarl Valleij Lifestyle Estate", "Paarl Valleij, Paarl"],
-      },
-      // Paarl Suburbs - try municipal first, fallback to OpenStreetMap
-      courtrai: {
-        name: "Courtrai",
-        source: "openstreetmap",
-        searchTerms: ["Courtrai, Paarl", "Courtrai"],
-      },
-      lemoenkloof: {
-        name: "Lemoenkloof",
-        source: "openstreetmap",
-        searchTerms: ["Lemoenkloof, Paarl"],
-      },
-      groenvlei: {
-        name: "Groenvlei",
-        source: "openstreetmap",
-        searchTerms: ["Groenvlei, Paarl"],
-      },
-      "charleston-hill": {
-        name: "Charleston Hill",
-        source: "openstreetmap",
-        searchTerms: ["Charleston Hill, Paarl"],
-      },
-      "de-zoete-inval": {
-        name: "De Zoete Inval",
-        source: "openstreetmap",
-        searchTerms: ["De Zoete Inval, Paarl"],
-      },
-      "klein-nederburg": {
-        name: "Klein Nederburg",
-        source: "openstreetmap",
-        searchTerms: ["Klein Nederburg, Paarl"],
-      },
-      denneburg: {
-        name: "Denneburg",
-        source: "openstreetmap",
-        searchTerms: ["Denneburg, Paarl"],
-      },
-      vrykyk: {
-        name: "Vrykyk",
-        source: "openstreetmap",
-        searchTerms: ["Vrykyk, Paarl"],
-      },
       // Franschhoek - Use Western Cape Spatial Data Warehouse
       franschhoek: {
         name: "Franschhoek",
         source: "westernCape",
         searchTerms: ["Franschhoek"],
-      },
-      "franschhoek-village": {
-        name: "Franschhoek",
-        source: "westernCape",
-        searchTerms: ["Franschhoek"],
-      },
-      "franschhoek-rural": {
-        name: "Franschhoek",
-        source: "westernCape",
-        searchTerms: ["Franschhoek"],
-      },
-      "groendal-franschhoek": {
-        name: "Groendal",
-        source: "openstreetmap",
-        searchTerms: ["Groendal, Franschhoek", "Groendal Franschhoek"],
-      },
-      langrug: {
-        name: "Langrug",
-        source: "openstreetmap",
-        searchTerms: ["Langrug, Franschhoek"],
-      },
-      "la-motte": {
-        name: "La Motte",
-        source: "openstreetmap",
-        searchTerms: ["La Motte, Franschhoek", "La Motte Wine Estate"],
-      },
-      // Franschhoek Estates - use OpenStreetMap
-      "domaine-des-anges": {
-        name: "Domaine des Anges",
-        source: "openstreetmap",
-        searchTerms: [
-          "Domaine des Anges, Franschhoek",
-          "Domaine des Anges Estate",
-        ],
-      },
-      "fransche-hoek": {
-        name: "Fransche Hoek",
-        source: "openstreetmap",
-        searchTerms: ["Fransche Hoek, Franschhoek", "Fransche Hoek Estate"],
-      },
-      "winelands-estate-franschhoek": {
-        name: "Winelands Estate",
-        source: "openstreetmap",
-        searchTerms: ["Winelands Estate, Franschhoek"],
-      },
-      "delta-crest": {
-        name: "Delta Crest",
-        source: "openstreetmap",
-        searchTerms: ["Delta Crest, Franschhoek", "Delta Crest Estate"],
-      },
-      "la-petite-provence": {
-        name: "La Petite Provence",
-        source: "openstreetmap",
-        searchTerms: [
-          "La Petite Provence, Franschhoek",
-          "La Petite Provence Estate",
-        ],
       },
     };
 
