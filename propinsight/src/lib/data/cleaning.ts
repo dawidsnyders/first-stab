@@ -149,26 +149,26 @@ export function cleanDate(date: string | undefined): string | undefined {
 
 /**
  * Remove duplicates based on address and ERF number
+ * Optimized: Use Map for O(1) lookups and preserve insertion order
  */
 export function removeDuplicates(
   properties: NormalizedProperty[]
 ): NormalizedProperty[] {
-  const seen = new Set<string>();
-  const unique: NormalizedProperty[] = [];
+  const seen = new Map<string, NormalizedProperty>();
 
   for (const prop of properties) {
     // Create a unique key from address and ERF
-    const key = `${normalizeAddress(prop.address).toLowerCase()}-${
-      prop.erfNumber?.toLowerCase() || "no-erf"
-    }`;
+    const normalizedAddress = normalizeAddress(prop.address).toLowerCase();
+    const erf = prop.erfNumber?.toLowerCase() || "no-erf";
+    const key = `${normalizedAddress}-${erf}`;
 
+    // Keep first occurrence (or merge if needed)
     if (!seen.has(key)) {
-      seen.add(key);
-      unique.push(prop);
+      seen.set(key, prop);
     }
   }
 
-  return unique;
+  return Array.from(seen.values());
 }
 
 /**

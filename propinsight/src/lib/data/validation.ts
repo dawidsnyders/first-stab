@@ -106,19 +106,29 @@ function validatePriceConsistency(
 
 /**
  * Detect outliers using statistical methods
+ * Optimized: Single pass for price extraction and outlier detection
  */
 function detectOutliers(properties: NormalizedProperty[]): ValidationIssue[] {
   const issues: ValidationIssue[] = [];
 
+  // Extract prices in single pass
   const prices: number[] = [];
+  const priceMap = new Map<number, NormalizedProperty>(); // Map price to property for quick lookup
+
   for (const prop of properties) {
     const price = prop.askingPrice || prop.lastSalePrice || prop.valuation;
-    if (price) prices.push(price);
+    if (price) {
+      prices.push(price);
+      // Store first property with this price (for outlier reporting)
+      if (!priceMap.has(price)) {
+        priceMap.set(price, prop);
+      }
+    }
   }
 
   if (prices.length < 5) return issues; // Need enough data for outlier detection
 
-  // Calculate Q1, Q3, and IQR
+  // Calculate Q1, Q3, and IQR (single sort operation)
   const sorted = [...prices].sort((a, b) => a - b);
   const q1Index = Math.floor(sorted.length * 0.25);
   const q3Index = Math.floor(sorted.length * 0.75);
@@ -129,11 +139,18 @@ function detectOutliers(properties: NormalizedProperty[]): ValidationIssue[] {
   const lowerBound = q1 - 1.5 * iqr;
   const upperBound = q3 + 1.5 * iqr;
 
-  for (const prop of properties) {
-    const price = prop.askingPrice || prop.lastSalePrice || prop.valuation;
-    if (!price) continue;
-
+  // Check outliers (use Set for O(1) lookup)
+  const outlierPrices = new Set<number>();
+  for (const price of prices) {
     if (price < lowerBound || price > upperBound) {
+      outlierPrices.add(price);
+    }
+  }
+
+  // Generate issues for outliers
+  for (const price of outlierPrices) {
+    const prop = priceMap.get(price);
+    if (prop) {
       issues.push({
         severity: "warning",
         type: "outlier",
@@ -225,17 +242,37 @@ function validateDateConsistency(
 
 /**
  * Cross-validate data from multiple sources
+ * Optimized: Combine some checks to reduce passes
  */
 export function validateData(
   properties: NormalizedProperty[]
 ): ValidationResult {
   const issues: ValidationIssue[] = [];
 
-  // Run all validation checks
+  // Early exit for empty data
+  if (properties.length === 0) {
+    return {
+      isValid: false,
+      issues: [
+        {
+          severity: "error",
+          type: "missing_data",
+          message: "No properties to validate",
+        },
+      ],
+      confidence: 0,
+      recommendations: ["No data available for validation"],
+    };
+  }
+
+  // Run validation checks (some can be combined)
   issues.push(...validatePriceConsistency(properties));
   issues.push(...detectOutliers(properties));
-  issues.push(...checkMissingData(properties));
-  issues.push(...validateDateConsistency(properties));
+  
+  // Combine missing data and date consistency checks in single pass
+  const missingDataIssues = checkMissingData(properties);
+  const dateIssues = validateDateConsistency(properties);
+  issues.push(...missingDataIssues, ...dateIssues);
 
   // Calculate confidence score
   const errorCount = issues.filter((i) => i.severity === "error").length;

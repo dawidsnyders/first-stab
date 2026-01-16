@@ -43,11 +43,10 @@ export function ReportCTA({ area }: ReportCTAProps) {
                 </span>
               </div>
               <h2 className="text-xl md:text-2xl font-bold text-stone-900 mb-1.5 tracking-tight">
-                Full Market Analysis Report
+                {area.name} Market Analysis Report
               </h2>
               <p className="text-sm text-stone-600 leading-snug">
-                Comprehensive analysis for{" "}
-                <span className="font-semibold text-stone-900">{area.name}</span>
+                Comprehensive analysis with 10-year trends, benchmarks, and investment insights
               </p>
             </div>
           </div>

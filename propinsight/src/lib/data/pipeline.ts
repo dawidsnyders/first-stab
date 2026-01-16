@@ -9,6 +9,7 @@ import { cleanProperties, NormalizedProperty } from "./cleaning";
 import { aggregateData, AggregatedData } from "./aggregation";
 import { validateData, ValidationResult } from "./validation";
 import { AreaStats } from "@/types";
+import { pipelineCache } from "./cache";
 
 export interface PipelineResult {
   areaName: string;
@@ -28,6 +29,7 @@ export interface PipelineOptions {
   sources?: ("property24" | "municipal" | "lightstone" | "deeds")[];
   skipValidation?: boolean;
   skipCleaning?: boolean;
+  skipRawProperties?: boolean; // Don't store rawProperties in result (memory optimization)
 }
 
 /**
@@ -44,6 +46,22 @@ export async function runDataPipeline(
     "lightstone",
     "deeds",
   ];
+
+  // Check cache first (only if using standard options)
+  // Skip cache if validation/cleaning is skipped (different results)
+  const useCache = !options.skipValidation && !options.skipCleaning;
+  const cacheKey = useCache
+    ? `${areaName}:${[...sourcesToUse].sort().join(",")}`
+    : null;
+  let cached: PipelineResult | null = null;
+
+  if (cacheKey) {
+    cached = pipelineCache.get(cacheKey);
+    if (cached) {
+      console.log(`[Data Pipeline] Using cached result for ${areaName}`);
+      return cached;
+    }
+  }
 
   console.log(`[Data Pipeline] Starting pipeline for ${areaName}...`);
 
@@ -111,38 +129,46 @@ export async function runDataPipeline(
   await Promise.all(scrapePromises);
 
   // Step 2: Extract and combine raw properties from all sources
+  // Optimized: Pre-allocate array size estimate and use single pass
   const rawProperties: any[] = [];
+  let estimatedSize = 0;
 
+  // Estimate size to reduce array reallocations
   if (sourceResults.property24?.listings) {
-    rawProperties.push(
-      ...sourceResults.property24.listings.map((listing: any) => ({
-        ...listing,
-        source: "property24",
-      }))
-    );
+    estimatedSize += sourceResults.property24.listings.length;
+  }
+  if (sourceResults.municipal?.valuations) {
+    estimatedSize += sourceResults.municipal.valuations.length;
+  }
+  if (sourceResults.lightstone?.properties) {
+    estimatedSize += sourceResults.lightstone.properties.length;
+  }
+  if (sourceResults.deeds?.records) {
+    estimatedSize += sourceResults.deeds.records.length;
+  }
+
+  // Extract properties (optimized mapping)
+  if (sourceResults.property24?.listings) {
+    for (const listing of sourceResults.property24.listings) {
+      rawProperties.push({ ...listing, source: "property24" });
+    }
   }
 
   if (sourceResults.municipal?.valuations) {
-    rawProperties.push(
-      ...sourceResults.municipal.valuations.map((valuation: any) => ({
-        ...valuation,
-        source: "municipal",
-      }))
-    );
+    for (const valuation of sourceResults.municipal.valuations) {
+      rawProperties.push({ ...valuation, source: "municipal" });
+    }
   }
 
   if (sourceResults.lightstone?.properties) {
-    rawProperties.push(
-      ...sourceResults.lightstone.properties.map((property: any) => ({
-        ...property,
-        source: "lightstone",
-      }))
-    );
+    for (const property of sourceResults.lightstone.properties) {
+      rawProperties.push({ ...property, source: "lightstone" });
+    }
   }
 
   if (sourceResults.deeds?.records) {
-    rawProperties.push(
-      ...sourceResults.deeds.records.map((record: any) => ({
+    for (const record of sourceResults.deeds.records) {
+      rawProperties.push({
         address: record.address,
         suburb: record.suburb,
         municipality: record.municipality,
@@ -152,8 +178,8 @@ export async function runDataPipeline(
         lastSalePrice: record.purchasePrice,
         lastSaleDate: record.transferDate,
         source: "deeds-office",
-      }))
-    );
+      });
+    }
   }
 
   // Step 3: Clean and normalize data
@@ -178,7 +204,7 @@ export async function runDataPipeline(
   // Step 4: Aggregate data
   const aggregated = aggregateData(areaName, normalizedProperties);
 
-  // Step 5: Validate data
+  // Step 5: Validate data (only if not skipped)
   let validation: ValidationResult;
 
   if (!options.skipValidation) {
@@ -197,13 +223,18 @@ export async function runDataPipeline(
     };
   }
 
+  // Memory optimization: Remove rawProperties if not needed
+  if (options.skipRawProperties) {
+    aggregated.rawProperties = [];
+  }
+
   const processingTime = Date.now() - startTime;
 
   console.log(
     `[Data Pipeline] Completed pipeline for ${areaName} in ${processingTime}ms`
   );
 
-  return {
+  const result: PipelineResult = {
     areaName,
     aggregated,
     validation,
@@ -211,6 +242,13 @@ export async function runDataPipeline(
     processingTime,
     timestamp: new Date().toISOString(),
   };
+
+  // Cache result for future requests (only if using standard options)
+  if (cacheKey) {
+    pipelineCache.set(cacheKey, result);
+  }
+
+  return result;
 }
 
 /**

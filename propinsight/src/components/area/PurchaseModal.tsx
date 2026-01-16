@@ -144,10 +144,10 @@ export function PurchaseModal({ isOpen, onClose, area }: PurchaseModalProps) {
                     </div>
                     <div className="min-w-0 flex-1">
                       <h2 className="text-lg font-bold text-stone-900 truncate">
-                        Market Analysis Report
+                        {area.name} Market Analysis Report
                       </h2>
                       <p className="text-xs text-stone-500 truncate">
-                        {area.name}
+                        Comprehensive analysis with 10-year trends
                       </p>
                     </div>
                   </div>
