@@ -145,8 +145,8 @@ export async function GET(request: NextRequest) {
         source: "openstreetmap",
         searchTerms: ["Devon Valley, Stellenbosch", "Devon Valley Wine Estate"],
       },
-      // Paarl/Drakenstein - use national municipality boundary for city
-      paarl: { name: "Drakenstein", source: "national" },
+      // Paarl/Drakenstein - Use Western Cape Spatial Data Warehouse first
+      paarl: { name: "Paarl", source: "westernCape", searchTerms: ["Paarl"] },
       // Paarl Estates - use OpenStreetMap (private estates not in municipal boundaries)
       "val-de-vie": {
         name: "Val de Vie",
@@ -245,24 +245,21 @@ export async function GET(request: NextRequest) {
         source: "openstreetmap",
         searchTerms: ["Vrykyk, Paarl"],
       },
-      // Franschhoek - part of Stellenbosch municipality
+      // Franschhoek - Use Western Cape Spatial Data Warehouse
       franschhoek: {
         name: "Franschhoek",
-        source: "openstreetmap",
-        searchTerms: ["Franschhoek, Western Cape, South Africa"],
+        source: "westernCape",
+        searchTerms: ["Franschhoek"],
       },
       "franschhoek-village": {
         name: "Franschhoek",
-        source: "openstreetmap",
-        searchTerms: [
-          "Franschhoek, Western Cape, South Africa",
-          "Franschhoek Village, Western Cape",
-        ],
+        source: "westernCape",
+        searchTerms: ["Franschhoek"],
       },
       "franschhoek-rural": {
         name: "Franschhoek",
-        source: "openstreetmap",
-        searchTerms: ["Franschhoek, Western Cape, South Africa"],
+        source: "westernCape",
+        searchTerms: ["Franschhoek"],
       },
       "groendal-franschhoek": {
         name: "Groendal",
@@ -335,7 +332,18 @@ export async function GET(request: NextRequest) {
         const url = new URL(endpoint);
 
         // Build query based on source type
-        if (source === "capeTown") {
+        if (source === "westernCape") {
+          // Western Cape Spatial Data Warehouse - Most accurate source
+          // Try multiple field names for suburb matching
+          const searchName = searchTerms[0] || suburbName;
+          url.searchParams.append("where", `UPPER(SUBURB) = UPPER('${searchName}') OR UPPER(NAME) = UPPER('${searchName}') OR UPPER(SUBURB_NAME) = UPPER('${searchName}')`);
+          url.searchParams.append("outFields", "*");
+          url.searchParams.append("returnGeometry", "true");
+          url.searchParams.append("f", "geojson");
+          url.searchParams.append("outSR", "4326"); // WGS84
+          url.searchParams.append("returnExceededLimitFeatures", "true");
+          url.searchParams.append("geometryPrecision", "8"); // Maximum precision
+        } else if (source === "capeTown") {
           url.searchParams.append("where", `OFC_SBRB_NAME = '${suburbName}'`);
           url.searchParams.append("outFields", "OFC_SBRB_NAME");
           url.searchParams.append("returnGeometry", "true");
@@ -506,9 +514,9 @@ export async function GET(request: NextRequest) {
 
         const responseData: GeoJSONResponse = await response.json();
 
-        // For Stellenbosch/national, filter features by name match using all search terms
+        // For Western Cape/S Stellenbosch/national, filter features by name match using all search terms
         let matchingFeature = null;
-        if (source === "stellenbosch" || source === "national") {
+        if (source === "westernCape" || source === "stellenbosch" || source === "national") {
           // Try to find matching features and pick the smallest one
           const candidates =
             responseData.features?.filter((f) => {
