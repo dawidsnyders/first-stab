@@ -44,7 +44,16 @@ export function MapView({ initialLevel = "suburb" }: MapViewProps) {
   const [isLoading, setIsLoading] = useState(false);
 
   // Memoize areas array to prevent unnecessary re-renders
-  const areas = useMemo(() => getAreasByLevel(initialLevel), [initialLevel]);
+  // Include both cities and suburbs so all areas are visible on the map
+  const areas = useMemo(() => {
+    if (initialLevel === "suburb") {
+      // For suburb view, include both suburbs AND cities (so cities like Paarl, Stellenbosch, Franschhoek are visible)
+      const suburbs = getAreasByLevel("suburb");
+      const cities = getAreasByLevel("city");
+      return [...cities, ...suburbs];
+    }
+    return getAreasByLevel(initialLevel);
+  }, [initialLevel]);
 
   const handleAreaClick = useCallback(
     (area: Area) => {

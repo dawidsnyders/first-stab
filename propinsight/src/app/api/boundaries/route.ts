@@ -469,7 +469,11 @@ export async function GET(request: NextRequest) {
 
                 // Use different area limits for cities vs suburbs/estates
                 // Cities can be larger (up to 500 km²), suburbs/estates should be < 100 km²
-                const isCity = suburbName === "Paarl" || suburbName === "Stellenbosch" || suburbName === "Franschhoek" || suburbName === "Cape Town";
+                const isCity =
+                  suburbName === "Paarl" ||
+                  suburbName === "Stellenbosch" ||
+                  suburbName === "Franschhoek" ||
+                  suburbName === "Cape Town";
                 const maxArea = isCity ? 500 : 100; // km² - cities can be larger
                 if (area < maxArea && isInWesternCape && area < smallestArea) {
                   matchingFeature = candidate;
@@ -478,7 +482,9 @@ export async function GET(request: NextRequest) {
                   console.warn(
                     `Rejecting overly large polygon for "${suburbName}": ${area.toFixed(
                       2
-                    )} km² (max ${maxArea} km² for ${isCity ? "city" : "suburb"})`
+                    )} km² (max ${maxArea} km² for ${
+                      isCity ? "city" : "suburb"
+                    })`
                   );
                 }
               }

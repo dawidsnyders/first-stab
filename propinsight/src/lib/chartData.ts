@@ -163,14 +163,16 @@ export function generateOutperformanceData(
     // Add slight cyclical variation (not a trend) to make it realistic
     const cyclicalVariation = Math.sin((yearsAgo / years) * Math.PI * 2) * 0.3; // Small cyclical pattern
     const randomVariation = (Math.random() - 0.5) * outperformanceVariation; // Random variation
-    
+
     // Historical outperformance stays close to current, with small variations
-    const historicalOutperformance = baseOutperformance + cyclicalVariation + randomVariation;
-    
+    const historicalOutperformance =
+      baseOutperformance + cyclicalVariation + randomVariation;
+
     // Ensure outperformance doesn't go negative for premium areas (unless current is negative)
-    const finalOutperformance = currentOutperformance > 0
-      ? Math.max(0, historicalOutperformance) // Premium areas don't underperform
-      : Math.min(0, historicalOutperformance); // Underperforming areas stay negative
+    const finalOutperformance =
+      currentOutperformance > 0
+        ? Math.max(0, historicalOutperformance) // Premium areas don't underperform
+        : Math.min(0, historicalOutperformance); // Underperforming areas stay negative
 
     // Area growth rate = national benchmark + outperformance
     const areaGrowthRate = nationalBenchmark + finalOutperformance;
