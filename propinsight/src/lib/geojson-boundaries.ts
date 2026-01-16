@@ -92,14 +92,16 @@ export async function fetchSuburbBoundaries(): Promise<
     url.searchParams.append("geometryPrecision", "6"); // High precision for granular boundaries
 
     const response = await fetch(url.toString(), {
-      method: 'GET',
+      method: "GET",
       headers: {
-        'Accept': 'application/json',
+        Accept: "application/json",
       },
     });
-    
+
     if (!response.ok) {
-      console.error(`Failed to fetch boundaries: ${response.status} ${response.statusText}`);
+      console.error(
+        `Failed to fetch boundaries: ${response.status} ${response.statusText}`
+      );
       throw new Error(`Failed to fetch boundaries: ${response.statusText}`);
     }
 
@@ -107,7 +109,9 @@ export async function fetchSuburbBoundaries(): Promise<
     const boundariesMap = new Map<string, [number, number][]>();
 
     if (data.features && Array.isArray(data.features)) {
-      console.log(`Fetched ${data.features.length} suburb boundaries from City of Cape Town API`);
+      console.log(
+        `Fetched ${data.features.length} suburb boundaries from City of Cape Town API`
+      );
       data.features.forEach((feature) => {
         if (feature.properties.OFC_SBRB_NAME && feature.geometry?.coordinates) {
           const suburbName = feature.properties.OFC_SBRB_NAME;
@@ -127,20 +131,29 @@ export async function fetchSuburbBoundaries(): Promise<
               // Store with original name exactly as provided
               boundariesMap.set(suburbName, boundary);
             } else {
-              console.warn(`Boundary for ${suburbName} has only ${boundary.length} points, skipping`);
+              console.warn(
+                `Boundary for ${suburbName} has only ${boundary.length} points, skipping`
+              );
             }
           }
         }
       });
-      console.log(`Successfully loaded ${boundariesMap.size} detailed boundaries`);
+      console.log(
+        `Successfully loaded ${boundariesMap.size} detailed boundaries`
+      );
     } else {
       console.warn("No features found in API response");
     }
 
     return boundariesMap;
   } catch (error) {
-    console.error("Error fetching suburb boundaries from City of Cape Town API:", error);
-    console.error("This may be due to CORS issues or network problems. Falling back to static boundaries.");
+    console.error(
+      "Error fetching suburb boundaries from City of Cape Town API:",
+      error
+    );
+    console.error(
+      "This may be due to CORS issues or network problems. Falling back to static boundaries."
+    );
     return new Map();
   }
 }
@@ -161,19 +174,24 @@ export async function getBoundaryForArea(
     }
 
     // Fetch from our server-side API route (avoids CORS, ensures accuracy)
-    const response = await fetch(`/api/boundaries?slug=${encodeURIComponent(slug)}`, {
-      method: "GET",
-      headers: {
-        Accept: "application/json",
-      },
-    });
+    const response = await fetch(
+      `/api/boundaries?slug=${encodeURIComponent(slug)}`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
 
     if (!response.ok) {
       if (response.status === 404) {
         console.warn(`Boundary not found for ${slug} via API`);
         return null;
       }
-      throw new Error(`API returned ${response.status}: ${response.statusText}`);
+      throw new Error(
+        `API returned ${response.status}: ${response.statusText}`
+      );
     }
 
     const data = await response.json();

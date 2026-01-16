@@ -129,7 +129,8 @@ export async function GET(request: NextRequest) {
       );
       return NextResponse.json(
         {
-          error: "Failed to fetch boundary from all City of Cape Town API endpoints",
+          error:
+            "Failed to fetch boundary from all City of Cape Town API endpoints",
           details: lastError?.message,
         },
         { status: 500 }

@@ -196,7 +196,7 @@ export function LeafletMap({
         let fillColor = "#a8b89d"; // sage-300 - subtle green tint
         let borderColor = "#5d7350"; // sage-500 - visible border
         let borderWidth = 2;
-        let fillOpacity = 0.2; // Subtle default
+        let fillOpacity = 0.1; // Very subtle default - 10% opacity for unselected areas
 
         // Selected state - nice green tint with solid green borders (brand colors)
         if (isSelected) {
@@ -281,7 +281,7 @@ export function LeafletMap({
           polygon.closeTooltip();
           // Restore original style based on selection state
           if (!isSelected) {
-            polygon.setStyle({ fillOpacity: 0.2 });
+            polygon.setStyle({ fillOpacity: 0.1 });
           } else {
             polygon.setStyle({ fillOpacity: 0.6 });
           }
@@ -318,7 +318,7 @@ export function LeafletMap({
       let fillColor = "#a8b89d"; // sage-300
       let borderColor = "#5d7350"; // sage-500
       let borderWidth = 2;
-      let fillOpacity = 0.2;
+      let fillOpacity = 0.1; // 10% opacity for unselected areas
 
       // Selected state - nice green tint with solid green borders
       if (isSelected) {

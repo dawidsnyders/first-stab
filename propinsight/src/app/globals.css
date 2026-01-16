@@ -114,3 +114,26 @@ body {
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }
+
+/* Minimal custom scrollbar for area info panel */
+.area-info-panel-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.area-info-panel-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.area-info-panel-scrollbar::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 2px;
+}
+
+.area-info-panel-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.area-info-panel-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d5db transparent;
+}
