@@ -205,7 +205,9 @@ export function PurchaseModal({ isOpen, onClose, area }: PurchaseModalProps) {
                     <p className="text-3xl font-bold text-stone-900">
                       {REPORT_PRICE_DISPLAY}
                     </p>
-                    <p className="text-xs text-stone-500 mt-1">one-time payment</p>
+                    <p className="text-xs text-stone-500 mt-1">
+                      one-time payment
+                    </p>
                   </div>
                 </div>
 
@@ -257,7 +259,9 @@ export function PurchaseModal({ isOpen, onClose, area }: PurchaseModalProps) {
                       </>
                     ) : (
                       <>
-                        <span className="relative">Purchase Report for {REPORT_PRICE_DISPLAY}</span>
+                        <span className="relative">
+                          Purchase Report for {REPORT_PRICE_DISPLAY}
+                        </span>
                         <svg
                           className="w-5 h-5 relative transition-transform duration-200 group-hover:translate-x-0.5"
                           fill="none"

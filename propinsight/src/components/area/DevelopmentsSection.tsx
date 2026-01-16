@@ -118,31 +118,40 @@ function DevelopmentCard({ development }: DevelopmentCardProps) {
       href={development.website}
       target="_blank"
       rel="noopener noreferrer"
-      className="group bg-white border border-stone-200 rounded-xl p-4 hover:shadow-lg hover:border-sage-300 transition-all duration-200 flex flex-col max-h-[150px] overflow-hidden"
+      className="group bg-white border border-stone-200 rounded-xl hover:shadow-lg hover:border-sage-300 transition-all duration-200 flex flex-col"
+      style={{ 
+        height: '150px',
+        paddingTop: '12px',
+        paddingBottom: '12px',
+        paddingLeft: '12px',
+        paddingRight: '12px'
+      }}
     >
       {/* Developer Logo & Status */}
-      <div className="flex items-center justify-between mb-2 flex-shrink-0">
+      <div className="flex items-center justify-between mb-1.5 flex-shrink-0">
         <DeveloperLogo developer={development.developer} />
         <div className="flex-shrink-0">{getStatusBadge()}</div>
       </div>
 
-      {/* Development Name and Price - Aligned */}
-      <div className="flex items-center justify-between gap-3 mb-2 flex-shrink-0">
-        <h4 className="text-sm font-bold text-stone-900 group-hover:text-sage-600 transition-colors duration-200 line-clamp-1 flex-1 min-w-0">
+      {/* Development Name and Price - Vertically Centered */}
+      <div className="flex items-center justify-between gap-3 mb-1.5 flex-shrink-0">
+        <h4 className="text-sm font-bold text-stone-900 group-hover:text-sage-600 transition-colors duration-200 line-clamp-1 flex-1 min-w-0 leading-tight">
           {development.name}
         </h4>
         <div className="text-right flex-shrink-0">
-          <p className="text-[10px] text-stone-500 leading-tight mb-0.5">
-            Avg Price
-          </p>
-          <p className="text-sm font-bold text-stone-900 leading-tight">
-            {formatPrice(development.averageApartmentPrice)}
-          </p>
+          <div className="flex flex-col items-end justify-center" style={{ transform: 'translateY(3px)' }}>
+            <p className="text-[10px] text-stone-500 leading-tight mb-0.5">
+              Avg Price
+            </p>
+            <p className="text-sm font-bold text-stone-900 leading-tight">
+              {formatPrice(development.averageApartmentPrice)}
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Completion Date */}
-      <div className="flex items-center gap-1.5 text-xs text-stone-600 mb-3 flex-grow min-h-0 pb-1">
+      <div className="flex items-center gap-1.5 text-xs text-stone-600 mb-1.5 flex-shrink-0">
         <CalendarIcon className="w-3 h-3 flex-shrink-0" />
         <span className="truncate">
           {isPastDue
@@ -156,8 +165,8 @@ function DevelopmentCard({ development }: DevelopmentCardProps) {
         </span>
       </div>
 
-      {/* View Link */}
-      <div className="flex items-center gap-1.5 text-xs text-sage-600 font-medium pt-2.5 border-t border-stone-100 group-hover:gap-2 transition-all duration-200 flex-shrink-0">
+      {/* View Link - Always visible at bottom */}
+      <div className="flex items-center gap-1.5 text-xs text-sage-600 font-medium pt-1.5 border-t border-stone-100 group-hover:gap-2 transition-all duration-200 flex-shrink-0 mt-auto">
         <span>View Development</span>
         <ArrowTopRightOnSquareIcon className="w-3 h-3" />
       </div>

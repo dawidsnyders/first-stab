@@ -139,6 +139,7 @@ export function StickyReportCTA({ area }: StickyReportCTAProps) {
               </div>
             </div>
           </div>
+        </div>
         </motion.button>
       </motion.div>
 

@@ -65,18 +65,18 @@ export function ReportCTA({ area }: ReportCTAProps) {
 
   return (
     <div className="bg-gradient-to-br from-sage-600 to-moss-600 rounded-2xl overflow-hidden">
-      <div className="p-6 md:p-8">
-        <div className="max-w-5xl">
-          <h2 className="text-2xl md:text-2xl font-bold text-white mb-2">
+      <div className="p-6 md:p-8 lg:p-10">
+        <div className="max-w-5xl mx-auto">
+          <h2 className="text-2xl md:text-3xl font-bold text-white mb-3">
             Get the Full Market Analysis Report
           </h2>
-          <p className="text-sage-50 text-base mb-6">
+          <p className="text-sage-50 text-base md:text-lg mb-8 leading-relaxed">
             A comprehensive 10-15 page market analysis with historical data,
             growth drivers, investment outlook, and actionable insights.
           </p>
 
           {/* Features grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mb-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-8">
             {[
               "10-Year Price Analysis",
               "CAGR Calculations",
@@ -108,24 +108,26 @@ export function ReportCTA({ area }: ReportCTAProps) {
           </div>
 
           {/* Area name and Buy button */}
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 md:gap-8">
             {/* Left: Area name */}
-            <div>
-              <div className="text-sage-50 text-sm font-medium mb-1">
+            <div className="flex-shrink-0">
+              <div className="text-sage-50 text-sm font-medium mb-2">
                 Report for
               </div>
-              <div className="text-2xl md:text-3xl font-bold text-white">
+              <div className="text-2xl md:text-3xl lg:text-4xl font-bold text-white">
                 {area.name}
               </div>
             </div>
 
             {/* Right: Pricing and Buy button */}
-            <div className="flex flex-col md:items-end gap-3">
+            <div className="flex flex-col md:items-end gap-4 flex-shrink-0">
               <div className="text-white text-right">
-                <div className="text-3xl md:text-4xl font-bold mb-1">
+                <div className="text-3xl md:text-4xl lg:text-5xl font-bold mb-1.5">
                   {REPORT_PRICE_DISPLAY}
                 </div>
-                <div className="text-sage-100 text-sm">once-off payment</div>
+                <div className="text-sage-100 text-sm md:text-base">
+                  once-off payment
+                </div>
               </div>
               
               <AnimatePresence mode="wait">
@@ -136,9 +138,13 @@ export function ReportCTA({ area }: ReportCTAProps) {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                     onClick={handleBuyClick}
-                    className="px-8 py-4 bg-white text-sage-700 font-bold text-lg rounded-xl hover:bg-stone-50 transition-all duration-200 shadow-lg hover:shadow-xl"
+                    whileHover={{ scale: 1.02, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    className="group relative px-8 py-4 bg-white text-sage-700 font-bold text-lg rounded-xl hover:bg-stone-50 transition-all duration-200 shadow-lg hover:shadow-2xl hover:shadow-sage-900/20 overflow-hidden"
                   >
-                    Buy Full Report
+                    {/* Shine effect on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
+                    <span className="relative">Buy Full Report</span>
                   </motion.button>
                 ) : (
                   <motion.form
@@ -161,8 +167,10 @@ export function ReportCTA({ area }: ReportCTAProps) {
                   <button
                     type="submit"
                     disabled={isSubmitting || !email.trim()}
-                    className="px-6 py-3 bg-white text-sage-700 font-semibold rounded-xl hover:bg-stone-50 transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap"
+                    className="group relative px-6 py-3 bg-white text-sage-700 font-semibold rounded-xl hover:bg-stone-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 whitespace-nowrap shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] overflow-hidden"
                   >
+                    {/* Shine effect on hover */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-700 ease-in-out"></div>
                     {isSubmitting ? (
                       <>
                         <motion.div
@@ -172,12 +180,12 @@ export function ReportCTA({ area }: ReportCTAProps) {
                             repeat: Infinity,
                             ease: "linear",
                           }}
-                          className="w-4 h-4 border-2 border-sage-600 border-t-transparent rounded-full"
+                          className="w-4 h-4 border-2 border-sage-600 border-t-transparent rounded-full relative z-10"
                         />
-                        Processing...
+                        <span className="relative z-10">Processing...</span>
                       </>
                     ) : (
-                      `Pay ${REPORT_PRICE_DISPLAY}`
+                      <span className="relative z-10">Pay {REPORT_PRICE_DISPLAY}</span>
                     )}
                   </button>
                   <button
@@ -199,8 +207,8 @@ export function ReportCTA({ area }: ReportCTAProps) {
       </div>
 
       {/* Sample report preview */}
-      <div className="bg-white/10 px-6 md:px-8 py-3 border-t border-white/10">
-        <p className="text-sage-100 text-xs">
+      <div className="bg-white/10 px-6 md:px-8 lg:px-10 py-4 border-t border-white/10">
+        <p className="text-sage-100 text-xs md:text-sm text-center max-w-3xl mx-auto">
           Reports are generated instantly using AI analysis of the latest
           available market data. Delivered via email and available for download.
         </p>
