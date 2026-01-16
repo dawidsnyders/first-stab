@@ -119,11 +119,11 @@ export async function GET(request: NextRequest) {
           "De Zalze, Stellenbosch",
         ],
       },
-      // Paarl - Use OpenStreetMap for more accurate town boundary (not entire municipality)
-      // Note: OpenStreetMap may only return Point for "Paarl", so we try multiple search terms
+      // Paarl - Try OpenStreetMap first, fallback to Western Cape API
+      // OpenStreetMap may only return Point, so we'll fallback to Western Cape API
       paarl: {
         name: "Paarl",
-        source: "openstreetmap",
+        source: "openstreetmap", // Will try OSM first, then fallback to westernCape
         searchTerms: [
           "Paarl town, Western Cape",
           "Paarl, Drakenstein, Western Cape",
@@ -712,8 +712,11 @@ export async function GET(request: NextRequest) {
 
     // If primary source failed and we have a fallback, try it
     if (!data && shouldTryFallback && fallbackEndpoints.length > 0) {
+      const fallbackReason = source === "capeTown" 
+        ? "Cape Town API failed" 
+        : "OpenStreetMap only returned Point geometries";
       console.log(
-        `Cape Town API failed for "${suburbName}", trying Western Cape API as fallback...`
+        `${fallbackReason} for "${suburbName}", trying Western Cape API as fallback...`
       );
       // Switch to Western Cape source and try those endpoints
       source = "westernCape";
