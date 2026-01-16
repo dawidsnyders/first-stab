@@ -310,12 +310,14 @@ export async function GET(request: NextRequest) {
                         // Reject polygons larger than 5 km² (suburbs should be much smaller)
                         // Most suburbs should be < 3 km²
                         // Use different limits based on what we're searching for
-                        // 5x larger limits: Towns 50 km², Suburbs/estates 25 km²
+                        // Towns like Stellenbosch and Paarl can be larger (actual town boundaries from OSM)
+                        // OpenStreetMap town boundaries are often 100-200 km² (includes surrounding areas)
                         const isTown =
                           suburbName === "Paarl" ||
                           suburbName === "Stellenbosch" ||
                           suburbName === "Franschhoek";
-                        const maxArea = isTown ? 50 : 25; // km² - 5x larger limits
+                        // Much larger limit for towns - OSM town boundaries can be 200+ km²
+                        const maxArea = isTown ? 250 : 25; // km² - allow larger town boundaries
                         // Also ensure it's in the right geographic area (Western Cape)
                         const isInWesternCape =
                           minLat >= -36 &&
