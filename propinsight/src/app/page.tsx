@@ -229,7 +229,7 @@ export default function Home() {
             {/* Scrollable Cards */}
             <div
               ref={carouselRef}
-              className="flex gap-4 overflow-x-auto scrollbar-hide scroll-smooth px-4 md:px-6 lg:px-12 pb-4"
+              className="flex items-stretch gap-4 overflow-x-auto scrollbar-hide scroll-smooth px-4 md:px-6 lg:px-12 pb-4"
             >
               {/* Card 1: Market Data */}
               <ProductCard
@@ -635,9 +635,9 @@ function ProductCard({
       whileInView={{ opacity: 1, scale: 1 }}
       viewport={{ once: true }}
       transition={{ duration: 0.4 }}
-      className="flex-shrink-0 w-[340px] md:w-[400px] lg:w-[440px]"
+      className="flex-shrink-0 w-[340px] md:w-[400px] lg:w-[440px] h-[420px] md:h-[480px]"
     >
-      <div className={`${bgColor} rounded-2xl p-6 md:p-8 h-[420px] md:h-[480px] flex flex-col relative overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200/60`}>
+      <div className={`${bgColor} rounded-2xl p-6 md:p-8 h-full flex flex-col relative overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200/60`}>
         {/* Decorative circles */}
         <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-white/40"></div>
         <div className="absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-white/30"></div>
