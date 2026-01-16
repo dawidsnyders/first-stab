@@ -420,7 +420,22 @@ export async function GET(request: NextRequest) {
               continue;
             }
           }
-          if (data) break; // Found boundary, exit endpoint loop
+          if (data) {
+            console.log(
+              `✓ Successfully found boundary for "${suburbName}" from OpenStreetMap`
+            );
+            break; // Found boundary, exit endpoint loop
+          } else {
+            console.warn(
+              `✗ No boundary found for "${suburbName}" from OpenStreetMap after trying ${searchTerms.length} search terms`
+            );
+            // For Paarl, if OpenStreetMap fails (only returns Point), we'll try Western Cape API in fallback
+            if (suburbName === "Paarl") {
+              console.log(
+                `Will try Western Cape API as fallback for "${suburbName}" (OpenStreetMap only returned Point geometries)`
+              );
+            }
+          }
           continue; // Try next endpoint if OpenStreetMap didn't work
         }
 
