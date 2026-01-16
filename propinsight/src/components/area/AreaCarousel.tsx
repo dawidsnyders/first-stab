@@ -117,9 +117,12 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
       const offsetPosition =
         elementPosition + window.pageYOffset - headerOffset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
+      // Use requestAnimationFrame for smoother scrolling
+      requestAnimationFrame(() => {
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth",
+        });
       });
     }
   };
@@ -167,7 +170,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
       <div className="w-48 flex-shrink-0 sticky top-24 self-start">
         <div className="relative h-full flex flex-col items-start">
           {/* Progress Track */}
-          <div className="absolute top-0 left-2 w-1 h-full bg-stone-200 rounded-full">
+          <div className="absolute top-0 left-[11px] w-1 h-full bg-stone-200 rounded-full">
             {/* Progress Fill */}
             <div
               className="absolute top-0 left-0 w-full bg-sage-600 rounded-full transition-all duration-100 ease-out"
@@ -190,15 +193,18 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                   onClick={() => scrollToSection(index)}
                   className="group relative flex items-center gap-3"
                 >
-                  {/* Indicator Circle */}
+                  {/* Indicator Circle - Centered on line */}
                   <div
-                    className={`w-3 h-3 rounded-full border-2 flex-shrink-0 transition-all duration-200 ${
+                    className={`w-3 h-3 rounded-full border-2 flex-shrink-0 transition-all duration-200 relative -left-[2px] ${
                       isActive
                         ? "bg-sage-600 border-sage-600 scale-125"
                         : isPast
                         ? "bg-sage-400 border-sage-400"
                         : "bg-white border-stone-300 group-hover:border-sage-400"
                     }`}
+                    style={{
+                      marginLeft: "0px",
+                    }}
                   />
 
                   {/* Area Name */}
@@ -240,35 +246,35 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                 <div className="w-full h-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden flex transition-all duration-200 group-hover:shadow-md group-hover:border-sage-300 group-hover:scale-[1.01] cursor-pointer">
                   {/* Left Side - Title and Info */}
                   <div className="flex-1 flex flex-col px-6 py-4">
-                    {/* Area Name Header */}
-                    <div className="mb-4">
-                      <h2 className="text-2xl font-bold text-stone-900 mb-1">
-                        {area.name}
-                      </h2>
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs text-stone-500 capitalize">
-                          {area.level}
-                        </span>
-                        {stats && (
-                          <>
-                            <span className="text-stone-300">•</span>
-                            <span
-                              className={`text-xs font-semibold ${
-                                isPositive ? "text-green-600" : "text-red-600"
-                              }`}
-                            >
-                              {formatPriceChange(stats.priceChangeYoY)} YoY
-                            </span>
-                          </>
-                        )}
+                    {/* Area Name Header with Stats */}
+                    <div className="mb-4 flex items-start justify-between gap-4">
+                      <div>
+                        <h2 className="text-2xl font-bold text-stone-900 mb-1">
+                          {area.name}
+                        </h2>
+                        <div className="flex items-center gap-2">
+                          <span className="text-xs text-stone-500 capitalize">
+                            {area.level}
+                          </span>
+                          {stats && (
+                            <>
+                              <span className="text-stone-300">•</span>
+                              <span
+                                className={`text-xs font-semibold ${
+                                  isPositive ? "text-green-600" : "text-red-600"
+                                }`}
+                              >
+                                {formatPriceChange(stats.priceChangeYoY)} YoY
+                              </span>
+                            </>
+                          )}
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Key Info - Single Line Below Title */}
-                    {stats && (
-                      <div className="flex-1 flex flex-col">
-                        <div className="flex items-center gap-6 mb-4">
-                          <div>
+                      {/* Stats - Right Aligned */}
+                      {stats && (
+                        <div className="flex items-center gap-6 flex-shrink-0">
+                          <div className="text-right">
                             <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                               Average Price
                             </div>
@@ -276,7 +282,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                               {formatPrice(stats.avgPrice)}
                             </div>
                           </div>
-                          <div>
+                          <div className="text-right">
                             <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                               Sales (12mo)
                             </div>
@@ -285,7 +291,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                             </div>
                           </div>
                           {stats.avgPricePerSqm ? (
-                            <div>
+                            <div className="text-right">
                               <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                                 Price per m²
                               </div>
@@ -294,7 +300,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                               </div>
                             </div>
                           ) : (
-                            <div>
+                            <div className="text-right">
                               <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                                 Median Price
                               </div>
@@ -304,6 +310,12 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                             </div>
                           )}
                         </div>
+                      )}
+                    </div>
+
+                    {/* Key Info */}
+                    {stats && (
+                      <div className="flex-1 flex flex-col">
 
                         {/* Price History Charts - Side by Side */}
                         <div className="mb-4 grid grid-cols-2 gap-4">
