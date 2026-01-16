@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { Area, formatPrice, formatPriceChange, formatNumber } from "@/types";
@@ -93,9 +93,27 @@ export function AreaInfoPanel({
   );
 }
 
-function AreaInfoContent({ area }: { area: Area }) {
+// Memoize component to prevent re-renders when area hasn't changed
+const AreaInfoContent = memo(function AreaInfoContent({ area }: { area: Area }) {
   const { stats } = area;
   const isPositive = stats && stats.priceChangeYoY >= 0;
+
+  // Memoize chart data to prevent regeneration on every render
+  // Only regenerate when area ID or stats actually change (not on hover)
+  const chartData = useMemo(() => {
+    if (!stats) return [];
+    return generateMedianPriceData(stats.medianPrice, stats.priceChangeYoY, 3);
+  }, [area.id, stats?.medianPrice, stats?.priceChangeYoY]);
+
+  const yAxisDomain = useMemo(() => {
+    if (!chartData.length || !stats) return [0, stats.medianPrice * 2];
+    const values = chartData.map((d) => d.value).filter((v) => typeof v === "number" && !isNaN(v));
+    if (values.length === 0) return [0, stats.medianPrice * 2];
+    const minValue = Math.min(...values);
+    const maxValue = Math.max(...values);
+    const range = maxValue - minValue;
+    return [Math.max(0, minValue - range * 0.1), maxValue + range * 0.1];
+  }, [chartData, stats?.medianPrice]);
 
   return (
     <div className="p-6 pb-24 space-y-6">
@@ -233,27 +251,18 @@ function AreaInfoContent({ area }: { area: Area }) {
           })()}
 
           {/* Mini chart */}
-          {(() => {
-            const chartData = generateMedianPriceData(stats.medianPrice, stats.priceChangeYoY, 3);
-            const values = chartData.map((d) => d.value).filter((v) => typeof v === "number" && !isNaN(v));
-            const minValue = values.length > 0 ? Math.min(...values) : 0;
-            const maxValue = values.length > 0 ? Math.max(...values) : stats.medianPrice * 2;
-            const range = maxValue - minValue;
-            const yAxisDomain = [Math.max(0, minValue - range * 0.1), maxValue + range * 0.1];
-            
-            return (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5, duration: 0.2 }}
-                className="h-40 bg-stone-50 rounded-lg border border-stone-200 flex flex-col"
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5, duration: 0.2 }}
+            className="h-40 bg-stone-50 rounded-lg border border-stone-200 flex flex-col"
+          >
+            <div className="text-xs text-stone-500 font-medium px-3 pt-3 pb-1 flex-shrink-0">Price trend (3 years)</div>
+            <ResponsiveContainer width="100%" height={116}>
+              <AreaChart
+                data={chartData}
+                margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
               >
-                <div className="text-xs text-stone-500 font-medium px-3 pt-3 pb-1 flex-shrink-0">Price trend (3 years)</div>
-                <ResponsiveContainer width="100%" height={116}>
-                    <AreaChart
-                      data={chartData}
-                      margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-                    >
                     <defs>
                       <linearGradient id={`miniPriceGradient-${area.id}`} x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#5d7350" stopOpacity={0.3} />
@@ -268,26 +277,8 @@ function AreaInfoContent({ area }: { area: Area }) {
                       fill={`url(#miniPriceGradient-${area.id})`}
                       dot={false}
                     />
-                    <XAxis 
-                      dataKey="label" 
-                      tick={{ fontSize: 9, fill: '#78716c' }}
-                      axisLine={false}
-                      tickLine={false}
-                      interval="preserveStartEnd"
-                      height={30}
-                    />
-                    <YAxis 
-                      domain={yAxisDomain}
-                      tick={{ fontSize: 9, fill: '#78716c' }}
-                      axisLine={false}
-                      tickLine={false}
-                      width={50}
-                      tickFormatter={(value) => {
-                        if (value >= 1000000) return `R${(value / 1000000).toFixed(1)}M`;
-                        if (value >= 1000) return `R${(value / 1000).toFixed(0)}K`;
-                        return `R${value}`;
-                      }}
-                    />
+                    <XAxis hide />
+                    <YAxis hide domain={yAxisDomain} />
                     <Tooltip
                       contentStyle={{
                         backgroundColor: "white",
@@ -299,11 +290,9 @@ function AreaInfoContent({ area }: { area: Area }) {
                       formatter={(value: number) => formatPrice(value)}
                       labelStyle={{ fontSize: "11px", color: "#78716c" }}
                     />
-                    </AreaChart>
-                  </ResponsiveContainer>
-              </motion.div>
-            );
-          })()}
+              </AreaChart>
+            </ResponsiveContainer>
+          </motion.div>
         </>
       )}
 
@@ -341,7 +330,10 @@ function AreaInfoContent({ area }: { area: Area }) {
       )}
     </div>
   );
-}
+}, (prevProps, nextProps) => {
+  // Only re-render if area ID actually changes (not on hover)
+  return prevProps.area.id === nextProps.area.id;
+});
 
 function StatCard({
   label,
