@@ -23,6 +23,10 @@ const AREA_COORDINATES: Record<string, [number, number]> = {
   paarl: [18.9752, -33.7342],
   stellenbosch: [18.8602, -33.9322],
   franschhoek: [19.1233, -33.9094],
+  "hout-bay": [18.3667, -34.05],
+  "somerset-west": [18.85, -34.0833],
+  simonstown: [18.4333, -34.2],
+  strand: [18.8333, -34.1167],
   // Cape Town Suburbs
   "camps-bay": [18.3756, -33.9508],
   "sea-point": [18.3889, -33.9167],

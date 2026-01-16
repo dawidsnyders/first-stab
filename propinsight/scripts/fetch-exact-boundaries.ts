@@ -20,6 +20,10 @@ const AREAS: Area[] = [
   { slug: "paarl", name: "Paarl", query: "Paarl, Drakenstein, South Africa" },
   { slug: "stellenbosch", name: "Stellenbosch", query: "Stellenbosch, South Africa" },
   { slug: "franschhoek", name: "Franschhoek", query: "Franschhoek, South Africa" },
+  { slug: "hout-bay", name: "Hout Bay", query: "Hout Bay, City of Cape Town, South Africa" },
+  { slug: "somerset-west", name: "Somerset West", query: "Somerset West, Western Cape, South Africa" },
+  { slug: "simonstown", name: "Simon's Town", query: "Simon's Town, City of Cape Town, South Africa" },
+  { slug: "strand", name: "Strand", query: "Strand, City of Cape Town, South Africa" },
   // Suburbs - these are working well
   { slug: "camps-bay", name: "Camps Bay", query: "Camps Bay, Cape Town, South Africa" },
   { slug: "sea-point", name: "Sea Point", query: "Sea Point, Cape Town, South Africa" },
@@ -51,6 +55,45 @@ const MANUAL_BOUNDARIES: Record<string, number[][]> = {
     [18.855, -34.014],
     [18.855, -34.018],
     [18.86, -34.02],
+  ],
+  "hout-bay": [
+    // Hout Bay - approximate boundary
+    // Center: 18.3667, -34.05
+    [18.35, -34.06],
+    [18.38, -34.06],
+    [18.39, -34.055],
+    [18.39, -34.045],
+    [18.38, -34.04],
+    [18.35, -34.04],
+    [18.34, -34.045],
+    [18.34, -34.055],
+    [18.35, -34.06],
+  ],
+  "simonstown": [
+    // Simon's Town - approximate boundary
+    // Center: 18.4333, -34.2
+    [18.42, -34.21],
+    [18.45, -34.21],
+    [18.46, -34.205],
+    [18.46, -34.195],
+    [18.45, -34.19],
+    [18.42, -34.19],
+    [18.41, -34.195],
+    [18.41, -34.205],
+    [18.42, -34.21],
+  ],
+  "strand": [
+    // Strand - approximate boundary
+    // Center: 18.8333, -34.1167
+    [18.82, -34.13],
+    [18.85, -34.13],
+    [18.86, -34.125],
+    [18.86, -34.105],
+    [18.85, -34.1],
+    [18.82, -34.1],
+    [18.81, -34.105],
+    [18.81, -34.125],
+    [18.82, -34.13],
   ],
 };
 
@@ -174,6 +217,21 @@ async function fetchBoundaryWithFallback(area: Area): Promise<number[][] | null>
       "De Zalze Estate Stellenbosch",
       "De Zalze Golf Estate",
       "De Zalze, Stellenbosch",
+    ] : []),
+    ...(area.slug === "hout-bay" ? [
+      "Hout Bay, City of Cape Town",
+      "Hout Bay suburb",
+      "Hout Bay, Western Cape",
+    ] : []),
+    ...(area.slug === "simonstown" ? [
+      "Simon's Town, City of Cape Town",
+      "Simonstown, Cape Town",
+      "Simon's Town, Western Cape",
+    ] : []),
+    ...(area.slug === "strand" ? [
+      "Strand, City of Cape Town",
+      "Strand, Helderberg",
+      "Strand, Western Cape",
     ] : []),
   ];
 
