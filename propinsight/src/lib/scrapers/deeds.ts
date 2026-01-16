@@ -184,11 +184,11 @@ export async function scrapeDeedsOffice(
       : sortedPrices[Math.floor(sortedPrices.length / 2)];
 
   // Calculate transfers in last 12 months (mock)
-  const now = new Date();
+  const currentDate = new Date();
   const twelveMonthsAgo = new Date(
-    now.getFullYear() - 1,
-    now.getMonth(),
-    now.getDate()
+    currentDate.getFullYear() - 1,
+    currentDate.getMonth(),
+    currentDate.getDate()
   );
   const transfersLast12Months = mockRecords.filter(
     (r) => new Date(r.transferDate) >= twelveMonthsAgo
@@ -196,9 +196,9 @@ export async function scrapeDeedsOffice(
 
   // Calculate transfers in last 5 years (mock)
   const fiveYearsAgo = new Date(
-    now.getFullYear() - 5,
-    now.getMonth(),
-    now.getDate()
+    currentDate.getFullYear() - 5,
+    currentDate.getMonth(),
+    currentDate.getDate()
   );
   const transfersLast5Years = mockRecords.filter(
     (r) => new Date(r.transferDate) >= fiveYearsAgo

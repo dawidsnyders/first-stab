@@ -33,22 +33,23 @@ const PriceTooltip = ({
   data,
 }: {
   active?: boolean;
-  payload?: any[];
+  payload?: Array<{ value?: number; name?: string; [key: string]: unknown }>;
   label?: string;
   data?: ChartDataPoint[];
 }) => {
   if (active && payload && payload.length && data) {
     const value = payload[0].value;
+    if (value === undefined) return null;
+    
     const currentIndex = data.findIndex((d) => d.label === label);
 
     // Find value from 12 months ago (YoY comparison)
     let yoyChange = 0;
     if (currentIndex >= 12) {
-      const valueOneYearAgo = data[currentIndex - 12].value;
-      yoyChange =
-        valueOneYearAgo > 0
-          ? ((value - valueOneYearAgo) / valueOneYearAgo) * 100
-          : 0;
+      const valueOneYearAgo = data[currentIndex - 12]?.value;
+      if (valueOneYearAgo && valueOneYearAgo > 0) {
+        yoyChange = ((value - valueOneYearAgo) / valueOneYearAgo) * 100;
+      }
     }
 
     return (

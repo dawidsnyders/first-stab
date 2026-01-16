@@ -1,4 +1,4 @@
-// @ts-nocheck - react-map-gl v8 has incomplete type definitions
+// react-map-gl v8 has incomplete type definitions
 "use client";
 
 import { useCallback, useState, useEffect } from "react";
@@ -7,16 +7,18 @@ import { Area, formatPrice, formatPriceChange } from "@/types";
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/lib/constants";
 
 // Try to import react-map-gl - if it fails, component will return fallback
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let Map: any;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 let Marker: any;
 let mapboxCssLoaded = false;
 
 try {
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const reactMapGl = require("react-map-gl");
   Map = reactMapGl.default || reactMapGl.Map;
   Marker = reactMapGl.Marker;
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   require("mapbox-gl/dist/mapbox-gl.css");
   mapboxCssLoaded = true;
 } catch (e) {
@@ -108,6 +110,29 @@ export function MapboxMap({
   });
   const [hoveredArea, setHoveredArea] = useState<Area | null>(null);
 
+  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+
+  // Define all hooks before any conditional returns (React hooks rules)
+  const handleMarkerClick = useCallback(
+    (area: Area) => {
+      onAreaClick(area);
+    },
+    [onAreaClick]
+  );
+
+  const handleMarkerEnter = useCallback(
+    (area: Area) => {
+      setHoveredArea(area);
+      onAreaHover?.(area);
+    },
+    [onAreaHover]
+  );
+
+  const handleMarkerLeave = useCallback(() => {
+    setHoveredArea(null);
+    onAreaHover?.(null);
+  }, [onAreaHover]);
+
   // Auto-focus on selected area
   useEffect(() => {
     if (selectedArea) {
@@ -120,8 +145,6 @@ export function MapboxMap({
       }));
     }
   }, [selectedArea]);
-
-  const mapboxToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
   // Return fallback if module not loaded or token not configured
   if (!Map || !Marker || !mapboxToken) {
@@ -143,31 +166,11 @@ export function MapboxMap({
     );
   }
 
-  const handleMarkerClick = useCallback(
-    (area: Area) => {
-      onAreaClick(area);
-    },
-    [onAreaClick]
-  );
-
-  const handleMarkerEnter = useCallback(
-    (area: Area) => {
-      setHoveredArea(area);
-      onAreaHover?.(area);
-    },
-    [onAreaHover]
-  );
-
-  const handleMarkerLeave = useCallback(() => {
-    setHoveredArea(null);
-    onAreaHover?.(null);
-  }, [onAreaHover]);
-
   return (
     <div className="w-full h-full rounded-2xl overflow-hidden relative">
       <Map
         {...viewState}
-        onMove={(evt: any) => {
+        onMove={(evt: { viewState: { longitude: number; latitude: number; zoom: number } }) => {
           setViewState(evt.viewState);
         }}
         mapboxAccessToken={mapboxToken}

@@ -98,7 +98,7 @@ export default async function CheckoutSuccessPage({
                   <li className="flex items-start gap-2">
                     <span className="text-blue-600 mt-0.5">✓</span>
                     <span>
-                      You'll receive an email with a download link within a few
+                      You&apos;ll receive an email with a download link within a few
                       minutes
                     </span>
                   </li>

@@ -31,7 +31,12 @@ const CustomTooltip = ({
   type,
 }: {
   active?: boolean;
-  payload?: any[];
+  payload?: Array<{ 
+    value?: number; 
+    name?: string; 
+    payload?: { previousValue?: number; [key: string]: unknown };
+    [key: string]: unknown;
+  }>;
   label?: string;
   type: StatChartProps["type"];
 }) => {
@@ -123,10 +128,10 @@ const CustomTooltip = ({
     }
 
     // Calculate change from previous point if available
-    if (payload[0].payload && payload[0].payload.previousValue) {
-      const prevValue = payload[0].payload.previousValue;
-      const currentValue = payload[0].value;
-      const percentChange = ((currentValue - prevValue) / prevValue) * 100;
+    const payloadData = payload[0]?.payload as { previousValue?: number } | undefined;
+    if (payloadData?.previousValue !== undefined && value !== undefined) {
+      const prevValue = payloadData.previousValue;
+      const percentChange = ((value - prevValue) / prevValue) * 100;
       change = percentChange >= 0;
     }
 
@@ -152,7 +157,7 @@ const CustomTooltip = ({
             {formattedValue}
           </p>
         </div>
-        {change !== null && payload[0].payload.previousValue && (
+        {change !== null && payloadData?.previousValue !== undefined && value !== undefined && (
           <p
             className={`text-xs mt-1 font-medium ${
               change ? "text-green-600" : "text-red-600"
@@ -160,9 +165,7 @@ const CustomTooltip = ({
           >
             {change ? "↑" : "↓"}{" "}
             {Math.abs(
-              ((payload[0].value - payload[0].payload.previousValue) /
-                payload[0].payload.previousValue) *
-                100
+              ((value - payloadData.previousValue) / payloadData.previousValue) * 100
             ).toFixed(1)}
             % from previous
           </p>
@@ -248,8 +251,8 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
       ];
       if (allValues.length === 0) return [-5, 10];
 
-      const minValue = Math.min(...allValues);
-      const maxValue = Math.max(...allValues);
+      const minValue = Math.min(...(allValues as number[]));
+      const maxValue = Math.max(...(allValues as number[]));
       const range = maxValue - minValue;
 
       // Ensure data spans at least 50% of the Y-axis

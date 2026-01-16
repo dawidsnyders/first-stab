@@ -118,7 +118,7 @@ const AreaInfoContent = memo(
     }, [area.id, stats?.medianPrice, stats?.priceChangeYoY]);
 
     const yAxisDomain = useMemo(() => {
-      if (!chartData.length || !stats) return [0, stats.medianPrice * 2];
+      if (!chartData.length || !stats) return [0, (stats?.medianPrice || 0) * 2];
       const values = chartData
         .map((d) => d.value)
         .filter((v) => typeof v === "number" && !isNaN(v));

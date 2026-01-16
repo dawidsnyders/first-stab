@@ -83,6 +83,13 @@ export function MapView({ initialLevel = "suburb" }: MapViewProps) {
 
   const hasMapboxToken = !!process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
+  // Define hover callback outside conditional to satisfy React hooks rules
+  const handleAreaHover = useCallback((area: Area | null) => {
+    // Hover callback - currently not used but kept for API compatibility
+    // State update is isolated and shouldn't cause map re-renders
+    setHoveredArea(area?.id || null);
+  }, []);
+
   return (
     <div
       className="relative w-full h-full min-h-[600px] bg-stone-100 rounded-2xl overflow-hidden"
@@ -94,22 +101,14 @@ export function MapView({ initialLevel = "suburb" }: MapViewProps) {
           areas={areas}
           selectedArea={selectedArea}
           onAreaClick={handleAreaClick}
-          onAreaHover={useCallback((area) => {
-            // Hover callback - currently not used but kept for API compatibility
-            // State update is isolated and shouldn't cause map re-renders
-            setHoveredArea(area?.id || null);
-          }, [])}
+          onAreaHover={handleAreaHover}
         />
       ) : (
         <LeafletMap
           areas={areas}
           selectedArea={selectedArea}
           onAreaClick={handleAreaClick}
-          onAreaHover={useCallback((area) => {
-            // Hover callback - currently not used but kept for API compatibility
-            // State update is isolated and shouldn't cause map re-renders
-            setHoveredArea(area?.id || null);
-          }, [])}
+          onAreaHover={handleAreaHover}
         />
       )}
 

@@ -313,7 +313,7 @@ export function LeafletMap({
           }
           // Prevent polygon from receiving focus
           const polygonElement = polygon.getElement();
-          if (polygonElement) {
+          if (polygonElement && polygonElement instanceof HTMLElement) {
             polygonElement.setAttribute("tabindex", "-1");
             polygonElement.style.outline = "none";
           }

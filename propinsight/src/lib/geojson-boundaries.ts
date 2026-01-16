@@ -226,7 +226,7 @@ export async function getBoundaryForArea(
  * Pre-fetch all boundaries (call this early if needed)
  */
 export async function prefetchBoundaries(): Promise<void> {
-  if (!boundariesCache && !fetchPromise) {
-    boundariesCache = await fetchSuburbBoundaries();
+  if (boundariesCache.size === 0) {
+    await fetchSuburbBoundaries();
   }
 }

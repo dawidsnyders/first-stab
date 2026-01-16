@@ -45,7 +45,7 @@ export default async function CheckoutCancelPage({
             <div className="bg-gray-50 rounded-lg p-4 text-left">
               <p className="text-sm text-gray-600">
                 You can return to complete your purchase at any time. Your
-                report will be ready when you're ready.
+                report will be ready when you&apos;re ready.
               </p>
             </div>
 

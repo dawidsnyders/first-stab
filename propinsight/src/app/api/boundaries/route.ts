@@ -17,7 +17,7 @@ interface GeoJSONFeature {
   type: string;
   properties: {
     OFC_SBRB_NAME?: string;
-    [key: string]: any;
+    [key: string]: string | number | boolean | undefined;
   };
   geometry: {
     type: string;
@@ -183,9 +183,11 @@ export async function GET(request: NextRequest) {
     let coordinates: number[][][];
     if (feature.geometry.type === "MultiPolygon") {
       // For MultiPolygon, use the largest polygon (first one)
-      coordinates = feature.geometry.coordinates[0];
+      // MultiPolygon coordinates are number[][][][], first element is number[][][]
+      coordinates = (feature.geometry.coordinates[0] as unknown) as number[][][];
     } else {
-      coordinates = feature.geometry.coordinates;
+      // Polygon coordinates are number[][][]
+      coordinates = feature.geometry.coordinates as number[][][];
     }
 
     // Convert to Leaflet format
