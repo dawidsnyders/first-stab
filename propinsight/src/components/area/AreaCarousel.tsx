@@ -22,24 +22,20 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
     const updateScrollProgress = () => {
       const newProgress: number[] = new Array(areas.length - 1).fill(0);
       let newActiveIndex = 0;
+      const headerOffset = 100;
+      const viewportCenter = window.scrollY + window.innerHeight / 2;
 
       sectionRefs.current.forEach((ref, index) => {
         if (!ref) return;
 
         const rect = ref.getBoundingClientRect();
-        const viewportHeight = window.innerHeight;
-        const headerOffset = 100;
+        const sectionTop = rect.top + window.scrollY;
+        const sectionBottom = rect.bottom + window.scrollY;
+        const sectionCenter = (sectionTop + sectionBottom) / 2;
 
-        // Calculate if section is in view
-        const sectionTop = rect.top - headerOffset;
-        const sectionBottom = rect.bottom - headerOffset;
-        const sectionHeight = rect.height;
-
-        // Check if section is more than 50% visible
-        const visibleHeight = Math.min(viewportHeight, sectionBottom) - Math.max(0, sectionTop);
-        const visibilityRatio = visibleHeight / sectionHeight;
-
-        if (visibilityRatio > 0.5) {
+        // Check if section center is closest to viewport center
+        const distanceFromCenter = Math.abs(sectionCenter - viewportCenter);
+        if (index === 0 || distanceFromCenter < Math.abs(sectionRefs.current[newActiveIndex]?.getBoundingClientRect().top! + window.scrollY + (sectionRefs.current[newActiveIndex]?.getBoundingClientRect().height! / 2) - viewportCenter)) {
           newActiveIndex = index;
         }
 
@@ -48,17 +44,21 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
           const nextRef = sectionRefs.current[index + 1];
           if (nextRef) {
             const nextRect = nextRef.getBoundingClientRect();
-            const gap = nextRect.top - rect.bottom;
-            const currentScroll = window.scrollY + headerOffset;
-            const sectionEnd = rect.bottom + window.scrollY;
-            const nextStart = nextRect.top + window.scrollY;
+            const currentScrollTop = window.scrollY + headerOffset;
+            
+            // Section boundaries
+            const currentSectionBottom = rect.bottom + window.scrollY;
+            const nextSectionTop = nextRect.top + window.scrollY;
+            const gap = nextSectionTop - currentSectionBottom;
 
-            // Calculate progress: 0 when current section is in view, 1 when next is fully in view
-            if (currentScroll >= sectionEnd && currentScroll <= nextStart) {
-              const progress = (currentScroll - sectionEnd) / gap;
+            // Calculate progress: 0 at current section bottom, 1 at next section top
+            if (currentScrollTop >= currentSectionBottom && currentScrollTop <= nextSectionTop) {
+              const progress = (currentScrollTop - currentSectionBottom) / gap;
               newProgress[index] = Math.min(1, Math.max(0, progress));
-            } else if (currentScroll > nextStart) {
+            } else if (currentScrollTop > nextSectionTop) {
               newProgress[index] = 1;
+            } else {
+              newProgress[index] = 0;
             }
           }
         }
@@ -100,25 +100,28 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
         <nav className="relative">
           {areas.map((area, index) => {
             const isActive = index === activeIndex;
-            const isNextActive = index === activeIndex + 1;
-            const lineProgress = scrollProgress[index] || 0;
+            const lineProgress = index < areas.length - 1 ? scrollProgress[index] || 0 : 0;
             const showLine = index < areas.length - 1;
+            // Next dot is active when line is fully filled
+            const isNextActive = index === activeIndex + 1 && lineProgress >= 1;
+            // Current dot is active or next dot is becoming active
+            const dotActive = isActive || (index === activeIndex + 1 && lineProgress > 0);
 
             return (
               <div key={area.id} className="relative">
                 <button
                   onClick={() => scrollToSection(index)}
                   className={`w-full text-left px-3 py-2.5 transition-all duration-200 flex items-center gap-3 group relative z-10 ${
-                    isActive || isNextActive
+                    dotActive
                       ? "text-stone-900 font-medium"
                       : "text-stone-500 hover:text-stone-700"
                   }`}
                 >
-                  {/* Dot indicator - Always visible, changes color when active or next */}
+                  {/* Dot indicator - Always visible, changes color when active */}
                   <div className="relative flex-shrink-0">
                     <div
                       className={`w-2 h-2 rounded-full transition-all duration-200 ${
-                        isActive || (isNextActive && lineProgress > 0.5)
+                        dotActive
                           ? "bg-sage-600"
                           : "bg-stone-300 group-hover:bg-stone-400"
                       }`}
@@ -132,7 +135,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                   <div className="absolute left-[11px] top-10 w-0.5 h-8 -translate-x-1/2">
                     {/* Background line (grey) */}
                     <div className="absolute inset-0 bg-stone-200" />
-                    {/* Progress line (sage) */}
+                    {/* Progress line (sage) - fills from bottom to top */}
                     <div
                       className="absolute bottom-0 left-0 right-0 bg-sage-600 transition-all duration-100 ease-out"
                       style={{
