@@ -26,7 +26,8 @@ export function StickyReportCTA({ area }: StickyReportCTAProps) {
           onClick={() => setIsModalOpen(true)}
           whileHover={{ scale: 1.01, y: -2 }}
           whileTap={{ scale: 0.99 }}
-          className="w-full relative bg-white/90 backdrop-blur-xl border border-stone-200/60 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden max-h-[100px] hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] hover:border-sage-300/60 hover:bg-white transition-all duration-100 cursor-pointer group text-left"
+          transition={{ duration: 0.2, ease: "easeOut" }}
+          className="w-full relative bg-white/90 backdrop-blur-xl border border-stone-200/60 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden max-h-[100px] hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] hover:border-sage-300/60 hover:bg-white transition-all duration-200 cursor-pointer group text-left"
         >
         <div className="px-4 sm:px-6 py-3">
           <div className="flex items-center justify-between gap-4">
