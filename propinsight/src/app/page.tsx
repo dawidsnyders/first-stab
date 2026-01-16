@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState } from "react";
+import { motion } from "framer-motion";
 import {
   ChartBarIcon,
   ArrowTrendingUpIcon,
@@ -12,27 +12,32 @@ import {
   MagnifyingGlassIcon,
   HomeIcon,
   MapPinIcon,
-} from '@heroicons/react/24/outline';
-import { SearchBar } from '@/components/ui/SearchBar';
-import { MapView } from '@/components/map/MapView';
-import { MapModal } from '@/components/ui/MapModal';
-import { AreaCard } from '@/components/area/AreaCard';
-import { getAreasByLevel } from '@/data/areas';
-import { APP_NAME, REPORT_PRICE_DISPLAY, NATIONAL_BENCHMARKS } from '@/lib/constants';
-import { formatNumber } from '@/types';
+} from "@heroicons/react/24/outline";
+import { SearchBar } from "@/components/ui/SearchBar";
+import { MapView } from "@/components/map/MapView";
+import { MapModal } from "@/components/ui/MapModal";
+import { AreaCard } from "@/components/area/AreaCard";
+import { getAreasByLevel } from "@/data/areas";
+import {
+  APP_NAME,
+  REPORT_PRICE_DISPLAY,
+  NATIONAL_BENCHMARKS,
+} from "@/lib/constants";
+import { formatNumber } from "@/types";
 
 export default function Home() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
-  const featuredSuburbs = getAreasByLevel('suburb').slice(0, 6);
-  const allSuburbs = getAreasByLevel('suburb');
+  const featuredSuburbs = getAreasByLevel("suburb").slice(0, 6);
+  const allSuburbs = getAreasByLevel("suburb");
   const totalSales = allSuburbs.reduce(
     (sum, area) => sum + (area.stats?.salesCount || 0),
     0
   );
-  const avgPriceGrowth = allSuburbs.reduce(
-    (sum, area) => sum + (area.stats?.priceChangeYoY || 0),
-    0
-  ) / allSuburbs.length;
+  const avgPriceGrowth =
+    allSuburbs.reduce(
+      (sum, area) => sum + (area.stats?.priceChangeYoY || 0),
+      0
+    ) / allSuburbs.length;
 
   return (
     <div className="min-h-screen bg-white">
@@ -139,7 +144,7 @@ export default function Home() {
                 Unlock comprehensive market insights for every suburb. Make
                 informed property decisions with
                 <span className="font-semibold text-stone-900">
-                  {' '}
+                  {" "}
                   data-driven analysis
                 </span>
                 .
@@ -173,7 +178,9 @@ export default function Home() {
                 Icon={MapPinIcon}
               />
               <StatBox
-                value={`+${(avgPriceGrowth - NATIONAL_BENCHMARKS.avgPropertyGrowth).toFixed(1)}%`}
+                value={`+${(
+                  avgPriceGrowth - NATIONAL_BENCHMARKS.avgPropertyGrowth
+                ).toFixed(1)}%`}
                 label="vs National"
                 Icon={BoltIcon}
               />
@@ -269,8 +276,8 @@ export default function Home() {
               Popular Areas
             </h3>
             <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-              Discover insights for some of the most sought-after suburbs in
-              the Western Cape
+              Discover insights for some of the most sought-after suburbs in the
+              Western Cape
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -523,9 +530,7 @@ function ReportFeature({
       </svg>
       <div>
         <h5 className="font-semibold text-white text-lg mb-1">{title}</h5>
-        <p className="text-sm text-stone-300 leading-relaxed">
-          {description}
-        </p>
+        <p className="text-sm text-stone-300 leading-relaxed">{description}</p>
       </div>
     </div>
   );

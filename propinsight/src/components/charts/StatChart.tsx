@@ -52,8 +52,7 @@ const CustomTooltip = ({
     if (payload[0].payload && payload[0].payload.previousValue) {
       const prevValue = payload[0].payload.previousValue;
       const currentValue = payload[0].value;
-      const percentChange =
-        ((currentValue - prevValue) / prevValue) * 100;
+      const percentChange = ((currentValue - prevValue) / prevValue) * 100;
       change = percentChange >= 0;
     }
 
@@ -172,28 +171,10 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
           margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
         >
           <defs>
-            <linearGradient
-              id={`gradient-${type}`}
-              x1="0"
-              y1="0"
-              x2="0"
-              y2="1"
-            >
-              <stop
-                offset="5%"
-                stopColor={colors.main}
-                stopOpacity={0.4}
-              />
-              <stop
-                offset="50%"
-                stopColor={colors.main}
-                stopOpacity={0.15}
-              />
-              <stop
-                offset="95%"
-                stopColor={colors.main}
-                stopOpacity={0}
-              />
+            <linearGradient id={`gradient-${type}`} x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor={colors.main} stopOpacity={0.4} />
+              <stop offset="50%" stopColor={colors.main} stopOpacity={0.15} />
+              <stop offset="95%" stopColor={colors.main} stopOpacity={0} />
             </linearGradient>
           </defs>
           <CartesianGrid

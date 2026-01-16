@@ -80,7 +80,8 @@ export function PriceTrendChart({
   priceChangeYoY,
 }: PriceTrendChartProps) {
   // Calculate 3-year average for reference line
-  const avgPrice = data.reduce((sum, point) => sum + point.value, 0) / data.length;
+  const avgPrice =
+    data.reduce((sum, point) => sum + point.value, 0) / data.length;
 
   // Enhance data with average price
   const enhancedData = data.map((point) => ({
@@ -169,7 +170,7 @@ export function PriceTrendChart({
           />
         </AreaChart>
       </ResponsiveContainer>
-      
+
       {/* Chart Stats */}
       <div className="mt-6 grid grid-cols-3 gap-4 pt-6 border-t border-stone-200">
         <div>
