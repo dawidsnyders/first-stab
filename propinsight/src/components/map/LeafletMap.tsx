@@ -429,7 +429,16 @@ export function LeafletMap({
       // to prevent all polygons from updating when hovering
 
       // Only update if style actually changed to avoid unnecessary updates
-      const currentStyle = (polygon as { options?: { fillColor?: string; color?: string; weight?: number; fillOpacity?: number } }).options;
+      const currentStyle = (
+        polygon as {
+          options?: {
+            fillColor?: string;
+            color?: string;
+            weight?: number;
+            fillOpacity?: number;
+          };
+        }
+      ).options;
       if (
         currentStyle.fillColor !== fillColor ||
         currentStyle.color !== borderColor ||

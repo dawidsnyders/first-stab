@@ -99,11 +99,11 @@ export async function GET(request: NextRequest) {
       constantia: { name: "Constantia", source: "capeTown" },
       clifton: { name: "Clifton", source: "westernCape" },
       bakoven: { name: "Bakoven", source: "westernCape" },
-      // Stellenbosch - Use Stellenbosch Municipality API (most accurate for city boundaries)
+      // Stellenbosch - Use OpenStreetMap for more accurate town boundary (not entire municipality)
       stellenbosch: {
         name: "Stellenbosch",
-        source: "stellenbosch",
-        searchTerms: ["Stellenbosch"],
+        source: "openstreetmap",
+        searchTerms: ["Stellenbosch", "Stellenbosch, Western Cape", "Stellenbosch town"],
       },
       // De Zalze Estate - use OpenStreetMap
       "de-zalze": {
@@ -115,10 +115,11 @@ export async function GET(request: NextRequest) {
           "De Zalze, Stellenbosch",
         ],
       },
-      // Paarl - Use National/Provincial API (Drakenstein Local Municipality - most accurate)
+      // Paarl - Use OpenStreetMap for more accurate town boundary (not entire municipality)
       paarl: {
         name: "Paarl",
-        source: "national",
+        source: "openstreetmap",
+        searchTerms: ["Paarl", "Paarl, Western Cape", "Paarl town"],
         searchTerms: ["Paarl", "Drakenstein"],
       },
       // Val de Vie Estate (merged from Val de Vie and Pearl Valley) - use OpenStreetMap
@@ -296,7 +297,11 @@ export async function GET(request: NextRequest) {
 
                         // Reject polygons larger than 5 km² (suburbs should be much smaller)
                         // Most suburbs should be < 3 km²
-                        const maxArea = 5; // km² - very strict limit for suburbs/estates
+                        // Use different limits based on what we're searching for
+                        // Towns like Paarl and Stellenbosch should be < 10 km² (actual town boundary)
+                        // Suburbs/estates should be < 5 km²
+                        const isTown = suburbName === "Paarl" || suburbName === "Stellenbosch" || suburbName === "Franschhoek";
+                        const maxArea = isTown ? 10 : 5; // km² - strict limits for precision
                         // Also ensure it's in the right geographic area (Western Cape)
                         const isInWesternCape =
                           minLat >= -36 &&
@@ -475,14 +480,16 @@ export async function GET(request: NextRequest) {
                   maxLng <= 26;
 
                 // Use different area limits for cities vs suburbs/estates
-                // Cities can be larger (up to 30 km²), suburbs/estates should be < 5 km²
-                // These are very strict limits to ensure only precise, granular boundaries
+                // Cities should be much smaller - actual town/city boundaries, not entire municipalities
+                // Paarl and Stellenbosch are towns, not huge municipalities - they should be < 10 km²
                 const isCity =
                   suburbName === "Paarl" ||
                   suburbName === "Stellenbosch" ||
                   suburbName === "Franschhoek" ||
                   suburbName === "Cape Town";
-                const maxArea = isCity ? 30 : 5; // km² - very strict limits for precision
+                // Much stricter: cities/towns should be < 10 km² (actual built-up area), not entire municipality
+                // Cape Town is the only exception as it's a large metropolitan area
+                const maxArea = suburbName === "Cape Town" ? 30 : suburbName === "Franschhoek" ? 5 : 10; // km² - strict limits for precision
                 if (area < maxArea && isInWesternCape && area < smallestArea) {
                   matchingFeature = candidate;
                   smallestArea = area;
