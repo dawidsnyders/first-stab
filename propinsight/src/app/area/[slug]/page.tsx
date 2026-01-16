@@ -156,7 +156,7 @@ export default async function AreaPage({ params }: PageProps) {
       </header>
 
       {/* Mobile Breadcrumb */}
-      <div className="md:hidden bg-white border-b border-stone-100 pt-20">
+      <div className="md:hidden bg-white border-b border-stone-100 pt-28">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
           <nav className="flex items-center gap-2 text-sm">
             <Link
@@ -173,7 +173,7 @@ export default async function AreaPage({ params }: PageProps) {
 
       {/* Hero */}
       <section className="bg-gradient-to-b from-white to-stone-50 pb-12 border-b border-stone-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 md:pt-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-24">
           <div className="grid lg:grid-cols-3 gap-8">
             {/* Left: Title and Description */}
             <div className="lg:col-span-2 space-y-4">
