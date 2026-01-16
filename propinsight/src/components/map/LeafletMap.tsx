@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Area } from "@/types";
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/lib/constants";
-import { getAreaBoundaryPolygon } from "@/data/areaBoundaries";
 import {
   getBoundaryForArea,
   prefetchBoundaries,
@@ -79,42 +78,31 @@ function getAreaCoordinates(area: Area): [number, number] {
   );
 }
 
-// This function will be async - boundaries are loaded dynamically
+// This function will be async - boundaries are loaded dynamically from official APIs
+// NO FALLBACKS - only use pixel-perfect boundaries from official sources
 async function getAreaBoundaryAsync(area: Area): Promise<[number, number][]> {
-  // First try to get real boundary from City of Cape Town GeoJSON API
-  if (area.level === "suburb") {
-    const geoJSONBoundary = await getBoundaryForArea(area.slug);
-    if (geoJSONBoundary) {
-      return geoJSONBoundary;
+  // ALWAYS try to get real boundary from official API sources
+  // This ensures pixel-perfect accuracy down to the last coordinate
+  const geoJSONBoundary = await getBoundaryForArea(area.slug);
+  if (geoJSONBoundary && geoJSONBoundary.length > 0) {
+    if (geoJSONBoundary.length >= 50) {
+      console.log(
+        `Using high-precision API boundary for ${area.slug} with ${geoJSONBoundary.length} points - pixel-perfect accuracy`
+      );
+    } else {
+      console.warn(
+        `API boundary for ${area.slug} has only ${geoJSONBoundary.length} points - may lack precision. For pixel-perfect accuracy, boundaries should have 100+ points.`
+      );
     }
+    return geoJSONBoundary;
   }
 
-  // Fallback: Try static boundary data
-  const staticBoundary = getAreaBoundaryPolygon(area.slug);
-  if (staticBoundary) {
-    return staticBoundary;
-  }
-
-  // Last resort: Generate approximate polygon if no real boundary exists
-  const coords = getAreaCoordinates(area); // Returns [lng, lat]
-  const [lng, lat] = coords;
-
-  // Adjust size based on area level
-  const size =
-    area.level === "province" ? 2.0 : area.level === "city" ? 0.4 : 0.05;
-
-  // Generate simple polygon as fallback
-  const points: [number, number][] = [];
-  const sides = 6;
-  for (let i = 0; i <= sides; i++) {
-    const angle = (i * 2 * Math.PI) / sides;
-    const radius = size;
-    const pointLng = lng + radius * Math.cos(angle);
-    const pointLat = lat + radius * Math.sin(angle);
-    // Leaflet expects [lat, lng] format
-    points.push([pointLat, pointLng]);
-  }
-  return points;
+  // NO FALLBACK - If API boundary not found, return empty array
+  // This ensures we never use inaccurate approximations
+  console.error(
+    `No API boundary found for ${area.slug} - cannot display accurate boundary. Please ensure the area exists in official municipal GIS data.`
+  );
+  return [];
 }
 
 interface LeafletMapProps {

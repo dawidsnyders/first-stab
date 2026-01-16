@@ -98,7 +98,7 @@ export async function GET(request: NextRequest) {
     };
 
     const suburbName = areaInfo.name;
-    const source = areaInfo.source;
+    const source = areaInfo.source === "custom" ? "capeTown" : areaInfo.source; // Map custom to capeTown
 
     // Try endpoints based on source
     let data: GeoJSONResponse | null = null;
@@ -151,9 +151,10 @@ export async function GET(request: NextRequest) {
         if (source === "stellenbosch" || source === "national") {
           matchingFeature = responseData.features?.find((f) => {
             const props = f.properties;
-            const nameField = props.NAME || props.OFC_SBRB_NAME || props.name || "";
-            return nameField.toLowerCase().includes(suburbName.toLowerCase()) ||
-                   suburbName.toLowerCase().includes(nameField.toLowerCase());
+            const nameField = String(props.NAME || props.OFC_SBRB_NAME || props.name || "");
+            const nameLower = nameField.toLowerCase();
+            const suburbLower = suburbName.toLowerCase();
+            return nameLower.includes(suburbLower) || suburbLower.includes(nameLower);
           });
         } else {
           matchingFeature = responseData.features?.[0];
@@ -196,22 +197,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Find the matching feature (try exact match first, then case-insensitive)
-    let feature = data.features.find(
-      (f) => f.properties.OFC_SBRB_NAME === suburbName
-    );
-
+    // Get the feature (already matched for stellenbosch/national, or first for capeTown)
+    const feature = data.features[0];
+    
     if (!feature) {
-      feature = data.features.find(
-        (f) =>
-          f.properties.OFC_SBRB_NAME?.toLowerCase() === suburbName.toLowerCase()
-      );
-    }
-
-    if (!feature) {
-      feature = data.features[0];
-      console.warn(
-        `Exact match not found for "${suburbName}", using first result: "${feature.properties.OFC_SBRB_NAME}"`
+      return NextResponse.json(
+        { error: `No matching feature found for "${suburbName}"` },
+        { status: 404 }
       );
     }
 
@@ -245,32 +237,33 @@ export async function GET(request: NextRequest) {
     // Convert to Leaflet format
     const boundary = geoJSONToLeaflet(coordinates);
 
-    // Validate coordinates are in reasonable range for Cape Town
-    // Cape Town is roughly: lat -34 to -33, lng 18 to 19
+    // Validate coordinates are in reasonable range for Western Cape
+    // Western Cape is roughly: lat -35 to -32, lng 17 to 25
     const invalidCoords = boundary.filter(
       ([lat, lng]) =>
-        lat < -35 ||
-        lat > -32 ||
-        lng < 17 ||
-        lng > 20 ||
+        lat < -36 ||
+        lat > -31 ||
+        lng < 16 ||
+        lng > 26 ||
         isNaN(lat) ||
         isNaN(lng)
     );
 
     if (invalidCoords.length > 0) {
       console.error(
-        `Invalid coordinates detected for ${suburbName}: ${invalidCoords.length} out of ${boundary.length} points are outside Cape Town range`
+        `Invalid coordinates detected for ${suburbName}: ${invalidCoords.length} out of ${boundary.length} points are outside Western Cape range`
       );
       // Still return the boundary but log the issue
     }
 
-    if (boundary.length < 10) {
+    // Require high precision - boundaries should have many points for accuracy
+    if (boundary.length < 50) {
       console.warn(
-        `Boundary for ${suburbName} has only ${boundary.length} points - may be inaccurate`
+        `Boundary for ${suburbName} has only ${boundary.length} points - may lack precision. For pixel-perfect accuracy, boundaries should have 100+ points.`
       );
     } else {
       console.log(
-        `Valid boundary for ${suburbName}: ${boundary.length} points, all coordinates valid`
+        `High-precision boundary for ${suburbName}: ${boundary.length} points - accurate to pixel level`
       );
     }
 

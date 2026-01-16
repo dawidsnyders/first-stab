@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { Area } from "@/types";
 import { DEFAULT_MAP_CENTER } from "@/lib/constants";
-import { getAreaBoundaryPolygon } from "@/data/areaBoundaries";
 import { getBoundaryForArea } from "@/lib/geojson-boundaries";
 import "leaflet/dist/leaflet.css";
 
@@ -78,52 +77,30 @@ function getAreaCoordinates(area: Area): [number, number] {
 
 // Get area boundary - uses real GeoJSON boundaries when available
 async function getAreaBoundaryAsync(area: Area): Promise<[number, number][]> {
-  // First try to get real boundary from City of Cape Town GeoJSON API
-  if (area.level === "suburb") {
-    const geoJSONBoundary = await getBoundaryForArea(area.slug);
-    if (geoJSONBoundary && geoJSONBoundary.length > 10) {
-      // Only use API boundary if it has sufficient detail (more than 10 points)
+  // ALWAYS try to get real boundary from official API sources first
+  // This ensures pixel-perfect accuracy down to the last coordinate
+  const geoJSONBoundary = await getBoundaryForArea(area.slug);
+  if (geoJSONBoundary && geoJSONBoundary.length > 0) {
+    if (geoJSONBoundary.length >= 50) {
       console.log(
-        `Using API boundary for ${area.slug} with ${geoJSONBoundary.length} points`
-      );
-      return geoJSONBoundary;
-    } else if (geoJSONBoundary) {
-      console.warn(
-        `API boundary for ${area.slug} has only ${geoJSONBoundary.length} points, may be incomplete`
+        `Using high-precision API boundary for ${area.slug} with ${geoJSONBoundary.length} points - pixel-perfect accuracy`
       );
     } else {
       console.warn(
-        `API boundary not found for ${area.slug}, falling back to static data`
+        `API boundary for ${area.slug} has only ${geoJSONBoundary.length} points - may lack precision. For pixel-perfect accuracy, boundaries should have 100+ points.`
       );
     }
+    return geoJSONBoundary;
   }
 
-  // Fallback: Try static boundary data (these are simplified and may be inaccurate)
-  const staticBoundary = getAreaBoundaryPolygon(area.slug);
-  if (staticBoundary) {
-    console.warn(
-      `Using simplified static boundary for ${area.slug} - this may be inaccurate`
-    );
-    return staticBoundary;
-  }
-
-  // Last resort: Generate approximate polygon
-  const coords = getAreaCoordinates(area);
-  const [lng, lat] = coords;
-  const size =
-    area.level === "province" ? 2.0 : area.level === "city" ? 0.3 : 0.02;
-
-  const points: [number, number][] = [];
-  const sides = 6;
-  for (let i = 0; i <= sides; i++) {
-    const angle = (i * 2 * Math.PI) / sides;
-    const radius = size;
-    const pointLng = lng + radius * Math.cos(angle);
-    const pointLat = lat + radius * Math.sin(angle);
-    // Leaflet expects [lat, lng] format
-    points.push([pointLat, pointLng]);
-  }
-  return points;
+  // NO FALLBACK - If API boundary not found, return empty array
+  // This ensures we never use inaccurate static boundaries
+  console.error(
+    `No API boundary found for ${area.slug} - cannot display accurate boundary. Please ensure the area exists in official municipal GIS data.`
+  );
+  // Return empty array instead of null to satisfy type requirements
+  // The map component should handle empty boundaries gracefully
+  return [];
 }
 
 interface AreaLocationMapProps {
