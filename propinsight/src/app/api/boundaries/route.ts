@@ -788,12 +788,17 @@ export async function GET(request: NextRequest) {
 
           let responseData: GeoJSONResponse;
           if (!response.ok) {
-            const apiName = source === "national" ? "National API" : "Western Cape API";
+            const apiName =
+              source === "national" ? "National API" : "Western Cape API";
             console.warn(
               `${apiName} fallback endpoint returned ${response.status}: ${response.statusText}`
             );
             // For National API with WHERE clause for Paarl, retry without WHERE clause
-            if (source === "national" && suburbName === "Paarl" && url.searchParams.get("where")?.includes("DRAKENSTEIN")) {
+            if (
+              source === "national" &&
+              suburbName === "Paarl" &&
+              url.searchParams.get("where")?.includes("DRAKENSTEIN")
+            ) {
               console.log(
                 `National API WHERE clause failed (${response.status}), retrying with where=1=1 for "${suburbName}"`
               );
@@ -806,7 +811,9 @@ export async function GET(request: NextRequest) {
               if (retryResponse.ok) {
                 responseData = await retryResponse.json();
                 console.log(
-                  `National API retry successful, got ${responseData.features?.length || 0} features`
+                  `National API retry successful, got ${
+                    responseData.features?.length || 0
+                  } features`
                 );
                 // Continue to filtering logic below
               } else {
@@ -866,6 +873,12 @@ export async function GET(request: NextRequest) {
               // Special case: For Paarl, also accept "Drakenstein" (the municipality it's in)
               if (suburbName === "Paarl") {
                 allSearchTerms.push("drakenstein");
+                // For National API, be very lenient - if any field contains "drakenstein", accept it
+                if (source === "national") {
+                  return possibleNames.some((nameLower) =>
+                    nameLower.includes("drakenstein")
+                  );
+                }
               }
 
               // Check if any of the possible names match any search term
