@@ -183,19 +183,19 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
             >
               <div className="w-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
                 {/* Area Name Header - Large, Dark Gray */}
-                <div className="px-8 py-6 border-b border-stone-200">
-                  <h2 className="text-4xl font-bold text-stone-900 mb-2">
+                <div className="px-6 py-3 border-b border-stone-200">
+                  <h2 className="text-2xl font-bold text-stone-900 mb-1">
                     {area.name}
                   </h2>
-                  <div className="flex items-center gap-3">
-                    <span className="text-sm text-stone-500 capitalize">
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-stone-500 capitalize">
                       {area.level}
                     </span>
                     {stats && (
                       <>
                         <span className="text-stone-300">•</span>
                         <span
-                          className={`text-sm font-semibold ${
+                          className={`text-xs font-semibold ${
                             isPositive ? "text-green-600" : "text-red-600"
                           }`}
                         >
@@ -207,47 +207,47 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                 </div>
 
                 {/* Map View - Takes significant space */}
-                <div className="px-8 py-6 border-b border-stone-200">
-                  <div className="h-[500px] rounded-lg overflow-hidden bg-stone-50">
+                <div className="px-6 py-3 border-b border-stone-200">
+                  <div className="h-[180px] rounded-lg overflow-hidden bg-stone-50">
                     <AreaLocationMap area={area} />
                   </div>
                 </div>
 
                 {/* Key Info - Clean Grid Below Map */}
                 {stats && (
-                  <div className="px-8 py-6 border-t border-stone-200 bg-stone-50/30">
-                    <div className="grid grid-cols-3 gap-8">
+                  <div className="px-6 py-3 bg-stone-50/30">
+                    <div className="grid grid-cols-3 gap-4">
                       <div>
-                        <div className="text-xs text-stone-500 uppercase tracking-wider mb-2 font-medium">
+                        <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                           Average Price
                         </div>
-                        <div className="text-2xl font-bold text-stone-900">
+                        <div className="text-lg font-bold text-stone-900">
                           {formatPrice(stats.avgPrice)}
                         </div>
                       </div>
                       <div>
-                        <div className="text-xs text-stone-500 uppercase tracking-wider mb-2 font-medium">
+                        <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                           Sales (12mo)
                         </div>
-                        <div className="text-2xl font-bold text-stone-900">
+                        <div className="text-lg font-bold text-stone-900">
                           {formatNumber(stats.salesCount)}
                         </div>
                       </div>
                       {stats.avgPricePerSqm ? (
                         <div>
-                          <div className="text-xs text-stone-500 uppercase tracking-wider mb-2 font-medium">
+                          <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                             Price per m²
                           </div>
-                          <div className="text-2xl font-bold text-stone-900">
+                          <div className="text-lg font-bold text-stone-900">
                             {formatPrice(stats.avgPricePerSqm)}
                           </div>
                         </div>
                       ) : (
                         <div>
-                          <div className="text-xs text-stone-500 uppercase tracking-wider mb-2 font-medium">
+                          <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
                             Median Price
                           </div>
-                          <div className="text-2xl font-bold text-stone-900">
+                          <div className="text-lg font-bold text-stone-900">
                             {formatPrice(stats.medianPrice)}
                           </div>
                         </div>
@@ -255,14 +255,14 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                     </div>
 
                     {/* CTA Link */}
-                    <div className="mt-6 pt-6 border-t border-stone-200">
+                    <div className="mt-3 pt-3 border-t border-stone-200">
                       <Link
                         href={`/area/${area.slug}`}
-                        className="inline-flex items-center gap-2 text-sage-600 hover:text-sage-700 font-semibold text-sm transition-colors duration-200 group"
+                        className="inline-flex items-center gap-2 text-sage-600 hover:text-sage-700 font-semibold text-xs transition-colors duration-200 group"
                       >
                         <span>View Full Market Analysis</span>
                         <svg
-                          className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1"
+                          className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-1"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"

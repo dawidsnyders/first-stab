@@ -5,13 +5,23 @@ import { NextRequest, NextResponse } from "next/server";
  * This avoids CORS issues and allows us to properly handle the API
  */
 
-// Try multiple endpoints - use the most reliable one
-const CAPE_TOWN_API_ENDPOINTS = [
-  // Primary: Official Suburb layer from Search Layers
-  "https://citymaps.capetown.gov.za/agsext/rest/services/Search_Layers/SL_WGDB_OFC_SBRB/MapServer/0/query",
-  // Fallback: Theme Based EGIS Viewer (may have different layer structure)
-  "https://citymaps.capetown.gov.za/agsext/rest/services/Theme_Based/EGISViewer/MapServer/0/query",
-];
+// Multiple API endpoints for different municipalities
+const API_ENDPOINTS = {
+  // City of Cape Town - Official Suburb boundaries
+  capeTown: [
+    "https://citymaps.capetown.gov.za/agsext/rest/services/Search_Layers/SL_WGDB_OFC_SBRB/MapServer/0/query",
+    "https://citymaps.capetown.gov.za/agsext/rest/services/Theme_Based/EGISViewer/MapServer/0/query",
+  ],
+  // Stellenbosch Municipality - Municipal and district boundaries
+  stellenbosch: [
+    "https://citymaps.stellenbosch.gov.za/server/rest/services/Basemap/BasemapData/MapServer/49/query", // Municipal Area
+    "https://citymaps.stellenbosch.gov.za/server/rest/services/Basemap/BasemapData/MapServer/35/query", // District Boundary
+  ],
+  // National/Provincial - Local Municipality boundaries (includes Drakenstein/Paarl)
+  national: [
+    "https://dpmegis.dpme.gov.za/arcgis/rest/services/Hosted/Boundaries/FeatureServer/2/query", // Local Municipality
+  ],
+};
 
 interface GeoJSONFeature {
   type: string;
@@ -54,25 +64,41 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Map slug to suburb name
-    const slugMap: Record<string, string> = {
-      "camps-bay": "Camps Bay",
-      "sea-point": "Sea Point",
-      "green-point": "Green Point",
-      woodstock: "Woodstock",
-      observatory: "Observatory",
-      claremont: "Claremont",
-      constantia: "Constantia",
-      clifton: "Clifton",
-      bakoven: "Bakoven",
+    // Comprehensive slug to official name mapping for all areas
+    const slugMap: Record<string, { name: string; source: 'capeTown' | 'stellenbosch' | 'national' | 'custom' }> = {
+      // Cape Town suburbs
+      "camps-bay": { name: "Camps Bay", source: "capeTown" },
+      "sea-point": { name: "Sea Point", source: "capeTown" },
+      "green-point": { name: "Green Point", source: "capeTown" },
+      woodstock: { name: "Woodstock", source: "capeTown" },
+      observatory: { name: "Observatory", source: "capeTown" },
+      claremont: { name: "Claremont", source: "capeTown" },
+      constantia: { name: "Constantia", source: "capeTown" },
+      clifton: { name: "Clifton", source: "capeTown" },
+      bakoven: { name: "Bakoven", source: "capeTown" },
+      // Stellenbosch areas
+      stellenbosch: { name: "Stellenbosch", source: "stellenbosch" },
+      "stellenbosch-central": { name: "Stellenbosch", source: "stellenbosch" },
+      dalsig: { name: "Dalsig", source: "stellenbosch" },
+      welgevonden: { name: "Welgevonden", source: "stellenbosch" },
+      mostertsdrift: { name: "Mostertsdrift", source: "stellenbosch" },
+      // Paarl/Drakenstein - use national municipality boundary
+      paarl: { name: "Drakenstein", source: "national" },
+      // Franschhoek - part of Stellenbosch municipality
+      franschhoek: { name: "Franschhoek", source: "stellenbosch" },
+      "franschhoek-village": { name: "Franschhoek", source: "stellenbosch" },
     };
 
-    const suburbName =
-      slugMap[slug] ||
-      slug
+    const areaInfo = slugMap[slug] || {
+      name: slug
         .split("-")
         .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-        .join(" ");
+        .join(" "),
+      source: "capeTown" as const, // Default to Cape Town for unknown areas
+    };
+
+    const suburbName = areaInfo.name;
+    const source = areaInfo.source;
 
     // Try each endpoint until one works
     let data: GeoJSONResponse | null = null;
