@@ -363,8 +363,18 @@ export async function GET(request: NextRequest) {
           source === "national"
         ) {
           // Try to find matching features and pick the smallest one
+          // IMPORTANT: Only accept Polygon or MultiPolygon geometries, reject Point geometries
           const candidates =
             responseData.features?.filter((f) => {
+              // First check geometry type - must be Polygon or MultiPolygon
+              if (
+                !f.geometry ||
+                (f.geometry.type !== "Polygon" &&
+                  f.geometry.type !== "MultiPolygon")
+              ) {
+                return false; // Skip Point, LineString, etc.
+              }
+              
               const props = f.properties;
               // Western Cape Spatial Data Warehouse uses SUBURB, NAME, or SUBURB_NAME fields
               const nameField = String(
@@ -384,6 +394,8 @@ export async function GET(request: NextRequest) {
                 );
               });
             }) || [];
+          
+          console.log(`Found ${candidates.length} polygon candidates for "${suburbName}" (filtered from ${responseData.features?.length || 0} total features)`);
 
           // Pick the smallest polygon (most specific boundary) that matches search terms
           let smallestArea = Infinity;

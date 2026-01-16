@@ -452,55 +452,53 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
                 opacity: 0.3,
               }}
             />
-            {isDualLineChart ? (
-              <>
-                {/* Area Performance Line with gradient fill */}
-                <Area
-                  type="monotone"
-                  dataKey="areaValue"
-                  name="Area Performance"
-                  stroke={colors.main}
-                  strokeWidth={3}
-                  fill={`url(#gradient-${type})`}
-                  dot={false}
-                  activeDot={{
-                    r: 6,
-                    fill: colors.main,
-                    strokeWidth: 3,
-                    stroke: "#fff",
-                    style: { filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" },
-                  }}
-                  animationDuration={1000}
-                  animationBegin={0}
-                />
-                {/* National Average Line - using Line component for better visibility */}
-                <Line
-                  type="monotone"
-                  dataKey="nationalValue"
-                  name="National Average"
-                  stroke="#78716c"
-                  strokeWidth={2.5}
-                  strokeDasharray="5 5"
-                  dot={false}
-                  activeDot={{
-                    r: 5,
-                    fill: "#78716c",
-                    strokeWidth: 2,
-                    stroke: "#fff",
-                    style: { filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" },
-                  }}
-                  animationDuration={1000}
-                  animationBegin={200}
-                />
-                <Legend
-                  wrapperStyle={{ paddingTop: "20px" }}
-                  iconType="line"
-                  formatter={(value) => (
-                    <span className="text-xs text-stone-600">{value}</span>
-                  )}
-                />
-              </>
-            ) : (
+            {/* Area Performance Line with gradient fill */}
+            <Area
+              type="monotone"
+              dataKey="areaValue"
+              name="Area Performance"
+              stroke={colors.main}
+              strokeWidth={3}
+              fill={`url(#gradient-${type})`}
+              dot={false}
+              activeDot={{
+                r: 6,
+                fill: colors.main,
+                strokeWidth: 3,
+                stroke: "#fff",
+                style: { filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" },
+              }}
+              animationDuration={1000}
+              animationBegin={0}
+            />
+            {/* National Average Line - using Line component for better visibility */}
+            <Line
+              type="monotone"
+              dataKey="nationalValue"
+              name="National Average"
+              stroke="#78716c"
+              strokeWidth={2.5}
+              strokeDasharray="5 5"
+              dot={false}
+              activeDot={{
+                r: 5,
+                fill: "#78716c",
+                strokeWidth: 2,
+                stroke: "#fff",
+                style: { filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" },
+              }}
+              animationDuration={1000}
+              animationBegin={200}
+            />
+            <Legend
+              wrapperStyle={{ paddingTop: "20px" }}
+              iconType="line"
+              formatter={(value) => (
+                <span className="text-xs text-stone-600">{value}</span>
+              )}
+            />
+          </ComposedChart>
+        ) : (
               <Area
                 type="monotone"
                 dataKey="value"
