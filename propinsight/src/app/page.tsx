@@ -117,6 +117,7 @@ export default function Home() {
 
       {/* Hero section - Mercury-style */}
       <section className="relative bg-white text-stone-900 min-h-screen flex flex-col overflow-visible">
+        {/* Content container - constrained width */}
         <div className="relative flex-1 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-0">
           <div className="max-w-4xl mx-auto w-full">
             {/* Title */}
@@ -158,23 +159,23 @@ export default function Home() {
               </div>
             </motion.div>
           </div>
+        </div>
 
-          {/* Map preview - sticking out at bottom, full width */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-            className="relative mt-auto -mb-20 md:-mb-28 lg:-mb-36 w-full"
-          >
-            <div className="relative w-full px-4 sm:px-6 lg:px-8">
-              <div className="bg-white rounded-2xl border border-stone-200 shadow-2xl overflow-hidden">
-                <div className="h-[350px] md:h-[450px] lg:h-[550px]">
-                  <MapView initialLevel="suburb" />
-                </div>
+        {/* Map preview - full width, outside constrained container */}
+        <motion.div
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          className="relative w-full -mb-20 md:-mb-28 lg:-mb-36"
+        >
+          <div className="w-full px-4 sm:px-6 lg:px-8">
+            <div className="bg-white rounded-2xl border border-stone-200 shadow-2xl overflow-hidden">
+              <div className="h-[350px] md:h-[450px] lg:h-[550px]">
+                <MapView initialLevel="suburb" />
               </div>
             </div>
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </section>
 
       {/* Product Showcase - Ondo-Style Carousel */}
