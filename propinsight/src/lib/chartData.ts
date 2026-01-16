@@ -138,9 +138,18 @@ export function generateOutperformanceData(
   const months = years * 12;
   const nationalBenchmark = NATIONAL_BENCHMARKS.avgPropertyGrowth;
 
-  // currentOutperformance is already in percentage form (e.g., 10.0 means 10.0% above national)
+  // currentOutperformance is already in percentage form (e.g., 6.0 means 6.0% above national)
   // nationalBenchmark is also in percentage form (2.5 means 2.5%)
-  // So current area growth rate = 2.5% + 10.0% = 12.5%
+  // So current area growth rate = 2.5% + 6.0% = 8.5%
+
+  // For premium areas like Sea Point, Camps Bay, etc., they should maintain
+  // consistent outperformance over time, not trend downward toward national average
+  // Use a stable outperformance with slight variation, not a trend toward convergence
+
+  // Base outperformance should be close to current, with small historical variation
+  // This maintains the area's premium status while showing realistic market fluctuations
+  const baseOutperformance = currentOutperformance;
+  const outperformanceVariation = Math.abs(currentOutperformance) * 0.15; // ±15% of current outperformance
 
   for (let i = months - 1; i >= 0; i--) {
     const date = new Date(now);
@@ -149,24 +158,32 @@ export function generateOutperformanceData(
     const monthsAgo = i;
     const yearsAgo = monthsAgo / 12;
 
-    // Generate historical area growth rate that trends toward current value
-    // Use a gradual approach: past values start closer to national average and trend toward current
-    // This simulates the area gradually outperforming over time
-    const progressToCurrent = Math.min(yearsAgo / years, 1); // 0 = 3 years ago, 1 = now
-    // Both nationalBenchmark and currentOutperformance are in percentage form
-    // e.g., nationalBenchmark = 2.5 (2.5%), currentOutperformance = 10.0 (10.0%)
-    const baseAreaGrowthRate =
-      nationalBenchmark + currentOutperformance * progressToCurrent;
+    // Generate historical outperformance that stays relatively stable
+    // Premium areas maintain their outperformance, with small fluctuations
+    // Add slight cyclical variation (not a trend) to make it realistic
+    const cyclicalVariation = Math.sin((yearsAgo / years) * Math.PI * 2) * 0.3; // Small cyclical pattern
+    const randomVariation = (Math.random() - 0.5) * outperformanceVariation; // Random variation
+    
+    // Historical outperformance stays close to current, with small variations
+    const historicalOutperformance = baseOutperformance + cyclicalVariation + randomVariation;
+    
+    // Ensure outperformance doesn't go negative for premium areas (unless current is negative)
+    const finalOutperformance = currentOutperformance > 0
+      ? Math.max(0, historicalOutperformance) // Premium areas don't underperform
+      : Math.min(0, historicalOutperformance); // Underperforming areas stay negative
 
-    // Add realistic monthly variation (±0.3% for area, ±0.15% for national)
-    const areaVariation = (Math.random() - 0.5) * 0.6; // ±0.3% variation
+    // Area growth rate = national benchmark + outperformance
+    const areaGrowthRate = nationalBenchmark + finalOutperformance;
+
+    // Add realistic monthly variation (±0.2% for area, ±0.15% for national)
+    const areaVariation = (Math.random() - 0.5) * 0.4; // ±0.2% variation
     const nationalVariation = (Math.random() - 0.5) * 0.3; // ±0.15% variation (less volatile)
 
     // Ensure values are reasonable (growth rates typically between -10% and +20%)
     // Values are already in percentage form, so use directly
     const finalAreaValue = Math.max(
       -10,
-      Math.min(20, baseAreaGrowthRate + areaVariation)
+      Math.min(20, areaGrowthRate + areaVariation)
     );
     const finalNationalValue = Math.max(
       -5,
