@@ -30,7 +30,12 @@ const AREA_COORDINATES: Record<string, [number, number]> = {
 };
 
 function getAreaCoordinates(area: Area): [number, number] {
-  return AREA_COORDINATES[area.slug] || [DEFAULT_MAP_CENTER[0], DEFAULT_MAP_CENTER[1]];
+  return (
+    AREA_COORDINATES[area.slug] || [
+      DEFAULT_MAP_CENTER[0],
+      DEFAULT_MAP_CENTER[1],
+    ]
+  );
 }
 
 interface LeafletMapProps {
@@ -61,8 +66,10 @@ export function LeafletMap({
       delete (L.default as any).Icon.Default.prototype._getIconUrl;
       (L.default as any).Icon.Default.mergeOptions({
         iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-        iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-        shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+        iconRetinaUrl:
+          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+        shadowUrl:
+          "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
 
       const map = L.default.map(mapRef.current!, {
@@ -94,9 +101,9 @@ export function LeafletMap({
         const markerDiv = document.createElement("div");
         markerDiv.className = "custom-marker";
         markerDiv.innerHTML = `
-          <div class="marker-pin ${selectedArea?.id === area.id ? "selected" : ""} ${
-          stats ? (isPositive ? "positive" : "negative") : "neutral"
-        }">
+          <div class="marker-pin ${
+            selectedArea?.id === area.id ? "selected" : ""
+          } ${stats ? (isPositive ? "positive" : "negative") : "neutral"}">
             <div class="marker-dot"></div>
           </div>
         `;
@@ -116,8 +123,12 @@ export function LeafletMap({
         const popupContent = document.createElement("div");
         popupContent.innerHTML = `
           <div style="padding: 12px;">
-            <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #171717;">${area.name}</h3>
-            ${stats ? `
+            <h3 style="margin: 0 0 8px 0; font-size: 16px; font-weight: 600; color: #171717;">${
+              area.name
+            }</h3>
+            ${
+              stats
+                ? `
               <div style="margin-bottom: 8px;">
                 <div style="font-size: 20px; font-weight: 700; color: #171717; margin-bottom: 4px;">
                   ${formatPrice(stats.avgPrice)}
@@ -138,7 +149,9 @@ export function LeafletMap({
                 cursor: pointer;
                 transition: background 0.2s;
               ">View Details</button>
-            ` : ""}
+            `
+                : ""
+            }
           </div>
         `;
 
@@ -180,7 +193,10 @@ export function LeafletMap({
       // Auto-focus on selected area
       if (selectedArea) {
         const coords = getAreaCoordinates(selectedArea);
-        map.setView([coords[1], coords[0]], 12, { animate: true, duration: 0.3 });
+        map.setView([coords[1], coords[0]], 12, {
+          animate: true,
+          duration: 0.3,
+        });
       }
     });
 
