@@ -116,35 +116,73 @@ export default function Home() {
       </header>
 
       {/* Hero section - Left-aligned title, right-aligned search */}
-      <section className="relative bg-white text-stone-900 min-h-screen flex flex-col">
+      <section className="relative bg-white text-stone-900 min-h-screen flex flex-col overflow-hidden">
+        {/* Subtle background decoration */}
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-br from-sage-100/30 to-transparent rounded-full blur-3xl"></div>
+          <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-gradient-to-tr from-moss-100/20 to-transparent rounded-full blur-3xl"></div>
+        </div>
+
         <div className="relative flex-1 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: Title and Subtitle */}
-            <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="space-y-6"
-            >
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-stone-900">
+            <div className="space-y-6">
+              <motion.h1
+                initial={{ opacity: 0, y: 30, x: -20 }}
+                animate={{ opacity: 1, y: 0, x: 0 }}
+                transition={{
+                  duration: 0.7,
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: 0.1,
+                }}
+                className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-stone-900"
+              >
                 Property Intelligence
                 <br />
-                <span className="text-sage-600">for South Africa</span>
-              </h1>
-              <p className="text-xl md:text-2xl text-stone-600 font-light leading-relaxed">
+                <motion.span
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.7,
+                    ease: [0.16, 1, 0.3, 1],
+                    delay: 0.3,
+                  }}
+                  className="text-sage-600"
+                >
+                  for South Africa
+                </motion.span>
+              </motion.h1>
+              <motion.p
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: 0.7,
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: 0.5,
+                }}
+                className="text-xl md:text-2xl text-stone-600 font-light leading-relaxed"
+              >
                 Make informed property decisions with comprehensive market
                 insights and data-driven analysis across the Western Cape.
-              </p>
-            </motion.div>
+              </motion.p>
+            </div>
 
-            {/* Right: Search bar */}
+            {/* Right: Search bar with visual enhancements */}
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-              className="flex justify-center lg:justify-end"
+              initial={{ opacity: 0, y: 40, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              transition={{
+                duration: 0.8,
+                ease: [0.16, 1, 0.3, 1],
+                delay: 0.4,
+              }}
+              className="flex justify-center lg:justify-end relative"
             >
-              <div className="w-full max-w-lg">
+              {/* Decorative elements */}
+              <div className="absolute -top-8 -right-8 w-32 h-32 bg-sage-100/40 rounded-full blur-2xl"></div>
+              <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-moss-100/30 rounded-full blur-2xl"></div>
+              
+              <div className="relative w-full max-w-lg">
                 <SearchBar onMapClick={() => setIsMapModalOpen(true)} />
               </div>
             </motion.div>

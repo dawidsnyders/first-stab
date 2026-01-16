@@ -383,12 +383,13 @@ export function LeafletMap({
           font-weight: 600 !important;
         }
 
+        /* Remove the triangle pointer */
         .area-tooltip::before {
-          border-top-color: white !important;
+          display: none !important;
         }
 
         .area-tooltip::after {
-          border-top-color: #ddd9d0 !important;
+          display: none !important;
         }
       `}</style>
 
