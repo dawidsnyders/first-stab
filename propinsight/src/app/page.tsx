@@ -185,14 +185,14 @@ export default function Home() {
       </header>
 
       {/* Hero section - Left-aligned title, right-aligned search */}
-      <section className="relative bg-white text-stone-900 flex flex-col overflow-hidden min-h-screen z-20">
+      <section className="relative bg-white text-stone-900 flex flex-col overflow-hidden z-20" style={{ minHeight: '60vh' }}>
         {/* Subtle background decoration */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-br from-sage-100/30 to-transparent rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-gradient-to-tr from-moss-100/20 to-transparent rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-[400px] pb-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: Title and Subtitle */}
             <div className="space-y-6">
@@ -1042,7 +1042,7 @@ function ProductCard({
       className="flex-shrink-0 w-[340px] md:w-[400px] lg:w-[440px] h-[420px] md:h-[480px]"
     >
       <div
-        className={`${bgColor} rounded-2xl p-6 md:p-8 h-full flex flex-col relative overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200/60`}
+        className={`${bgColor} rounded-2xl p-6 md:p-8 h-full flex flex-col relative overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200/60`}
       >
         {/* Decorative circles */}
         <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-white/30"></div>
@@ -1078,26 +1078,11 @@ function ProductCard({
           </div>
         </div>
 
-        {/* Description & Arrow */}
-        <div className="flex items-end justify-between gap-4 relative z-10 mt-auto pt-4">
-          <p className={`text-sm ${textSubtle} leading-relaxed flex-1`}>
+        {/* Description */}
+        <div className="relative z-10 mt-auto pt-4">
+          <p className={`text-sm ${textSubtle} leading-relaxed`}>
             {description}
           </p>
-          <div className="w-10 h-10 rounded-full bg-stone-900 flex-shrink-0 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-            <svg
-              className="w-5 h-5 text-white"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 8l4 4m0 0l-4 4m4-4H3"
-              />
-            </svg>
-          </div>
         </div>
       </div>
     </motion.div>
