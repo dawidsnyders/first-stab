@@ -194,13 +194,38 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
   const chartData = useMemo(() => {
     if (type === "outperformance") {
       // Verify data structure and ensure areaValue and nationalValue exist
-      return data.map((point, index) => ({
-        ...point,
-        previousValue: index > 0 ? data[index - 1].value : null,
-        areaValue: point.areaValue ?? point.value ?? 0,
-        nationalValue:
-          point.nationalValue ?? NATIONAL_BENCHMARKS.avgPropertyGrowth,
-      }));
+      const processed = data.map((point, index) => {
+        const areaVal = point.areaValue ?? point.value ?? 0;
+        const nationalVal = point.nationalValue ?? NATIONAL_BENCHMARKS.avgPropertyGrowth;
+        
+        // Debug: Log first point to verify data structure
+        if (index === 0) {
+          console.log("Outperformance chart data sample:", {
+            original: point,
+            areaValue: areaVal,
+            nationalValue: nationalVal,
+            hasAreaValue: point.areaValue !== undefined,
+            hasNationalValue: point.nationalValue !== undefined,
+          });
+        }
+        
+        return {
+          ...point,
+          previousValue: index > 0 ? data[index - 1].value : null,
+          areaValue: typeof areaVal === "number" ? areaVal : 0,
+          nationalValue: typeof nationalVal === "number" ? nationalVal : NATIONAL_BENCHMARKS.avgPropertyGrowth,
+        };
+      });
+      
+      // Log all values to verify they're valid
+      console.log("Processed chart data:", {
+        length: processed.length,
+        firstPoint: processed[0],
+        areaValues: processed.map(p => p.areaValue).slice(0, 5),
+        nationalValues: processed.map(p => p.nationalValue).slice(0, 5),
+      });
+      
+      return processed;
     }
     return dataWithPrev;
   }, [data, dataWithPrev, type]);
