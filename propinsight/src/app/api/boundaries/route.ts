@@ -185,12 +185,15 @@ export async function GET(request: NextRequest) {
     let endpoints = API_ENDPOINTS[source] || API_ENDPOINTS.capeTown;
 
     // If Cape Town API fails, fallback to Western Cape API for Cape Town suburbs
-    // If OpenStreetMap fails for Paarl (only returns Point), fallback to Western Cape API
+    // If OpenStreetMap fails for Paarl (only returns Point), fallback to Western Cape API, then National API
     const shouldTryFallback =
       source === "capeTown" ||
       (source === "openstreetmap" && suburbName === "Paarl");
+    // For Paarl, try both Western Cape and National APIs (National has Drakenstein municipality)
     const fallbackEndpoints = shouldTryFallback
-      ? API_ENDPOINTS.westernCape
+      ? suburbName === "Paarl"
+        ? [...API_ENDPOINTS.westernCape, ...API_ENDPOINTS.national]
+        : API_ENDPOINTS.westernCape
       : [];
 
     for (const endpoint of endpoints) {
@@ -715,20 +718,29 @@ export async function GET(request: NextRequest) {
         source === "capeTown"
           ? "Cape Town API failed"
           : "OpenStreetMap only returned Point geometries";
+      const fallbackAPIs = suburbName === "Paarl" 
+        ? "Western Cape and National APIs" 
+        : "Western Cape API";
       console.log(
-        `${fallbackReason} for "${suburbName}", trying Western Cape API as fallback...`
+        `${fallbackReason} for "${suburbName}", trying ${fallbackAPIs} as fallback...`
       );
-      // Switch to Western Cape source and try those endpoints
-      source = "westernCape";
+      // Switch source based on endpoint - will be set per endpoint in loop
       endpoints = fallbackEndpoints;
       lastError = null;
 
-      // Retry with Western Cape endpoints
+      // Retry with fallback endpoints (Western Cape and/or National)
       for (const endpoint of endpoints) {
+        // Determine source based on endpoint
+        if (API_ENDPOINTS.national.includes(endpoint)) {
+          source = "national";
+        } else {
+          source = "westernCape";
+        }
         try {
           const url = new URL(endpoint);
+          const apiName = source === "national" ? "National API" : "Western Cape API";
           console.log(
-            `Querying Western Cape API (fallback) for "${suburbName}"`
+            `Querying ${apiName} (fallback) for "${suburbName}"`
           );
           url.searchParams.append("where", "1=1"); // Get all, filter in code
           url.searchParams.append("outFields", "*");
