@@ -190,7 +190,6 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
     previousValue: index > 0 ? data[index - 1].value : null,
   }));
 
-
   const getYAxisFormatter = () => {
     switch (type) {
       case "medianPrice":
