@@ -335,12 +335,11 @@ export default async function AreaPage({ params }: PageProps) {
           <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
             <div className="mb-6">
               <h2 className="text-2xl font-bold text-stone-900 mb-2">
-                3-Year Price Trend Analysis
+                Price Trend Analysis
               </h2>
               <p className="text-stone-600">
                 Deep dive into price movements, seasonal patterns, and market
-                cycles over the past 36 months. Hover over the chart to see
-                detailed values at each point in time.
+                cycles. Hover over the chart to see detailed values at each point in time.
               </p>
             </div>
             <PriceTrendChart

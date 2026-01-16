@@ -26,7 +26,7 @@ export function StickyReportCTA({ area }: StickyReportCTAProps) {
           onClick={() => setIsModalOpen(true)}
           whileHover={{ scale: 1.01, y: -2 }}
           whileTap={{ scale: 0.99 }}
-          className="w-full relative bg-white/90 backdrop-blur-xl border border-stone-200/60 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden max-h-[100px] hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] hover:border-sage-300/60 hover:bg-white transition-all duration-200 cursor-pointer group text-left"
+          className="w-full relative bg-white/90 backdrop-blur-xl border border-stone-200/60 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden max-h-[100px] hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] hover:border-sage-300/60 hover:bg-white transition-all duration-100 cursor-pointer group text-left"
         >
         <div className="px-4 sm:px-6 py-3">
           <div className="flex items-center justify-between gap-4">
@@ -118,13 +118,13 @@ export function StickyReportCTA({ area }: StickyReportCTAProps) {
               </div>
 
               {/* CTA Button */}
-              <div className="relative px-5 py-2.5 bg-gradient-to-r from-sage-600 to-moss-600 text-white font-semibold text-sm rounded-lg shadow-md group-hover:shadow-lg group-hover:from-sage-700 group-hover:to-moss-700 transition-all duration-200 whitespace-nowrap flex items-center gap-1.5 overflow-hidden pointer-events-none">
+              <div className="relative px-5 py-2.5 bg-gradient-to-r from-sage-600 to-moss-600 text-white font-semibold text-sm rounded-lg shadow-md group-hover:shadow-lg group-hover:from-sage-700 group-hover:to-moss-700 transition-all duration-100 whitespace-nowrap flex items-center gap-1.5 overflow-hidden pointer-events-none">
                 {/* Shine effect on hover */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
 
                 <span className="relative">Buy Report</span>
                 <svg
-                  className="w-3.5 h-3.5 relative transition-transform duration-200 group-hover:translate-x-0.5"
+                  className="w-3.5 h-3.5 relative transition-transform duration-100 group-hover:translate-x-0.5"
                   fill="none"
                   stroke="currentColor"
                   viewBox="0 0 24 24"

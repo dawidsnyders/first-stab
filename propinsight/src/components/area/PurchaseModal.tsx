@@ -107,7 +107,7 @@ export function PurchaseModal({ isOpen, onClose, area }: PurchaseModalProps) {
               <div className="relative bg-gradient-to-br from-sage-600 to-moss-600 p-6">
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/20 transition-colors duration-200 group"
+                  className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/20 transition-colors duration-100 group"
                   aria-label="Close modal"
                 >
                   <svg
@@ -228,7 +228,7 @@ export function PurchaseModal({ isOpen, onClose, area }: PurchaseModalProps) {
                       placeholder="your@email.com"
                       required
                       autoFocus
-                      className="w-full px-4 py-3 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all duration-200 text-stone-900 placeholder-stone-400"
+                      className="w-full px-4 py-3 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all duration-100 text-stone-900 placeholder-stone-400"
                     />
                     <p className="text-xs text-stone-500 mt-1.5">
                       We'll send your report to this email address
@@ -239,7 +239,7 @@ export function PurchaseModal({ isOpen, onClose, area }: PurchaseModalProps) {
                   <button
                     type="submit"
                     disabled={isSubmitting || !email.trim()}
-                    className="w-full group relative px-6 py-4 bg-gradient-to-r from-sage-600 to-moss-600 text-white font-semibold rounded-xl hover:from-sage-700 hover:to-moss-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden"
+                    className="w-full group relative px-6 py-4 bg-gradient-to-r from-sage-600 to-moss-600 text-white font-semibold rounded-xl hover:from-sage-700 hover:to-moss-700 transition-all duration-100 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden"
                   >
                     {/* Shine effect on hover */}
                     <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
@@ -263,7 +263,7 @@ export function PurchaseModal({ isOpen, onClose, area }: PurchaseModalProps) {
                           Purchase Report for {REPORT_PRICE_DISPLAY}
                         </span>
                         <svg
-                          className="w-5 h-5 relative transition-transform duration-200 group-hover:translate-x-0.5"
+                          className="w-5 h-5 relative transition-transform duration-100 group-hover:translate-x-0.5"
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"

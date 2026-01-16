@@ -30,16 +30,25 @@ const PriceTooltip = ({
   active,
   payload,
   label,
+  data,
 }: {
   active?: boolean;
   payload?: any[];
   label?: string;
+  data?: ChartDataPoint[];
 }) => {
-  if (active && payload && payload.length) {
+  if (active && payload && payload.length && data) {
     const value = payload[0].value;
-    const avgPrice = payload[0].payload.avgPrice || value;
-    const changeFromAvg =
-      avgPrice > 0 ? ((value - avgPrice) / avgPrice) * 100 : 0;
+    const currentIndex = data.findIndex((d) => d.label === label);
+    
+    // Find value from 12 months ago (YoY comparison)
+    let yoyChange = 0;
+    if (currentIndex >= 12) {
+      const valueOneYearAgo = data[currentIndex - 12].value;
+      yoyChange = valueOneYearAgo > 0 
+        ? ((value - valueOneYearAgo) / valueOneYearAgo) * 100 
+        : 0;
+    }
 
     return (
       <motion.div
@@ -57,15 +66,15 @@ const PriceTooltip = ({
               {formatPrice(value)}
             </p>
           </div>
-          {changeFromAvg !== 0 && (
+          {currentIndex >= 12 && yoyChange !== 0 && (
             <div className="pt-2 border-t border-stone-100">
               <p
                 className={`text-xs font-medium ${
-                  changeFromAvg > 0 ? "text-green-600" : "text-red-600"
+                  yoyChange > 0 ? "text-green-600" : "text-red-600"
                 }`}
               >
-                {changeFromAvg > 0 ? "↑" : "↓"}{" "}
-                {Math.abs(changeFromAvg).toFixed(1)}% from 3-year average
+                {yoyChange > 0 ? "↑" : "↓"}{" "}
+                {Math.abs(yoyChange).toFixed(1)}% YoY
               </p>
             </div>
           )}
@@ -192,7 +201,7 @@ export function PriceTrendChart({
             tickMargin={8}
             domain={yAxisDomain}
           />
-          <Tooltip content={<PriceTooltip />} />
+          <Tooltip content={<PriceTooltip data={chartData} />} />
           <ReferenceLine
             y={avgPrice}
             stroke={avgColor}

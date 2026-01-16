@@ -119,12 +119,9 @@ function DevelopmentCard({ development }: DevelopmentCardProps) {
       target="_blank"
       rel="noopener noreferrer"
       className="group bg-white border border-stone-200 rounded-xl hover:shadow-lg hover:border-sage-300 transition-all duration-200 flex flex-col"
-      style={{ 
-        height: '150px',
-        paddingTop: '12px',
-        paddingBottom: '12px',
-        paddingLeft: '12px',
-        paddingRight: '12px'
+      style={{
+        height: "150px",
+        padding: "12px",
       }}
     >
       {/* Developer Logo & Status */}
@@ -139,7 +136,10 @@ function DevelopmentCard({ development }: DevelopmentCardProps) {
           {development.name}
         </h4>
         <div className="text-right flex-shrink-0">
-          <div className="flex flex-col items-end justify-center" style={{ transform: 'translateY(3px)' }}>
+          <div
+            className="flex flex-col items-end justify-center"
+            style={{ transform: "translateY(12px)" }}
+          >
             <p className="text-[10px] text-stone-500 leading-tight mb-0.5">
               Avg Price
             </p>
