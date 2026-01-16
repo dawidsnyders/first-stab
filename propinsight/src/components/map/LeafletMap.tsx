@@ -263,15 +263,26 @@ export function LeafletMap({
         // Check first coordinate to ensure it's in Western Cape range
         if (boundary.length > 0) {
           const [firstLat, firstLng] = boundary[0];
-          if (firstLat < -36 || firstLat > -31 || firstLng < 16 || firstLng > 26) {
+          if (
+            firstLat < -36 ||
+            firstLat > -31 ||
+            firstLng < 16 ||
+            firstLng > 26
+          ) {
             console.error(
               `⚠ WARNING: ${area.name} boundary coordinates seem incorrect. First point: [${firstLat}, ${firstLng}]. Expected Western Cape range: lat -36 to -31, lng 16 to 26`
             );
           }
         }
-        
+
         console.log(
-          `Adding polygon for ${area.name} (${area.slug}) with ${boundary.length} points. First coord: [${boundary[0]?.[0]}, ${boundary[0]?.[1]}], Last coord: [${boundary[boundary.length - 1]?.[0]}, ${boundary[boundary.length - 1]?.[1]}]`
+          `Adding polygon for ${area.name} (${area.slug}) with ${
+            boundary.length
+          } points. First coord: [${boundary[0]?.[0]}, ${
+            boundary[0]?.[1]
+          }], Last coord: [${boundary[boundary.length - 1]?.[0]}, ${
+            boundary[boundary.length - 1]?.[1]
+          }]`
         );
         const polygon = L.default
           .polygon(boundary, {
@@ -282,11 +293,19 @@ export function LeafletMap({
             className: `area-polygon area-${area.id}`,
             interactive: true,
             bubblingMouseEvents: false,
-            // Ensure polygon is clickable
+            // Ensure polygon is clickable and on top layer
             clickable: true,
+            pane: "overlayPane", // Ensure polygon is in overlay pane (above tiles)
           })
           .addTo(mapInstanceRef.current);
         
+        // Ensure polygon is in the correct pane and has proper z-index
+        const polygonElement = polygon.getElement();
+        if (polygonElement) {
+          polygonElement.style.pointerEvents = "auto";
+          polygonElement.style.cursor = "pointer";
+        }
+
         // Store polygon reference for debugging
         polygonsRef.current.set(area.id, polygon);
 
@@ -313,7 +332,9 @@ export function LeafletMap({
 
         // Add click handler - use refs to get latest callbacks
         polygon.on("click", (e) => {
-          console.log(`✓ Click detected on ${area.name} (${area.slug}) polygon`);
+          console.log(
+            `✓ Click detected on ${area.name} (${area.slug}) polygon`
+          );
           if (e.originalEvent) {
             e.originalEvent.stopPropagation();
             // Prevent focus on the element to avoid blue outline
@@ -329,10 +350,12 @@ export function LeafletMap({
           }
           onAreaClickRef.current(area);
         });
-        
+
         // Also add mouseover to verify polygon is interactive
         polygon.on("mouseover", () => {
-          console.log(`✓ Mouseover detected on ${area.name} (${area.slug}) polygon`);
+          console.log(
+            `✓ Mouseover detected on ${area.name} (${area.slug}) polygon`
+          );
         });
 
         // Add hover handlers - only update the specific polygon, not state
