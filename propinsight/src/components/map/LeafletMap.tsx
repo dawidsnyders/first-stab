@@ -122,10 +122,8 @@ export function LeafletMap({
         })
         .addTo(map);
 
-      // Apply grey filter to map for desaturated look
-      const mapContainer = mapRef.current!;
-      mapContainer.style.filter =
-        "grayscale(100%) brightness(0.9) contrast(0.95)";
+      // Map is now colored - no grayscale filter
+      // Keep slight brightness adjustment for better contrast with overlays
 
       mapInstanceRef.current = map;
       setIsMapReady(true);
@@ -174,21 +172,24 @@ export function LeafletMap({
         const isHovered = hoveredArea?.id === area.id;
 
         // Determine polygon style - make boundaries clearly visible and prominent
-        let fillColor = "#5d7350"; // sage-600 solid color
-        let borderColor = "#4a5c3f"; // sage-700 - very visible dark border
-        let borderWidth = 2.5;
-        let fillOpacity = 0.3; // Clearly visible
+        // Default state - subtle neutral tones
+        let fillColor = "#a8b89d"; // sage-300 - subtle green tint
+        let borderColor = "#5d7350"; // sage-500 - visible border
+        let borderWidth = 2;
+        let fillOpacity = 0.2; // Subtle default
 
+        // Selected state - nice green tint with solid green borders (brand colors)
         if (isSelected) {
-          fillColor = "#7d9470"; // sage-500 brighter when selected
-          borderColor = "#3d4d33"; // sage-700 darker border
-          borderWidth = 4;
-          fillOpacity = 0.5;
-        } else if (isHovered) {
-          fillColor = "#6f8464"; // sage-500 lighter on hover
-          borderColor = "#4a5c3f"; // sage-700
+          fillColor = "#e8ede6"; // sage-100 - light green tint
+          borderColor = "#4a5c3f"; // sage-600 - solid green border (brand)
           borderWidth = 3.5;
-          fillOpacity = 0.4;
+          fillOpacity = 0.6; // Nice visible green tint when selected
+        } else if (isHovered) {
+          // Hover state - medium green tint
+          fillColor = "#d1d9cc"; // sage-200 - medium green tint
+          borderColor = "#5d7350"; // sage-500
+          borderWidth = 2.5;
+          fillOpacity = 0.3;
         }
 
         const polygon = L.default
@@ -203,6 +204,27 @@ export function LeafletMap({
           })
           .addTo(mapInstanceRef.current);
 
+        // Add tooltip with area name - nice looking tooltip
+        const tooltipContent = `
+          <div style="
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2a2520;
+            padding: 6px 12px;
+            margin: 0;
+            text-align: center;
+          ">${area.name}</div>
+        `;
+        
+        polygon.bindTooltip(tooltipContent, {
+          permanent: false,
+          direction: "auto",
+          className: "area-tooltip",
+          offset: [0, -10],
+          opacity: 0.95,
+        });
+
         // Add click handler - use refs to get latest callbacks
         polygon.on("click", (e) => {
           if (e.originalEvent) {
@@ -215,17 +237,23 @@ export function LeafletMap({
         polygon.on("mouseover", () => {
           setHoveredArea(area);
           onAreaHoverRef.current?.(area);
-          polygon.setStyle({ fillOpacity: 0.4 });
+          // Show tooltip and update style
+          polygon.openTooltip();
+          if (!isSelected) {
+            polygon.setStyle({ fillOpacity: 0.35 });
+          }
         });
 
         polygon.on("mouseout", () => {
           setHoveredArea(null);
           onAreaHoverRef.current?.(null);
+          // Hide tooltip and restore original style
+          polygon.closeTooltip();
           // Restore original style based on selection state
           if (!isSelected) {
-            polygon.setStyle({ fillOpacity: 0.3 });
+            polygon.setStyle({ fillOpacity: 0.2 });
           } else {
-            polygon.setStyle({ fillOpacity: 0.5 });
+            polygon.setStyle({ fillOpacity: 0.6 });
           }
         });
 
@@ -256,21 +284,24 @@ export function LeafletMap({
       const isHovered = hoveredArea?.id === area.id;
 
       // Determine polygon style - match initial creation styles
-      let fillColor = "#5d7350";
-      let borderColor = "#4a5c3f";
-      let borderWidth = 2.5;
-      let fillOpacity = 0.3;
+      // Default state - subtle green tint
+      let fillColor = "#a8b89d"; // sage-300
+      let borderColor = "#5d7350"; // sage-500
+      let borderWidth = 2;
+      let fillOpacity = 0.2;
 
+      // Selected state - nice green tint with solid green borders
       if (isSelected) {
-        fillColor = "#7d9470";
-        borderColor = "#3d4d33"; // Even darker for selected
-        borderWidth = 4;
-        fillOpacity = 0.5;
-      } else if (isHovered) {
-        fillColor = "#6f8464";
-        borderColor = "#4a5c3f";
+        fillColor = "#e8ede6"; // sage-100 - light green tint
+        borderColor = "#4a5c3f"; // sage-600 - solid green border (brand)
         borderWidth = 3.5;
-        fillOpacity = 0.4;
+        fillOpacity = 0.6; // Nice visible green tint
+      } else if (isHovered) {
+        // Hover state - medium green tint
+        fillColor = "#d1d9cc"; // sage-200
+        borderColor = "#5d7350"; // sage-500
+        borderWidth = 2.5;
+        fillOpacity = 0.3;
       }
 
       polygon.setStyle({
@@ -339,6 +370,25 @@ export function LeafletMap({
         .leaflet-overlay-pane svg path {
           pointer-events: auto !important;
           cursor: pointer !important;
+        }
+
+        /* Custom tooltip styling - nice looking tooltip */
+        .area-tooltip {
+          background: white !important;
+          border: 1px solid #ddd9d0 !important;
+          border-radius: 8px !important;
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+          padding: 0 !important;
+          margin: 0 !important;
+          font-weight: 600 !important;
+        }
+
+        .area-tooltip::before {
+          border-top-color: white !important;
+        }
+
+        .area-tooltip::after {
+          border-top-color: #ddd9d0 !important;
         }
       `}</style>
 

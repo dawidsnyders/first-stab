@@ -115,67 +115,41 @@ export default function Home() {
         </motion.div>
       </header>
 
-      {/* Hero section - Mercury-style */}
-      <section className="relative bg-white text-stone-900 min-h-screen flex flex-col overflow-visible">
-        {/* Content container - constrained width */}
-        <div className="relative flex-1 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-0">
-          <div className="max-w-4xl mx-auto w-full">
-            {/* Title */}
+      {/* Hero section - Left-aligned title, right-aligned search */}
+      <section className="relative bg-white text-stone-900 min-h-screen flex flex-col">
+        <div className="relative flex-1 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+            {/* Left: Title and Subtitle */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              className="text-center mb-5"
+              className="space-y-6"
             >
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-4 leading-[1.1] tracking-tight text-stone-900">
+              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-stone-900">
                 Property Intelligence
                 <br />
                 <span className="text-sage-600">for South Africa</span>
               </h1>
-            </motion.div>
-
-            {/* Subtitle */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
-              className="text-center mb-8"
-            >
-              <p className="text-xl md:text-2xl text-stone-600 font-light leading-relaxed max-w-2xl mx-auto">
+              <p className="text-xl md:text-2xl text-stone-600 font-light leading-relaxed">
                 Make informed property decisions with comprehensive market
                 insights and data-driven analysis across the Western Cape.
               </p>
             </motion.div>
 
-            {/* Search bar */}
+            {/* Right: Search bar */}
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2, ease: "easeOut" }}
-              className="flex justify-center mb-16"
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.1, ease: "easeOut" }}
+              className="flex justify-center lg:justify-end"
             >
-              <div className="w-full max-w-2xl">
+              <div className="w-full max-w-lg">
                 <SearchBar onMapClick={() => setIsMapModalOpen(true)} />
               </div>
             </motion.div>
           </div>
         </div>
-
-        {/* Map preview - full width, outside constrained container */}
-        <motion.div
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
-          className="relative w-full -mb-20 md:-mb-28 lg:-mb-36"
-        >
-          <div className="w-full px-4 sm:px-6 lg:px-8">
-            <div className="bg-white rounded-2xl border border-stone-200 shadow-2xl overflow-hidden">
-              <div className="h-[350px] md:h-[450px] lg:h-[550px]">
-                <MapView initialLevel="suburb" />
-              </div>
-            </div>
-          </div>
-        </motion.div>
       </section>
 
       {/* Product Showcase - Ondo-Style Carousel */}
