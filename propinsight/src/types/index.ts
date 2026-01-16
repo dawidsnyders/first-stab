@@ -1,5 +1,5 @@
 // Area types
-export type AreaLevel = 'province' | 'city' | 'suburb';
+export type AreaLevel = "province" | "city" | "suburb";
 
 export interface Area {
   id: string;
@@ -24,7 +24,38 @@ export interface AreaStats {
     apartments: number;
     land: number;
   };
+  propertyTypeDetails?: {
+    houses: {
+      salesCount: number;
+      avgPrice: number;
+      medianPrice: number;
+      priceChangeYoY: number;
+      volume: number; // total sales volume
+    };
+    apartments: {
+      salesCount: number;
+      avgPrice: number;
+      medianPrice: number;
+      priceChangeYoY: number;
+      volume: number; // total sales volume
+    };
+  };
   lastUpdated: string;
+}
+
+export interface Development {
+  id: string;
+  name: string;
+  developer: {
+    name: string;
+    slug: string;
+    logo?: string; // URL to logo
+  };
+  areaId: string; // Which area this development is in
+  estimatedCompletion: string; // ISO date string
+  averageApartmentPrice: number;
+  website: string; // URL to development website
+  status: "ongoing" | "upcoming" | "completed";
 }
 
 // Report types
@@ -45,9 +76,9 @@ export interface ReportPurchase {
   reportId: string;
   email: string;
   amount: number;
-  currency: 'ZAR';
+  currency: "ZAR";
   stripePaymentId?: string;
-  status: 'pending' | 'completed' | 'failed';
+  status: "pending" | "completed" | "failed";
   createdAt: string;
 }
 
@@ -70,10 +101,10 @@ export const formatPrice = (price: number): string => {
 };
 
 export const formatPriceChange = (change: number): string => {
-  const sign = change >= 0 ? '+' : '';
+  const sign = change >= 0 ? "+" : "";
   return `${sign}${change.toFixed(1)}%`;
 };
 
 export const formatNumber = (num: number): string => {
-  return new Intl.NumberFormat('en-ZA').format(num);
+  return new Intl.NumberFormat("en-ZA").format(num);
 };

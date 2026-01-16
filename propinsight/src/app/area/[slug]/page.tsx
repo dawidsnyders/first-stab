@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { CalendarIcon, BoltIcon } from "@heroicons/react/24/outline";
 import { getAreaBySlug, getChildAreas, sampleAreas } from "@/data/areas";
+import { getDevelopmentsByArea } from "@/data/developments";
 import { formatPrice, formatPriceChange, formatNumber } from "@/types";
 import {
   APP_NAME,
@@ -12,7 +13,10 @@ import { AreaCard } from "@/components/area/AreaCard";
 import { ReportCTA } from "./ReportCTA";
 import { StatsGrid } from "@/components/area/StatsGrid";
 import { PriceTrendChart } from "@/components/charts/PriceTrendChart";
+import { PropertyTypeBreakdown } from "@/components/area/PropertyTypeBreakdown";
+import { DevelopmentsSection } from "@/components/area/DevelopmentsSection";
 import { generateMedianPriceData } from "@/lib/chartData";
+import { AreaLocationMap } from "@/components/map/AreaLocationMap";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -34,6 +38,7 @@ export default async function AreaPage({ params }: PageProps) {
 
   const { stats } = area;
   const childAreas = getChildAreas(area.id);
+  const developments = getDevelopmentsByArea(area.id);
   const isPositive = stats && stats.priceChangeYoY >= 0;
 
   // Calculate outperformance vs national benchmark
@@ -232,6 +237,11 @@ export default async function AreaPage({ params }: PageProps) {
               <p className="text-lg text-stone-600 leading-relaxed max-w-2xl">
                 {getDescription()}
               </p>
+              
+              {/* Location Map */}
+              <div className="pt-4">
+                <AreaLocationMap area={area} />
+              </div>
             </div>
 
             {/* Right: Key Stats and Interesting Info */}
@@ -345,36 +355,42 @@ export default async function AreaPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* Property type breakdown */}
-      {stats?.propertyTypeBreakdown && (
+      {/* Property Type Breakdown - Houses vs Apartments */}
+      {stats && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
-            <div className="mb-6">
+            <div className="mb-8">
               <h2 className="text-2xl font-bold text-stone-900 mb-2">
-                Property Type Distribution
+                Houses vs Apartments Breakdown
               </h2>
               <p className="text-stone-600">
-                Market composition by property type, showing the relative
-                proportion of houses, apartments, and land sales in {area.name}.
+                A detailed comparison showing how houses and apartments perform
+                differently in {area.name}. These property types have distinct
+                market dynamics, prices, and growth patterns.
               </p>
             </div>
-            <div className="flex gap-6">
-              <PropertyTypeBar
-                label="Houses"
-                percentage={stats.propertyTypeBreakdown.houses}
-                color="bg-sage-500"
-              />
-              <PropertyTypeBar
-                label="Apartments"
-                percentage={stats.propertyTypeBreakdown.apartments}
-                color="bg-terracotta-500"
-              />
-              <PropertyTypeBar
-                label="Land"
-                percentage={stats.propertyTypeBreakdown.land}
-                color="bg-stone-400"
-              />
+            <PropertyTypeBreakdown stats={stats} areaName={area.name} />
+          </div>
+        </section>
+      )}
+
+      {/* Developments Section */}
+      {developments.length > 0 && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
+            <div className="mb-8">
+              <h2 className="text-2xl font-bold text-stone-900 mb-2">
+                Ongoing & Upcoming Developments
+              </h2>
+              <p className="text-stone-600">
+                Track new developments in {area.name} from leading property
+                developers. Click on any development to learn more.
+              </p>
             </div>
+            <DevelopmentsSection
+              developments={developments}
+              areaName={area.name}
+            />
           </div>
         </section>
       )}
