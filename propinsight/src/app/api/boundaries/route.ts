@@ -120,6 +120,7 @@ export async function GET(request: NextRequest) {
         ],
       },
       // Paarl - Use OpenStreetMap for more accurate town boundary (not entire municipality)
+      // Fallback to Western Cape API if OpenStreetMap only returns Points
       paarl: {
         name: "Paarl",
         source: "openstreetmap",
@@ -128,6 +129,7 @@ export async function GET(request: NextRequest) {
           "Paarl, Western Cape",
           "Paarl town",
           "Paarl, Drakenstein",
+          "Drakenstein", // Also search for municipality name in fallback
         ],
       },
       // Val de Vie Estate (merged from Val de Vie and Pearl Valley) - use OpenStreetMap
@@ -803,6 +805,22 @@ export async function GET(request: NextRequest) {
               responseData.features?.length || 0
             } total features)`
           );
+          
+          // Debug: Log sample feature properties to understand the data structure
+          if (candidates.length === 0 && responseData.features && responseData.features.length > 0) {
+            const sampleFeature = responseData.features[0];
+            console.log(
+              `Debug: Sample feature properties for "${suburbName}":`,
+              Object.keys(sampleFeature.properties || {}).slice(0, 10)
+            );
+            console.log(
+              `Debug: Sample feature property values:`,
+              Object.entries(sampleFeature.properties || {})
+                .slice(0, 10)
+                .map(([k, v]) => `${k}: ${v}`)
+                .join(", ")
+            );
+          }
 
           if (candidates.length > 0) {
             // Use smallest candidate
