@@ -8,7 +8,7 @@ import {
   MapIcon,
   DocumentTextIcon,
   BoltIcon,
-  TargetIcon,
+  AcademicCapIcon,
   MagnifyingGlassIcon,
   HomeIcon,
   MapPinIcon,
@@ -225,7 +225,7 @@ export default function Home() {
               description="Quick stats and key metrics displayed beautifully. No need to dig through spreadsheets."
             />
             <FeatureCard
-              Icon={TargetIcon}
+              Icon={AcademicCapIcon}
               title="Investment Intelligence"
               description="Understand market dynamics, risk factors, and opportunities to make smarter property investments."
             />

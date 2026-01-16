@@ -11,6 +11,8 @@ import {
 import { AreaCard } from "@/components/area/AreaCard";
 import { ReportCTA } from "./ReportCTA";
 import { StatsGrid } from "@/components/area/StatsGrid";
+import { PriceTrendChart } from "@/components/charts/PriceTrendChart";
+import { generateMedianPriceData } from "@/lib/chartData";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -316,61 +318,32 @@ export default async function AreaPage({ params }: PageProps) {
         </section>
       )}
 
-      {/* Price chart placeholder */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
-          <div className="mb-6">
-            <h2 className="text-2xl font-bold text-stone-900 mb-2">
-              3-Year Price Trend Analysis
-            </h2>
-            <p className="text-stone-600">
-              Deep dive into price movements, seasonal patterns, and market
-              cycles over the past 36 months with interactive charts and
-              annotations.
-            </p>
-          </div>
-          <div className="h-80 bg-gradient-to-br from-stone-50 to-stone-100 rounded-xl flex items-center justify-center border-2 border-dashed border-stone-300 relative overflow-hidden">
-            <div className="absolute inset-0 bg-grid-stone-200/50 opacity-20" />
-            <div className="text-center text-stone-500 relative z-10">
-              <svg
-                className="w-16 h-16 mx-auto mb-4 text-stone-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={1.5}
-                  d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
-                />
-              </svg>
-              <p className="text-base font-medium text-stone-700 mb-1">
-                Interactive price chart with annotations
+      {/* Price chart */}
+      {stats && (
+        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="bg-white rounded-2xl border border-stone-200 p-8 shadow-sm">
+            <div className="mb-6">
+              <h2 className="text-2xl font-bold text-stone-900 mb-2">
+                3-Year Price Trend Analysis
+              </h2>
+              <p className="text-stone-600">
+                Deep dive into price movements, seasonal patterns, and market
+                cycles over the past 36 months. Hover over the chart to see
+                detailed values at each point in time.
               </p>
-              <p className="text-sm text-stone-500">
-                Available in the full market report
-              </p>
-              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-sage-600 font-medium">
-                <svg
-                  className="w-4 h-4"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M13 10V3L4 14h7v7l9-11h-7z"
-                  />
-                </svg>
-                Includes 10-year historical data
-              </div>
             </div>
+            <PriceTrendChart
+              data={generateMedianPriceData(
+                stats.medianPrice,
+                stats.priceChangeYoY
+              )}
+              areaName={area.name}
+              currentPrice={stats.medianPrice}
+              priceChangeYoY={stats.priceChangeYoY}
+            />
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Property type breakdown */}
       {stats?.propertyTypeBreakdown && (
