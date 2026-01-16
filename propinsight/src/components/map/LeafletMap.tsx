@@ -249,6 +249,16 @@ export function LeafletMap({
         polygon.on("click", (e) => {
           if (e.originalEvent) {
             e.originalEvent.stopPropagation();
+            // Prevent focus on the element to avoid blue outline
+            if (e.originalEvent.target) {
+              (e.originalEvent.target as HTMLElement).blur();
+            }
+          }
+          // Prevent polygon from receiving focus
+          const polygonElement = polygon.getElement();
+          if (polygonElement) {
+            polygonElement.setAttribute("tabindex", "-1");
+            polygonElement.style.outline = "none";
           }
           onAreaClickRef.current(area);
         });
@@ -390,6 +400,31 @@ export function LeafletMap({
         .leaflet-overlay-pane svg path {
           pointer-events: auto !important;
           cursor: pointer !important;
+        }
+
+        /* Remove focus outline from polygons */
+        .leaflet-interactive:focus {
+          outline: none !important;
+          outline-offset: 0 !important;
+        }
+
+        .leaflet-interactive:focus-visible {
+          outline: none !important;
+          outline-offset: 0 !important;
+        }
+
+        /* Remove any browser default focus styles on polygon elements */
+        .area-polygon:focus,
+        .area-polygon:focus-visible {
+          outline: none !important;
+          outline-offset: 0 !important;
+        }
+
+        /* Remove outline from SVG paths when focused */
+        .leaflet-overlay-pane svg path:focus,
+        .leaflet-overlay-pane svg path:focus-visible {
+          outline: none !important;
+          outline-offset: 0 !important;
         }
 
         /* Custom tooltip styling - nice looking tooltip */

@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import { Area } from "@/types";
 import { DEFAULT_MAP_CENTER } from "@/lib/constants";
+import { getAreaBoundaryPolygon } from "@/data/areaBoundaries";
+import { getBoundaryForArea } from "@/lib/geojson-boundaries";
 import "leaflet/dist/leaflet.css";
 
 // Coordinates for all Western Cape areas
@@ -37,34 +39,39 @@ function getAreaCoordinates(area: Area): [number, number] {
   );
 }
 
-// Generate approximate polygon boundary
-function generateAreaBoundary(
-  center: [number, number],
-  size: number = 0.02
-): [number, number][] {
-  const [lng, lat] = center;
+// Get area boundary - uses real GeoJSON boundaries when available
+async function getAreaBoundaryAsync(area: Area): Promise<[number, number][]> {
+  // First try to get real boundary from City of Cape Town GeoJSON API
+  if (area.level === "suburb") {
+    const geoJSONBoundary = await getBoundaryForArea(area.slug);
+    if (geoJSONBoundary) {
+      return geoJSONBoundary;
+    }
+  }
+
+  // Fallback: Try static boundary data
+  const staticBoundary = getAreaBoundaryPolygon(area.slug);
+  if (staticBoundary) {
+    return staticBoundary;
+  }
+
+  // Last resort: Generate approximate polygon
+  const coords = getAreaCoordinates(area);
+  const [lng, lat] = coords;
+  const size =
+    area.level === "province" ? 2.0 : area.level === "city" ? 0.3 : 0.02;
+
   const points: [number, number][] = [];
   const sides = 6;
   for (let i = 0; i <= sides; i++) {
     const angle = (i * 2 * Math.PI) / sides;
-    const radius = size * (0.8 + Math.random() * 0.4);
-    points.push([
-      lng + radius * Math.cos(angle),
-      lat + radius * Math.sin(angle),
-    ]);
+    const radius = size;
+    const pointLng = lng + radius * Math.cos(angle);
+    const pointLat = lat + radius * Math.sin(angle);
+    // Leaflet expects [lat, lng] format
+    points.push([pointLat, pointLng]);
   }
   return points;
-}
-
-function getAreaBoundary(area: Area): [number, number][] {
-  const coords = getAreaCoordinates(area);
-  const size =
-    area.level === "province"
-      ? 2.0
-      : area.level === "city"
-      ? 0.3
-      : 0.02; // suburb
-  return generateAreaBoundary(coords, size);
 }
 
 interface AreaLocationMapProps {
@@ -84,73 +91,53 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
       return;
     }
 
-    // Dynamically import Leaflet to avoid SSR issues
-    import("leaflet").then((L) => {
-      const coords = getAreaCoordinates(area);
-      const boundary = getAreaBoundary(area);
+    // Dynamically import Leaflet and fetch boundaries
+    Promise.all([import("leaflet"), getAreaBoundaryAsync(area)]).then(
+      ([L, boundary]) => {
+        const coords = getAreaCoordinates(area);
 
-      // Determine zoom level based on area level
-      const zoom =
-        area.level === "province"
-          ? 7
-          : area.level === "city"
-          ? 10
-          : 12; // suburb
+        // Determine zoom level based on area level
+        const zoom =
+          area.level === "province" ? 7 : area.level === "city" ? 10 : 12; // suburb
 
-      const map = L.default.map(mapRef.current!, {
-        center: [coords[1], coords[0]],
-        zoom: zoom,
-        zoomControl: true,
-        attributionControl: false,
-        dragging: true,
-        touchZoom: true,
-        doubleClickZoom: true,
-        scrollWheelZoom: true,
-        boxZoom: true,
-        keyboard: true,
-      });
+        const map = L.default.map(mapRef.current!, {
+          center: [coords[1], coords[0]], // [lat, lng] for Leaflet
+          zoom: zoom,
+          zoomControl: true,
+          attributionControl: false,
+          dragging: true,
+          touchZoom: true,
+          doubleClickZoom: true,
+          scrollWheelZoom: true,
+          boxZoom: true,
+          keyboard: true,
+        });
 
-      // Add greyed-out OpenStreetMap tile layer
-      L.default
-        .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution: "",
-          maxZoom: 19,
-        })
-        .addTo(map);
+        // Add OpenStreetMap tile layer (full color, no grayscale)
+        L.default
+          .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: "",
+            maxZoom: 19,
+          })
+          .addTo(map);
 
-      // Apply grey filter to map
-      const mapContainer = mapRef.current!;
-      mapContainer.style.filter = "grayscale(100%) brightness(0.9) contrast(0.95)";
+        // Map is now colored - no grayscale filter
 
-      // Add area polygon
-      L.default
-        .polygon(boundary, {
-          color: "#5d7350", // sage-600
-          weight: 2.5,
-          fillColor: "rgba(93, 115, 80, 0.3)", // sage-600 with opacity
-          fillOpacity: 0.3,
-        })
-        .addTo(map);
+        // Add area polygon with new styling (matching main map)
+        L.default
+          .polygon(boundary, {
+            color: "#4a5c3f", // sage-600 - solid green border (brand)
+            weight: 3.5,
+            fillColor: "#e8ede6", // sage-100 - light green tint
+            fillOpacity: 0.6, // Nice visible green tint
+            className: "area-location-polygon",
+            interactive: false, // Non-interactive for preview
+          })
+          .addTo(map);
 
-      // Add marker at center
-      const marker = L.default.marker([coords[1], coords[0]], {
-        icon: L.default.divIcon({
-          className: "area-location-marker",
-          html: `<div style="
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #5d7350;
-            border: 3px solid white;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
-          "></div>`,
-          iconSize: [16, 16],
-          iconAnchor: [8, 8],
-        }),
-      }).addTo(map);
-
-      mapInstanceRef.current = map;
-    });
+        mapInstanceRef.current = map;
+      }
+    );
 
     return () => {
       if (mapInstanceRef.current) {
@@ -171,6 +158,28 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
   return (
     <div className="relative w-full h-64 rounded-xl overflow-hidden border border-stone-200 bg-stone-50">
       <div ref={mapRef} className="w-full h-full" />
+
+      {/* Custom CSS for map styling - matching main map */}
+      <style jsx global>{`
+        .leaflet-container {
+          font-family: inherit;
+          background: #f5f5f4;
+        }
+
+        /* Remove focus outline from polygons */
+        .leaflet-interactive:focus,
+        .leaflet-interactive:focus-visible {
+          outline: none !important;
+          outline-offset: 0 !important;
+        }
+
+        .area-location-polygon:focus,
+        .area-location-polygon:focus-visible {
+          outline: none !important;
+          outline-offset: 0 !important;
+        }
+      `}</style>
+
       <div className="absolute bottom-2 right-2 text-xs text-stone-500 bg-white/90 px-2 py-1 rounded backdrop-blur-sm">
         <a
           href="https://www.openstreetmap.org/copyright"

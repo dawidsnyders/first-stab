@@ -13,9 +13,10 @@ import {
   MapPinIcon,
 } from "@heroicons/react/24/outline";
 import { SearchBar } from "@/components/ui/SearchBar";
-import { MapView } from "@/components/map/MapView";
 import { MapModal } from "@/components/ui/MapModal";
+import { MapView } from "@/components/map/MapView";
 import { AreaCard } from "@/components/area/AreaCard";
+import { AreaPreviewCard } from "@/components/area/AreaPreviewCard";
 import { getAreasByLevel } from "@/data/areas";
 import {
   APP_NAME,
@@ -191,7 +192,7 @@ export default function Home() {
               {/* Decorative elements */}
               <div className="absolute -top-8 -right-8 w-32 h-32 bg-sage-100/40 rounded-full blur-2xl"></div>
               <div className="absolute -bottom-8 -left-8 w-24 h-24 bg-moss-100/30 rounded-full blur-2xl"></div>
-              
+
               <div className="relative w-full max-w-lg">
                 <SearchBar onMapClick={() => setIsMapModalOpen(true)} />
               </div>
@@ -365,7 +366,7 @@ export default function Home() {
               <div className="flex-shrink-0 w-4 md:w-8"></div>
             </div>
           </div>
-          
+
           {/* Controls: Navigation + Progress */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
             <div className="flex items-center gap-6">
@@ -410,12 +411,16 @@ export default function Home() {
                   </svg>
                 </button>
               </div>
-              
+
               {/* Scroll track with fixed-size thumb */}
               <div className="flex-1 h-1.5 bg-stone-200 rounded-full relative">
                 <motion.div
                   className="absolute top-0 h-full w-16 bg-stone-900 rounded-full"
-                  style={{ left: `calc(${scrollProgress}% - ${scrollProgress * 0.16}%)` }}
+                  style={{
+                    left: `calc(${scrollProgress}% - ${
+                      scrollProgress * 0.16
+                    }%)`,
+                  }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
                 />
               </div>
@@ -424,7 +429,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Map section - Preview */}
+      {/* Featured Areas - Map Preview Cards */}
       <section
         id="explore"
         className="relative bg-gradient-to-b from-white to-stone-50 py-24"
@@ -435,8 +440,8 @@ export default function Home() {
               Explore the Western Cape
             </h3>
             <p className="text-xl text-stone-600 max-w-2xl mx-auto mb-6">
-              Navigate our interactive map to discover market insights for any
-              suburb. Click on areas to see instant statistics and trends.
+              Discover market insights for top-performing suburbs across Cape
+              Town
             </p>
             <button
               onClick={() => setIsMapModalOpen(true)}
@@ -446,8 +451,19 @@ export default function Home() {
               Open Full Map
             </button>
           </div>
-          <div className="bg-white rounded-2xl shadow-xl border border-stone-200 overflow-hidden">
-            <MapView initialLevel="suburb" />
+
+          {/* Area Preview Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {getAreasByLevel("suburb")
+              .filter((area) => area.stats) // Only show areas with stats
+              .slice(0, 4)
+              .map((area, index) => (
+                <AreaPreviewCard
+                  key={area.id}
+                  area={area}
+                  delay={index * 0.1}
+                />
+              ))}
           </div>
         </div>
       </section>
@@ -737,7 +753,9 @@ function ProductCard({
       transition={{ duration: 0.4 }}
       className="flex-shrink-0 w-[340px] md:w-[400px] lg:w-[440px] h-[420px] md:h-[480px]"
     >
-      <div className={`${bgColor} rounded-2xl p-6 md:p-8 h-full flex flex-col relative overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200/60`}>
+      <div
+        className={`${bgColor} rounded-2xl p-6 md:p-8 h-full flex flex-col relative overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200/60`}
+      >
         {/* Decorative circles */}
         <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-white/30"></div>
         <div className="absolute -right-8 -bottom-8 w-32 h-32 rounded-full bg-white/20"></div>

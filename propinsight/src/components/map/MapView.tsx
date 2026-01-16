@@ -82,7 +82,7 @@ export function MapView({ initialLevel = "suburb" }: MapViewProps) {
   const hasMapboxToken = !!process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
 
   return (
-    <div className="relative w-full h-full min-h-[600px] bg-stone-100 rounded-2xl overflow-hidden">
+    <div className="relative w-full h-full min-h-[600px] bg-stone-100 rounded-2xl overflow-hidden" style={{ isolation: 'isolate' }}>
       {/* Use LeafletMap as primary (always works), MapboxMap as optional enhancement */}
       {hasMapboxToken ? (
         <MapboxMap

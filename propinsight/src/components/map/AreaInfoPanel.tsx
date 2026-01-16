@@ -18,27 +18,13 @@ export function AreaInfoPanel({
   isLoading,
   onClose,
 }: AreaInfoPanelProps) {
-  // Track if panel was previously visible to handle smooth transitions
-  const [wasVisible, setWasVisible] = useState(false);
-
-  useEffect(() => {
-    if (area || isLoading) {
-      setWasVisible(true);
-    }
-  }, [area, isLoading]);
-
   const isVisible = area || isLoading;
-
-  // Debug: log visibility state
-  if (typeof window !== 'undefined' && (area || isLoading)) {
-    console.log('AreaInfoPanel visibility:', { area: area?.name, isLoading, isVisible });
-  }
 
   return (
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          key="info-panel" // Use fixed key so panel doesn't unmount when switching areas
+          key="info-panel" // Fixed key - panel stays mounted when switching areas
           initial={{ x: "100%", opacity: 0 }}
           animate={{ x: 0, opacity: 1 }}
           exit={{ x: "100%", opacity: 0 }}
@@ -46,7 +32,11 @@ export function AreaInfoPanel({
             duration: 0.2, // 200ms animation
             ease: [0.4, 0, 0.2, 1], // Smooth easing
           }}
-          className="absolute top-0 right-0 h-full w-96 max-w-[90vw] bg-white shadow-2xl border-l border-stone-200 overflow-y-auto z-20"
+          className="absolute top-0 right-0 h-full w-96 max-w-[90vw] bg-white shadow-2xl border-l border-stone-200 overflow-y-auto z-[5000]"
+          style={{ 
+            pointerEvents: 'auto',
+            touchAction: 'pan-y',
+          }}
         >
           {/* Close button */}
           <motion.button
@@ -72,7 +62,7 @@ export function AreaInfoPanel({
           </motion.button>
 
           {/* Content area - shows skeleton when loading, content when ready */}
-          <AnimatePresence mode="wait">
+          <AnimatePresence mode="wait" initial={false}>
             {isLoading ? (
               <motion.div
                 key="skeleton"
