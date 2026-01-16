@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { CalendarIcon, BoltIcon, CurrencyDollarIcon, SparklesIcon, ChartBarIcon, TrendingUpIcon, HomeIcon, BuildingOfficeIcon } from "@heroicons/react/24/outline";
+import { CalendarIcon, BoltIcon, CurrencyDollarIcon, SparklesIcon, ChartBarIcon, ArrowTrendingUpIcon, HomeIcon, BuildingOfficeIcon } from "@heroicons/react/24/outline";
 import { getAreaBySlug, getChildAreas, sampleAreas } from "@/data/areas";
 import { getDevelopmentsByArea } from "@/data/developments";
 import { formatPrice, formatPriceChange, formatNumber, Area } from "@/types";
