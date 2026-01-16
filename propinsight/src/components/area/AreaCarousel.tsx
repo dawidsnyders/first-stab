@@ -168,7 +168,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
       </div>
 
       {/* Right Side - Scrollable Sections */}
-      <div className="flex-1 space-y-3">
+      <div className="flex-1">
         {areas.map((area, index) => {
           const { stats } = area;
           const isPositive = stats && stats.priceChangeYoY >= 0;
