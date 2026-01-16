@@ -499,18 +499,27 @@ export async function GET(request: NextRequest) {
             console.warn(
               `No polygon passed size validation for "${suburbName}". Candidate sizes:`,
               candidates.slice(0, 5).map((c) => {
-                if (c.geometry && (c.geometry.type === "Polygon" || c.geometry.type === "MultiPolygon")) {
+                if (
+                  c.geometry &&
+                  (c.geometry.type === "Polygon" ||
+                    c.geometry.type === "MultiPolygon")
+                ) {
                   let coords: number[][] = [];
                   if (c.geometry.type === "Polygon") {
                     coords = c.geometry.coordinates[0] as unknown as number[][];
                   } else {
-                    const multiPoly = c.geometry.coordinates[0] as unknown as number[][][];
+                    const multiPoly = c.geometry
+                      .coordinates[0] as unknown as number[][][];
                     coords = multiPoly[0] as number[][];
                   }
                   if (coords && coords.length > 0) {
                     const lngs = coords.map((coord) => coord[0]);
                     const lats = coords.map((coord) => coord[1]);
-                    const area = (Math.max(...lngs) - Math.min(...lngs)) * (Math.max(...lats) - Math.min(...lats)) * 111 * 111;
+                    const area =
+                      (Math.max(...lngs) - Math.min(...lngs)) *
+                      (Math.max(...lats) - Math.min(...lats)) *
+                      111 *
+                      111;
                     return `${area.toFixed(2)} km²`;
                   }
                 }
@@ -518,23 +527,37 @@ export async function GET(request: NextRequest) {
               })
             );
             // Use smallest candidate even if it's slightly over limit (within 2x)
-            const isCity = suburbName === "Paarl" || suburbName === "Stellenbosch" || suburbName === "Franschhoek" || suburbName === "Cape Town";
+            const isCity =
+              suburbName === "Paarl" ||
+              suburbName === "Stellenbosch" ||
+              suburbName === "Franschhoek" ||
+              suburbName === "Cape Town";
             const maxArea = isCity ? 30 : 5;
             let bestCandidate = null;
             let smallestCandidateArea = Infinity;
             for (const candidate of candidates) {
-              if (candidate.geometry && (candidate.geometry.type === "Polygon" || candidate.geometry.type === "MultiPolygon")) {
+              if (
+                candidate.geometry &&
+                (candidate.geometry.type === "Polygon" ||
+                  candidate.geometry.type === "MultiPolygon")
+              ) {
                 let coords: number[][] = [];
                 if (candidate.geometry.type === "Polygon") {
-                  coords = candidate.geometry.coordinates[0] as unknown as number[][];
+                  coords = candidate.geometry
+                    .coordinates[0] as unknown as number[][];
                 } else {
-                  const multiPoly = candidate.geometry.coordinates[0] as unknown as number[][][];
+                  const multiPoly = candidate.geometry
+                    .coordinates[0] as unknown as number[][][];
                   coords = multiPoly[0] as number[][];
                 }
                 if (coords && coords.length > 0) {
                   const lngs = coords.map((c) => c[0]);
                   const lats = coords.map((c) => c[1]);
-                  const area = (Math.max(...lngs) - Math.min(...lngs)) * (Math.max(...lats) - Math.min(...lats)) * 111 * 111;
+                  const area =
+                    (Math.max(...lngs) - Math.min(...lngs)) *
+                    (Math.max(...lats) - Math.min(...lats)) *
+                    111 *
+                    111;
                   // Accept if within 2x the limit (more lenient fallback)
                   if (area < maxArea * 2 && area < smallestCandidateArea) {
                     bestCandidate = candidate;
@@ -546,7 +569,9 @@ export async function GET(request: NextRequest) {
             if (bestCandidate) {
               matchingFeature = bestCandidate;
               console.warn(
-                `Using fallback polygon for ${suburbName} (${smallestCandidateArea.toFixed(2)} km²) - slightly over limit but closest match`
+                `Using fallback polygon for ${suburbName} (${smallestCandidateArea.toFixed(
+                  2
+                )} km²) - slightly over limit but closest match`
               );
             } else {
               matchingFeature = candidates[0];
