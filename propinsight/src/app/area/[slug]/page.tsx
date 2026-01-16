@@ -191,7 +191,7 @@ export default async function AreaPage({ params }: PageProps) {
       <section className="bg-gradient-to-b from-white to-stone-50 pb-12 border-b border-stone-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 md:pt-24">
           <div className="grid lg:grid-cols-3 gap-8">
-            {/* Left: Title and Description */}
+            {/* Left: Title, Description, and Key Stats */}
             <div className="lg:col-span-2 space-y-4">
               <div className="flex items-center gap-3">
                 <span className="text-xs text-sage-600 font-semibold uppercase tracking-wider bg-sage-50 px-3 py-1.5 rounded-full">
@@ -249,16 +249,8 @@ export default async function AreaPage({ params }: PageProps) {
                 {getDescription()}
               </p>
               
-              {/* Location Map */}
-              <div className="pt-4">
-                <AreaLocationMap area={area} />
-              </div>
-            </div>
-
-            {/* Right: Key Stats and Interesting Info */}
-            {stats && (
-              <div className="lg:col-span-1 space-y-6">
-                {/* Key Stats Card */}
+              {/* Key Stats Card */}
+              {stats && (
                 <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm">
                   <div className="space-y-4">
                     <div>
@@ -287,8 +279,18 @@ export default async function AreaPage({ params }: PageProps) {
                     </div>
                   </div>
                 </div>
+              )}
+            </div>
 
-                {/* Interesting Info */}
+            {/* Right: Map and Market Activity */}
+            {stats && (
+              <div className="lg:col-span-1 space-y-6">
+                {/* Location Map */}
+                <div className="bg-white rounded-2xl border border-stone-200 p-6 shadow-sm overflow-hidden">
+                  <AreaLocationMap area={area} />
+                </div>
+
+                {/* Market Activity */}
                 {interestingInfo.length > 0 && (
                   <div className="bg-sage-50/50 rounded-2xl border border-sage-100 p-5">
                     <div className="text-xs text-sage-700 uppercase tracking-wide font-semibold mb-4">
