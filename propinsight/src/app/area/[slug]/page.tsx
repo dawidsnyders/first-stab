@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { CalendarIcon, BoltIcon, CurrencyDollarIcon, SparklesIcon } from "@heroicons/react/24/outline";
+import { CalendarIcon, BoltIcon, CurrencyDollarIcon, SparklesIcon, ChartBarIcon, TrendingUpIcon, HomeIcon, BuildingOfficeIcon } from "@heroicons/react/24/outline";
 import { getAreaBySlug, getChildAreas, sampleAreas } from "@/data/areas";
 import { getDevelopmentsByArea } from "@/data/developments";
 import { formatPrice, formatPriceChange, formatNumber, Area } from "@/types";
@@ -56,37 +56,86 @@ export default async function AreaPage({ params }: PageProps) {
       : Math.round(90 - marketVelocity)
     : null;
 
-  // Generate interesting area info based on stats
+  // Generate rich market insights based on stats
   const getInterestingInfo = () => {
     if (!stats) return [];
     const info = [];
 
-    // Days on market estimate
-    if (avgDaysOnMarket) {
+    // Market Velocity with context
+    if (marketVelocity > 0) {
+      const velocityContext = marketVelocity > 30 ? "Very Active" : marketVelocity > 15 ? "Active" : "Moderate";
       info.push({
-        label: "Avg Days on Market",
-        value: avgDaysOnMarket.toString(),
-        Icon: CalendarIcon,
+        label: "Market Velocity",
+        value: `${marketVelocity} sales/month`,
+        subtitle: velocityContext,
+        Icon: BoltIcon,
+        color: marketVelocity > 30 ? "green" : marketVelocity > 15 ? "sage" : "stone",
       });
     }
 
-    // Sales velocity
-    if (marketVelocity > 0) {
+    // Price per sqm comparison (if available)
+    if (stats.avgPricePerSqm) {
+      const pricePerSqm = stats.avgPricePerSqm;
+      const affordability = pricePerSqm > 20000 ? "Premium" : pricePerSqm > 12000 ? "Moderate" : "Affordable";
       info.push({
-        label: "Sales/Month",
-        value: marketVelocity.toString(),
-        Icon: BoltIcon,
+        label: "Price per m²",
+        value: formatPrice(pricePerSqm),
+        subtitle: affordability,
+        Icon: HomeIcon,
+        color: "terracotta",
+      });
+    }
+
+    // Days on market with trend
+    if (avgDaysOnMarket) {
+      const marketSpeed = avgDaysOnMarket < 45 ? "Fast-moving" : avgDaysOnMarket < 70 ? "Steady" : "Slower";
+      info.push({
+        label: "Days on Market",
+        value: `${avgDaysOnMarket} days`,
+        subtitle: marketSpeed,
+        Icon: CalendarIcon,
+        color: avgDaysOnMarket < 45 ? "green" : "stone",
       });
     }
 
     // Annual Sales Volume
     const annualSalesVolume = stats.medianPrice * stats.salesCount;
     if (annualSalesVolume > 0) {
+      const volumeLabel = annualSalesVolume > 500000000 ? "High Volume" : annualSalesVolume > 200000000 ? "Moderate" : "Growing";
       info.push({
         label: "Annual Sales Volume",
         value: formatPrice(annualSalesVolume),
+        subtitle: volumeLabel,
         Icon: CurrencyDollarIcon,
+        color: "sage",
       });
+    }
+
+    // Growth trend indicator
+    const growthTrend = stats.priceChangeYoY > 7 ? "Strong Growth" : stats.priceChangeYoY > 4 ? "Steady Growth" : stats.priceChangeYoY > 0 ? "Moderate" : "Declining";
+    info.push({
+      label: "Growth Trend",
+      value: formatPriceChange(stats.priceChangeYoY),
+      subtitle: growthTrend,
+      Icon: TrendingUpIcon,
+      color: stats.priceChangeYoY > 7 ? "green" : stats.priceChangeYoY > 0 ? "sage" : "red",
+    });
+
+    // Property type distribution (if available)
+    if (stats.propertyTypeBreakdown) {
+      const { houses, apartments } = stats.propertyTypeBreakdown;
+      const total = (houses || 0) + (apartments || 0);
+      if (total > 0) {
+        const dominantType = (houses || 0) > (apartments || 0) ? "Houses" : "Apartments";
+        const housePercent = total > 0 ? Math.round(((houses || 0) / total) * 100) : 0;
+        info.push({
+          label: "Market Composition",
+          value: `${housePercent}% houses`,
+          subtitle: `${dominantType} dominant`,
+          Icon: BuildingOfficeIcon,
+          color: "moss",
+        });
+      }
     }
 
     return info;
@@ -194,29 +243,53 @@ export default async function AreaPage({ params }: PageProps) {
                 {/* Location Map */}
                 <AreaMapWithButton area={area} />
 
-                {/* Market Activity */}
+                {/* Market Insights */}
                 {interestingInfo.length > 0 && (
-                  <div className="bg-sage-50/50 rounded-2xl border border-sage-100 p-5">
-                    <div className="text-xs text-sage-700 uppercase tracking-wide font-semibold mb-4">
-                      Market Activity
+                  <div className="bg-gradient-to-br from-sage-50/50 to-moss-50/30 rounded-2xl border border-sage-100/60 p-6">
+                    <div className="flex items-center gap-2 mb-5">
+                      <ChartBarIcon className="w-4 h-4 text-sage-600" />
+                      <h3 className="text-xs text-sage-700 uppercase tracking-wide font-semibold">
+                        Market Insights
+                      </h3>
                     </div>
                     <div className="space-y-3">
                       {interestingInfo.map((info, idx) => {
                         const Icon = info.Icon;
+                        const colorClasses = {
+                          green: "bg-green-100 text-green-700",
+                          sage: "bg-sage-100 text-sage-700",
+                          stone: "bg-stone-100 text-stone-700",
+                          terracotta: "bg-terracotta-100 text-terracotta-700",
+                          moss: "bg-moss-100 text-moss-700",
+                          red: "bg-red-100 text-red-700",
+                        };
+                        const colorClass = colorClasses[info.color as keyof typeof colorClasses] || colorClasses.stone;
+                        
                         return (
                           <div
                             key={idx}
-                            className="flex items-center justify-between"
+                            className="bg-white/60 backdrop-blur-sm rounded-lg border border-sage-100/60 p-3 hover:bg-white/80 hover:border-sage-200 transition-all duration-200"
                           >
-                            <div className="flex items-center gap-2">
-                              <Icon className="w-5 h-5 text-sage-600" />
-                              <span className="text-sm text-stone-600">
-                                {info.label}
-                              </span>
+                            <div className="flex items-start justify-between gap-3">
+                              <div className="flex items-start gap-2.5 flex-1 min-w-0">
+                                <div className={`flex-shrink-0 w-8 h-8 rounded-lg ${colorClass} flex items-center justify-center mt-0.5`}>
+                                  <Icon className="w-4 h-4" />
+                                </div>
+                                <div className="flex-1 min-w-0">
+                                  <div className="text-xs text-stone-500 mb-0.5">
+                                    {info.label}
+                                  </div>
+                                  <div className="text-sm font-semibold text-stone-900 mb-0.5">
+                                    {info.value}
+                                  </div>
+                                  {info.subtitle && (
+                                    <div className="text-[10px] text-stone-500 font-medium">
+                                      {info.subtitle}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
                             </div>
-                            <span className="text-sm font-semibold text-stone-900">
-                              {info.value}
-                            </span>
                           </div>
                         );
                       })}

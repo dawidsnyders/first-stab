@@ -287,9 +287,9 @@ export async function GET(request: NextRequest) {
                         const area =
                           (maxLng - minLng) * (maxLat - minLat) * 111 * 111; // km²
 
-                        // Reject polygons larger than 100 km² (suburbs should be much smaller)
-                        // Most suburbs should be < 50 km²
-                        const maxArea = 100; // km² - strict limit for suburbs
+                        // Reject polygons larger than 10 km² (suburbs should be much smaller)
+                        // Most suburbs should be < 5 km²
+                        const maxArea = 10; // km² - very strict limit for suburbs/estates
                         // Also ensure it's in the right geographic area (Western Cape)
                         const isInWesternCape =
                           minLat >= -36 &&
@@ -468,13 +468,13 @@ export async function GET(request: NextRequest) {
                   maxLng <= 26;
 
                 // Use different area limits for cities vs suburbs/estates
-                // Cities can be larger (up to 500 km²), suburbs/estates should be < 100 km²
+                // Cities can be larger (up to 50 km²), suburbs/estates should be < 10 km²
                 const isCity =
                   suburbName === "Paarl" ||
                   suburbName === "Stellenbosch" ||
                   suburbName === "Franschhoek" ||
                   suburbName === "Cape Town";
-                const maxArea = isCity ? 500 : 100; // km² - cities can be larger
+                const maxArea = isCity ? 50 : 10; // km² - much stricter limits for precision
                 if (area < maxArea && isInWesternCape && area < smallestArea) {
                   matchingFeature = candidate;
                   smallestArea = area;
