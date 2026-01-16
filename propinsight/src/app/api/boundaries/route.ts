@@ -119,16 +119,15 @@ export async function GET(request: NextRequest) {
           "De Zalze, Stellenbosch",
         ],
       },
-      // Paarl - Try OpenStreetMap first, fallback to Western Cape API
-      // OpenStreetMap may only return Point, so we'll fallback to Western Cape API
+      // Paarl - Use OpenStreetMap for more accurate town boundary (not entire municipality)
       paarl: {
         name: "Paarl",
-        source: "openstreetmap", // Will try OSM first, then fallback to westernCape
+        source: "openstreetmap",
         searchTerms: [
-          "Paarl town, Western Cape",
-          "Paarl, Drakenstein, Western Cape",
-          "Paarl, Western Cape, South Africa",
           "Paarl",
+          "Paarl, Western Cape",
+          "Paarl town",
+          "Paarl, Drakenstein",
         ],
       },
       // Val de Vie Estate (merged from Val de Vie and Pearl Valley) - use OpenStreetMap
@@ -277,23 +276,14 @@ export async function GET(request: NextRequest) {
                   let bestFeature = null;
                   let smallestArea = Infinity;
 
-                  // Filter out Point geometries first - we only want polygons
-                  const polygonFeatures = osmData.features.filter(
-                    (f) =>
-                      f.geometry &&
-                      (f.geometry.type === "Polygon" ||
-                        f.geometry.type === "MultiPolygon") &&
-                      f.geometry.coordinates
-                  );
-                  
-                  if (polygonFeatures.length === 0) {
-                    console.warn(
-                      `OpenStreetMap returned ${osmData.features.length} features for "${searchTerm}", but none are polygons (types: ${osmData.features.map(f => f.geometry?.type).filter(Boolean).join(", ")})`
-                    );
-                    continue; // Try next search term
-                  }
-                  
-                  for (const feature of polygonFeatures) {
+                  for (const feature of osmData.features) {
+                    // Check if it has a proper polygon geometry (not just a point)
+                    if (
+                      feature.geometry &&
+                      (feature.geometry.type === "Polygon" ||
+                        feature.geometry.type === "MultiPolygon") &&
+                      feature.geometry.coordinates
+                    ) {
                       // Calculate approximate bounding box area to filter out overly large polygons
                       let coords: number[][] = [];
                       if (feature.geometry.type === "Polygon") {
@@ -421,22 +411,7 @@ export async function GET(request: NextRequest) {
               continue;
             }
           }
-          if (data) {
-            console.log(
-              `✓ Successfully found boundary for "${suburbName}" from OpenStreetMap`
-            );
-            break; // Found boundary, exit endpoint loop
-          } else {
-            console.warn(
-              `✗ No boundary found for "${suburbName}" from OpenStreetMap after trying ${searchTerms.length} search terms`
-            );
-            // For Paarl, if OpenStreetMap fails (only returns Point), we'll try Western Cape API in fallback
-            if (suburbName === "Paarl") {
-              console.log(
-                `Will try Western Cape API as fallback for "${suburbName}" (OpenStreetMap only returned Point geometries)`
-              );
-            }
-          }
+          if (data) break; // Found boundary, exit endpoint loop
           continue; // Try next endpoint if OpenStreetMap didn't work
         }
 
