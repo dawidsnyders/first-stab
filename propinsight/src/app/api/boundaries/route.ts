@@ -180,7 +180,8 @@ export async function GET(request: NextRequest) {
     let endpoints = API_ENDPOINTS[source] || API_ENDPOINTS.capeTown;
 
     // If Cape Town API fails, fallback to Western Cape API for Cape Town suburbs
-    const shouldTryFallback = source === "capeTown";
+    // If OpenStreetMap fails for Paarl (only returns Point), fallback to Western Cape API
+    const shouldTryFallback = source === "capeTown" || (source === "openstreetmap" && suburbName === "Paarl");
     const fallbackEndpoints = shouldTryFallback
       ? API_ENDPOINTS.westernCape
       : [];
