@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import Link from "next/link";
 import { Area, formatPrice, formatPriceChange, formatNumber } from "@/types";
 import { AreaLocationMap } from "@/components/map/AreaLocationMap";
@@ -31,7 +31,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
   // Track which section is in view and scroll progress between sections
   useEffect(() => {
     let rafId: number | null = null;
-    
+
     const updateScrollProgress = () => {
       const newProgress: number[] = new Array(areas.length - 1).fill(0);
       let newActiveIndex = 0;
@@ -239,6 +239,25 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
           const { stats } = area;
           const isPositive = stats && stats.priceChangeYoY >= 0;
 
+          // Memoize chart data to prevent regeneration on scroll
+          const priceTrendData = useMemo(() => {
+            if (!stats) return [];
+            return generateMedianPriceData(
+              stats.medianPrice,
+              stats.priceChangeYoY,
+              5
+            );
+          }, [area.id, stats?.medianPrice, stats?.priceChangeYoY]);
+
+          const pricePerSqmData = useMemo(() => {
+            if (!stats || !stats.avgPricePerSqm) return [];
+            return generatePricePerSqmData(
+              stats.avgPricePerSqm,
+              stats.priceChangeYoY,
+              5
+            );
+          }, [area.id, stats?.avgPricePerSqm, stats?.priceChangeYoY]);
+
           return (
             <section
               key={area.id}
@@ -335,11 +354,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                             <div className="h-20 w-full">
                               <ResponsiveContainer width="100%" height="100%">
                                 <LineChart
-                                  data={generateMedianPriceData(
-                                    stats.medianPrice,
-                                    stats.priceChangeYoY,
-                                    5
-                                  )}
+                                  data={priceTrendData}
                                   margin={{
                                     top: 5,
                                     right: 5,
@@ -415,11 +430,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                               <div className="h-20 w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                   <LineChart
-                                    data={generatePricePerSqmData(
-                                      stats.avgPricePerSqm,
-                                      stats.priceChangeYoY,
-                                      5
-                                    )}
+                                    data={pricePerSqmData}
                                     margin={{
                                       top: 5,
                                       right: 5,
