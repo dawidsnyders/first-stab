@@ -673,7 +673,6 @@ export async function GET(request: NextRequest) {
           });
 
           if (!response.ok) {
-            const errorText = await response.text().catch(() => "");
             console.warn(
               `Western Cape fallback endpoint returned ${response.status}: ${response.statusText}`
             );
@@ -686,6 +685,7 @@ export async function GET(request: NextRequest) {
           const responseData: GeoJSONResponse = await response.json();
 
           // Filter for polygons matching the suburb name
+          // Try multiple field names and be flexible with matching
           const candidates =
             responseData.features?.filter((f) => {
               if (
@@ -695,22 +695,37 @@ export async function GET(request: NextRequest) {
               ) {
                 return false;
               }
-              const props = f.properties;
+              const props = f.properties || {};
+              // Try multiple possible field names
               const nameField = String(
                 props.SUBURB ||
                   props.NAME ||
                   props.SUBURB_NAME ||
+                  props.OFC_SBRB_NAME ||
+                  props.MUNICIPALITY ||
+                  props.MUNICIPALITY_NAME ||
+                  props.LOCAL_MUNICIPALITY ||
                   props.name ||
                   ""
               );
-              const nameLower = nameField.toLowerCase();
+              const nameLower = nameField.toLowerCase().trim();
+              if (!nameLower) return false;
+              
+              // Try matching with all search terms
               return searchTerms.some((term) => {
-                const termLower = term.toLowerCase();
+                const termLower = term.toLowerCase().trim();
+                // Exact match or contains match
                 return (
-                  nameLower.includes(termLower) || termLower.includes(nameLower)
+                  nameLower === termLower ||
+                  nameLower.includes(termLower) ||
+                  termLower.includes(nameLower)
                 );
               });
             }) || [];
+          
+          console.log(
+            `Western Cape fallback found ${candidates.length} polygon candidates for "${suburbName}" (from ${responseData.features?.length || 0} total features)`
+          );
 
           if (candidates.length > 0) {
             // Use smallest candidate
@@ -748,7 +763,9 @@ export async function GET(request: NextRequest) {
                     maxLat <= -31 &&
                     minLng >= 16 &&
                     maxLng <= 26;
-                  const maxArea = 5; // km² for suburbs
+                  // For fallback, be more lenient - accept up to 15 km² (3x normal limit)
+                  // This ensures we get boundaries even if they're slightly larger than ideal
+                  const maxArea = 15; // km² for suburbs in fallback (more lenient)
                   if (
                     area < maxArea &&
                     isInWesternCape &&
