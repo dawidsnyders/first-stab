@@ -412,7 +412,7 @@ export default async function AreaPage({ params }: PageProps) {
       {/* Report CTA */}
       <section
         id="report"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6"
       >
         <ReportCTA area={area} />
       </section>

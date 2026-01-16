@@ -106,5 +106,12 @@ export const formatPriceChange = (change: number): string => {
 };
 
 export const formatNumber = (num: number): string => {
-  return new Intl.NumberFormat("en-ZA").format(num);
+  // Use consistent formatting that works the same on server and client
+  // en-ZA uses space as thousands separator, but Node.js might use comma
+  // Use explicit options to ensure consistency
+  return new Intl.NumberFormat("en-ZA", {
+    useGrouping: true,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(num);
 };

@@ -1,7 +1,7 @@
-'use client';
+"use client";
 
-import { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useRef, useEffect } from "react";
+import { motion } from "framer-motion";
 import {
   ChartBarIcon,
   ArrowTrendingUpIcon,
@@ -11,38 +11,49 @@ import {
   MagnifyingGlassIcon,
   HomeIcon,
   MapPinIcon,
-} from '@heroicons/react/24/outline';
-import { SearchBar } from '@/components/ui/SearchBar';
-import { MapView } from '@/components/map/MapView';
-import { MapModal } from '@/components/ui/MapModal';
-import { AreaCard } from '@/components/area/AreaCard';
-import { getAreasByLevel } from '@/data/areas';
-import { APP_NAME, REPORT_PRICE_DISPLAY, NATIONAL_BENCHMARKS } from '@/lib/constants';
-import { formatNumber } from '@/types';
+} from "@heroicons/react/24/outline";
+import { SearchBar } from "@/components/ui/SearchBar";
+import { MapView } from "@/components/map/MapView";
+import { MapModal } from "@/components/ui/MapModal";
+import { AreaCard } from "@/components/area/AreaCard";
+import { getAreasByLevel } from "@/data/areas";
+import {
+  APP_NAME,
+  REPORT_PRICE_DISPLAY,
+  NATIONAL_BENCHMARKS,
+} from "@/lib/constants";
+import { formatNumber } from "@/types";
 
 export default function Home() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const featuredSuburbs = getAreasByLevel('suburb').slice(0, 6);
+  const featuredSuburbs = getAreasByLevel("suburb").slice(0, 6);
 
-  const scrollCarousel = (direction: 'left' | 'right') => {
+  // Ensure client-side only rendering for dynamic content
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const scrollCarousel = (direction: "left" | "right") => {
     if (carouselRef.current) {
       const scrollAmount = 500;
       carouselRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth",
       });
     }
   };
-  const allSuburbs = getAreasByLevel('suburb');
+  const allSuburbs = getAreasByLevel("suburb");
   const totalSales = allSuburbs.reduce(
     (sum, area) => sum + (area.stats?.salesCount || 0),
     0
   );
-  const avgPriceGrowth = allSuburbs.reduce(
-    (sum, area) => sum + (area.stats?.priceChangeYoY || 0),
-    0
-  ) / allSuburbs.length;
+  const avgPriceGrowth =
+    allSuburbs.reduce(
+      (sum, area) => sum + (area.stats?.priceChangeYoY || 0),
+      0
+    ) / allSuburbs.length;
 
   return (
     <div className="min-h-screen bg-white">
@@ -149,7 +160,7 @@ export default function Home() {
                 Unlock comprehensive market insights for every suburb. Make
                 informed property decisions with
                 <span className="font-semibold text-stone-900">
-                  {' '}
+                  {" "}
                   data-driven analysis
                 </span>
                 .
@@ -173,17 +184,19 @@ export default function Home() {
                 Icon={ArrowTrendingUpIcon}
               />
               <StatBox
-                value={formatNumber(totalSales)}
+                value={isMounted ? formatNumber(totalSales) : "..."}
                 label="Total Sales (12m)"
                 Icon={HomeIcon}
               />
               <StatBox
-                value={formatNumber(allSuburbs.length)}
+                value={isMounted ? formatNumber(allSuburbs.length) : "..."}
                 label="Active Areas"
                 Icon={MapPinIcon}
               />
               <StatBox
-                value={`+${(avgPriceGrowth - NATIONAL_BENCHMARKS.avgPropertyGrowth).toFixed(1)}%`}
+                value={`+${(
+                  avgPriceGrowth - NATIONAL_BENCHMARKS.avgPropertyGrowth
+                ).toFixed(1)}%`}
                 label="vs National"
                 Icon={BoltIcon}
               />
@@ -193,10 +206,13 @@ export default function Home() {
       </section>
 
       {/* Product Showcase - Ondo-Style Carousel */}
-      <section id="features" className="relative bg-gradient-to-b from-stone-100 to-stone-50 py-16 md:py-24 overflow-hidden">
+      <section
+        id="features"
+        className="relative bg-gradient-to-b from-stone-100 to-stone-50 py-16 md:py-24 overflow-hidden"
+      >
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.03)_1px,transparent_0)] bg-[size:32px_32px]"></div>
-        
+
         <div className="relative">
           {/* Section Header */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12">
@@ -215,37 +231,57 @@ export default function Home() {
                   Comprehensive tools for investors, agents, and homebuyers
                 </p>
               </div>
-              
+
               {/* Navigation Arrows */}
               <div className="flex items-center gap-3">
                 <button
-                  onClick={() => scrollCarousel('left')}
+                  onClick={() => scrollCarousel("left")}
                   className="w-12 h-12 rounded-full bg-white border border-stone-200 flex items-center justify-center hover:bg-stone-50 hover:border-stone-300 transition-all duration-200 shadow-sm hover:shadow group"
                   aria-label="Previous"
                 >
-                  <svg className="w-5 h-5 text-stone-600 group-hover:text-stone-900 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                  <svg
+                    className="w-5 h-5 text-stone-600 group-hover:text-stone-900 transition-colors"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M15 19l-7-7 7-7"
+                    />
                   </svg>
                 </button>
                 <button
-                  onClick={() => scrollCarousel('right')}
+                  onClick={() => scrollCarousel("right")}
                   className="w-12 h-12 rounded-full bg-stone-900 flex items-center justify-center hover:bg-stone-800 transition-all duration-200 shadow-sm hover:shadow group"
                   aria-label="Next"
                 >
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  <svg
+                    className="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M9 5l7 7-7 7"
+                    />
                   </svg>
                 </button>
               </div>
             </motion.div>
           </div>
-          
+
           {/* Carousel Container */}
           <div className="relative">
             {/* Edge Gradients */}
             <div className="absolute left-0 top-0 bottom-0 w-8 md:w-24 bg-gradient-to-r from-stone-100 to-transparent z-10 pointer-events-none"></div>
             <div className="absolute right-0 top-0 bottom-0 w-8 md:w-24 bg-gradient-to-l from-stone-50 to-transparent z-10 pointer-events-none"></div>
-            
+
             {/* Scrollable Cards */}
             <div
               ref={carouselRef}
@@ -256,8 +292,18 @@ export default function Home() {
                 bgColor="bg-gradient-to-br from-sage-500 to-sage-600"
                 icon={
                   <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                    <svg
+                      className="w-8 h-8 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                      />
                     </svg>
                   </div>
                 }
@@ -268,14 +314,24 @@ export default function Home() {
                 metricLabel="Suburbs Tracked"
                 description="Real-time market data updated daily across the Western Cape"
               />
-              
+
               {/* Card 2: Growth Analytics */}
               <ProductCard
                 bgColor="bg-gradient-to-br from-terracotta-400 to-terracotta-500"
                 icon={
                   <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                    <svg
+                      className="w-8 h-8 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                      />
                     </svg>
                   </div>
                 }
@@ -286,14 +342,24 @@ export default function Home() {
                 metricLabel="Price History"
                 description="Track growth trends and compare against national benchmarks"
               />
-              
+
               {/* Card 3: Reports */}
               <ProductCard
                 bgColor="bg-gradient-to-br from-stone-700 to-stone-800"
                 icon={
                   <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    <svg
+                      className="w-8 h-8 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
                     </svg>
                   </div>
                 }
@@ -304,14 +370,24 @@ export default function Home() {
                 metricLabel="per Report"
                 description="In-depth 10-15 page reports with investment outlook and risk assessment"
               />
-              
+
               {/* Card 4: Interactive Maps */}
               <ProductCard
                 bgColor="bg-gradient-to-br from-moss-500 to-moss-600"
                 icon={
                   <div className="w-16 h-16 rounded-2xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                    <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                    <svg
+                      className="w-8 h-8 text-white"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7"
+                      />
                     </svg>
                   </div>
                 }
@@ -322,15 +398,25 @@ export default function Home() {
                 metricLabel="to Explore"
                 description="Navigate suburbs visually and discover market insights instantly"
               />
-              
+
               {/* Card 5: Investment Intelligence */}
               <ProductCard
                 bgColor="bg-gradient-to-br from-sand-400 to-sand-500"
                 textDark={true}
                 icon={
                   <div className="w-16 h-16 rounded-2xl bg-black/10 backdrop-blur-sm flex items-center justify-center">
-                    <svg className="w-8 h-8 text-stone-800" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      className="w-8 h-8 text-stone-800"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={1.5}
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                   </div>
                 }
@@ -341,7 +427,7 @@ export default function Home() {
                 metricLabel="Powered Insights"
                 description="Risk assessments, ROI projections, and comparable area analysis"
               />
-              
+
               {/* End spacer */}
               <div className="flex-shrink-0 w-4 md:w-8"></div>
             </div>
@@ -385,8 +471,8 @@ export default function Home() {
               Popular Areas
             </h3>
             <p className="text-xl text-stone-600 max-w-2xl mx-auto">
-              Discover insights for some of the most sought-after suburbs in
-              the Western Cape
+              Discover insights for some of the most sought-after suburbs in the
+              Western Cape
             </p>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -621,9 +707,7 @@ function ReportFeature({
       </svg>
       <div>
         <h5 className="font-semibold text-white text-lg mb-1">{title}</h5>
-        <p className="text-sm text-stone-300 leading-relaxed">
-          {description}
-        </p>
+        <p className="text-sm text-stone-300 leading-relaxed">{description}</p>
       </div>
     </div>
   );
@@ -652,10 +736,10 @@ function ProductCard({
   description,
   textDark = false,
 }: ProductCardProps) {
-  const textColor = textDark ? 'text-stone-900' : 'text-white';
-  const textMuted = textDark ? 'text-stone-600' : 'text-white/70';
-  const textSubtle = textDark ? 'text-stone-500' : 'text-white/60';
-  
+  const textColor = textDark ? "text-stone-900" : "text-white";
+  const textMuted = textDark ? "text-stone-600" : "text-white/70";
+  const textSubtle = textDark ? "text-stone-500" : "text-white/60";
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
@@ -664,43 +748,73 @@ function ProductCard({
       transition={{ duration: 0.4 }}
       className="flex-shrink-0 w-[340px] md:w-[420px] lg:w-[480px]"
     >
-      <div className={`${bgColor} rounded-3xl p-8 md:p-10 h-[400px] md:h-[440px] flex flex-col relative overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1`}>
+      <div
+        className={`${bgColor} rounded-3xl p-8 md:p-10 h-[400px] md:h-[440px] flex flex-col relative overflow-hidden group cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1`}
+      >
         {/* Decorative circles */}
-        <div className={`absolute -right-20 -top-20 w-64 h-64 rounded-full ${textDark ? 'bg-black/5' : 'bg-white/10'}`}></div>
-        <div className={`absolute -right-10 -bottom-10 w-40 h-40 rounded-full ${textDark ? 'bg-black/5' : 'bg-white/5'}`}></div>
-        
+        <div
+          className={`absolute -right-20 -top-20 w-64 h-64 rounded-full ${
+            textDark ? "bg-black/5" : "bg-white/10"
+          }`}
+        ></div>
+        <div
+          className={`absolute -right-10 -bottom-10 w-40 h-40 rounded-full ${
+            textDark ? "bg-black/5" : "bg-white/5"
+          }`}
+        ></div>
+
         {/* Header */}
         <div className="flex items-start justify-between mb-6 relative z-10">
           {icon}
-          <span className={`text-xs font-medium ${textMuted} uppercase tracking-wider`}>
+          <span
+            className={`text-xs font-medium ${textMuted} uppercase tracking-wider`}
+          >
             {label}
           </span>
         </div>
-        
+
         {/* Title Section */}
         <div className="mb-6 relative z-10">
-          <h4 className={`text-2xl md:text-3xl font-bold ${textColor} mb-1`}>{title}</h4>
+          <h4 className={`text-2xl md:text-3xl font-bold ${textColor} mb-1`}>
+            {title}
+          </h4>
           <p className={`text-sm ${textMuted}`}>{subtitle}</p>
         </div>
-        
+
         {/* Big Metric */}
         <div className="flex-grow flex items-center relative z-10">
           <div>
-            <div className={`text-5xl md:text-6xl lg:text-7xl font-bold ${textColor} tracking-tight`}>
+            <div
+              className={`text-5xl md:text-6xl lg:text-7xl font-bold ${textColor} tracking-tight`}
+            >
               {metric}
             </div>
             <div className={`text-sm ${textMuted} mt-1`}>{metricLabel}</div>
           </div>
         </div>
-        
+
         {/* Description & Arrow */}
         <div className="flex items-end justify-between relative z-10">
           <p className={`text-sm ${textSubtle} max-w-[70%] leading-relaxed`}>
             {description}
           </p>
-          <div className={`w-10 h-10 rounded-full ${textDark ? 'bg-stone-900' : 'bg-white/20'} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
-            <svg className={`w-5 h-5 ${textDark ? 'text-white' : 'text-white'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+          <div
+            className={`w-10 h-10 rounded-full ${
+              textDark ? "bg-stone-900" : "bg-white/20"
+            } flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}
+          >
+            <svg
+              className={`w-5 h-5 ${textDark ? "text-white" : "text-white"}`}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 8l4 4m0 0l-4 4m4-4H3"
+              />
             </svg>
           </div>
         </div>

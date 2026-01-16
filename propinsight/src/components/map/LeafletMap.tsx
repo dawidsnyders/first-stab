@@ -30,23 +30,25 @@ const AREA_COORDINATES: Record<string, [number, number]> = {
 
 // Generate approximate polygon boundaries around coordinates
 // In production, these would be real GeoJSON boundaries
-// Creating irregular polygons that look more like real suburb boundaries
+// Creating regular polygons for consistent boundaries
+// Note: Leaflet uses [lat, lng] format, so we convert here
 function generateAreaBoundary(
-  center: [number, number],
+  center: [number, number], // [lng, lat] from our data
   size: number = 0.02
 ): [number, number][] {
   const [lng, lat] = center;
-  // Create an irregular polygon (hexagon-like) for more realistic appearance
+  // Create a regular hexagon polygon for consistent boundaries
   const points: [number, number][] = [];
   const sides = 6;
   for (let i = 0; i <= sides; i++) {
     const angle = (i * 2 * Math.PI) / sides;
-    // Add some randomness to make it look more natural
-    const radius = size * (0.8 + Math.random() * 0.4);
-    points.push([
-      lng + radius * Math.cos(angle),
-      lat + radius * Math.sin(angle),
-    ]);
+    // Use consistent radius without randomness for visibility and clickability
+    const radius = size;
+    // Generate in [lng, lat] but convert to [lat, lng] for Leaflet
+    const pointLng = lng + radius * Math.cos(angle);
+    const pointLat = lat + radius * Math.sin(angle);
+    // Leaflet expects [lat, lng] format
+    points.push([pointLat, pointLng]);
   }
   return points;
 }
@@ -61,14 +63,14 @@ function getAreaCoordinates(area: Area): [number, number] {
 }
 
 function getAreaBoundary(area: Area): [number, number][] {
-  const coords = getAreaCoordinates(area);
-  // Adjust size based on area level
+  const coords = getAreaCoordinates(area); // Returns [lng, lat]
+  // Adjust size based on area level - make suburbs clearly visible
   const size =
     area.level === "province"
       ? 2.0
       : area.level === "city"
-      ? 0.3
-      : 0.02; // suburb
+      ? 0.4
+      : 0.04; // suburb - increased for better visibility
   return generateAreaBoundary(coords, size);
 }
 
@@ -91,8 +93,23 @@ export function LeafletMap({
   const [hoveredArea, setHoveredArea] = useState<Area | null>(null);
   const [isMapReady, setIsMapReady] = useState(false);
 
+  // Store callbacks in refs to ensure latest versions are used
+  const onAreaClickRef = useRef(onAreaClick);
+  const onAreaHoverRef = useRef(onAreaHover);
+
+  useEffect(() => {
+    onAreaClickRef.current = onAreaClick;
+    onAreaHoverRef.current = onAreaHover;
+  }, [onAreaClick, onAreaHover]);
+
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
+
+    // Check if container already has a map instance
+    if ((mapRef.current as any)._leaflet_id) {
+      console.warn("Map container already initialized, skipping...");
+      return;
+    }
 
     // Dynamically import Leaflet to avoid SSR issues
     import("leaflet").then((L) => {
@@ -120,16 +137,20 @@ export function LeafletMap({
       setIsMapReady(true);
 
       // Add area polygons
+      console.log(`Adding ${areas.length} areas to map`);
       areas.forEach((area) => {
         const boundary = getAreaBoundary(area);
+        const coords = getAreaCoordinates(area);
+        console.log(`Adding polygon for ${area.name} at`, coords, "boundary:", boundary.length, "points");
+        
         const isSelected = selectedArea?.id === area.id;
         const isHovered = hoveredArea?.id === area.id;
 
-        // Determine polygon style - darker grey boundaries for visibility
-        let fillColor = "rgba(120, 113, 108, 0.05)"; // stone-400 with very low opacity
-        let borderColor = "#57534e"; // stone-600 - darker grey for clear boundaries
-        let borderWidth = 2;
-        let fillOpacity = 0.05;
+        // Determine polygon style - make boundaries clearly visible
+        let fillColor = "rgba(93, 115, 80, 0.15)"; // sage-600 with visible opacity
+        let borderColor = "#5d7350"; // sage-600 - clearly visible
+        let borderWidth = 3;
+        let fillOpacity = 0.15;
 
         if (isSelected) {
           fillColor = "rgba(93, 115, 80, 0.3)"; // sage-600
@@ -149,27 +170,32 @@ export function LeafletMap({
           fillColor: fillColor,
           fillOpacity: fillOpacity,
           className: `area-polygon area-${area.id}`,
+          interactive: true,
+          bubblingMouseEvents: false,
         }).addTo(map);
 
-        // Add click handler
-        polygon.on("click", () => {
-          onAreaClick(area);
+        // Make polygon clickable and set cursor
+        polygon.setStyle({ cursor: "pointer" });
+
+        // Add click handler - use refs to get latest callbacks
+        polygon.on("click", (e) => {
+          console.log(`Polygon clicked for ${area.name}`);
+          if (e.originalEvent) {
+            e.originalEvent.stopPropagation();
+          }
+          onAreaClickRef.current(area);
         });
 
-        // Add hover handlers
+        // Add hover handlers - use refs to get latest callbacks
         polygon.on("mouseover", () => {
           setHoveredArea(area);
-          onAreaHover?.(area);
+          onAreaHoverRef.current?.(area);
+          polygon.setStyle({ cursor: "pointer" });
         });
 
         polygon.on("mouseout", () => {
           setHoveredArea(null);
-          onAreaHover?.(null);
-        });
-
-        // Change cursor on hover
-        polygon.on("mouseover", function () {
-          this.setStyle({ cursor: "pointer" });
+          onAreaHoverRef.current?.(null);
         });
 
         polygonsRef.current.set(area.id, polygon);
@@ -187,12 +213,20 @@ export function LeafletMap({
 
     return () => {
       if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
+        try {
+          mapInstanceRef.current.remove();
+          // Clear the leaflet ID from the container
+          if (mapRef.current) {
+            delete (mapRef.current as any)._leaflet_id;
+          }
+        } catch (e) {
+          console.warn("Error removing map:", e);
+        }
         mapInstanceRef.current = null;
       }
       polygonsRef.current.clear();
     };
-  }, []);
+  }, [areas]); // Re-run if areas change
 
   // Update polygons when selected/hovered area changes
   useEffect(() => {
@@ -206,11 +240,11 @@ export function LeafletMap({
         const isSelected = selectedArea?.id === area.id;
         const isHovered = hoveredArea?.id === area.id;
 
-        // Determine polygon style - darker grey boundaries for visibility
-        let fillColor = "rgba(120, 113, 108, 0.05)";
-        let borderColor = "#57534e"; // stone-600 - darker grey
-        let borderWidth = 2;
-        let fillOpacity = 0.05;
+        // Determine polygon style - make boundaries clearly visible
+        let fillColor = "rgba(93, 115, 80, 0.1)";
+        let borderColor = "#5d7350"; // sage-600 - clearly visible
+        let borderWidth = 2.5;
+        let fillOpacity = 0.1;
 
         if (isSelected) {
           fillColor = "rgba(93, 115, 80, 0.3)";
@@ -254,18 +288,42 @@ export function LeafletMap({
           background: #f5f5f4;
         }
 
+        /* Ensure all interactive elements are clickable */
+        .leaflet-interactive {
+          pointer-events: auto !important;
+          cursor: pointer !important;
+        }
+
+        .leaflet-interactive:hover {
+          cursor: pointer !important;
+        }
+
         .area-polygon {
-          cursor: pointer;
-          transition: all 0.2s ease;
+          cursor: pointer !important;
+          pointer-events: auto !important;
         }
 
         .area-polygon:hover {
-          cursor: pointer;
+          cursor: pointer !important;
         }
 
-        /* Ensure boundaries are visible */
-        .leaflet-interactive {
+        /* Ensure map doesn't block interactions */
+        .leaflet-map-pane {
+          pointer-events: auto;
+        }
+
+        .leaflet-overlay-pane {
           pointer-events: auto !important;
+        }
+
+        .leaflet-overlay-pane svg {
+          pointer-events: auto !important;
+        }
+
+        /* Make sure paths are clickable */
+        .leaflet-overlay-pane svg path {
+          pointer-events: auto !important;
+          cursor: pointer !important;
         }
       `}</style>
 

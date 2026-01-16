@@ -78,6 +78,12 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
   useEffect(() => {
     if (!mapRef.current || mapInstanceRef.current) return;
 
+    // Check if container already has a map instance
+    if ((mapRef.current as any)._leaflet_id) {
+      console.warn("Map container already initialized, skipping...");
+      return;
+    }
+
     // Dynamically import Leaflet to avoid SSR issues
     import("leaflet").then((L) => {
       const coords = getAreaCoordinates(area);
@@ -94,14 +100,14 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
       const map = L.default.map(mapRef.current!, {
         center: [coords[1], coords[0]],
         zoom: zoom,
-        zoomControl: false,
+        zoomControl: true,
         attributionControl: false,
-        dragging: false,
-        touchZoom: false,
-        doubleClickZoom: false,
-        scrollWheelZoom: false,
-        boxZoom: false,
-        keyboard: false,
+        dragging: true,
+        touchZoom: true,
+        doubleClickZoom: true,
+        scrollWheelZoom: true,
+        boxZoom: true,
+        keyboard: true,
       });
 
       // Add greyed-out OpenStreetMap tile layer
@@ -148,7 +154,15 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
 
     return () => {
       if (mapInstanceRef.current) {
-        mapInstanceRef.current.remove();
+        try {
+          mapInstanceRef.current.remove();
+          // Clear the leaflet ID from the container
+          if (mapRef.current) {
+            delete (mapRef.current as any)._leaflet_id;
+          }
+        } catch (e) {
+          console.warn("Error removing map:", e);
+        }
         mapInstanceRef.current = null;
       }
     };
