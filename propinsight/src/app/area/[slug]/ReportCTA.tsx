@@ -1,67 +1,17 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Area } from "@/types";
 import { REPORT_PRICE_DISPLAY } from "@/lib/constants";
+import { PurchaseModal } from "@/components/area/PurchaseModal";
 
 interface ReportCTAProps {
   area: Area;
 }
 
 export function ReportCTA({ area }: ReportCTAProps) {
-  const [email, setEmail] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [showEmailForm, setShowEmailForm] = useState(false);
-
-  const handlePurchase = async (areaSlug: string, email: string) => {
-    setIsSubmitting(true);
-
-    try {
-      // Create Stripe checkout session
-      const response = await fetch("/api/checkout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          areaSlug,
-          email,
-        }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to create checkout session");
-      }
-
-      // Redirect to Stripe Checkout
-      if (data.url) {
-        window.location.href = data.url;
-      } else {
-        throw new Error("No checkout URL received");
-      }
-    } catch (error) {
-      console.error("Checkout error:", error);
-      alert(
-        error instanceof Error
-          ? error.message
-          : "Failed to start checkout. Please try again."
-      );
-      setIsSubmitting(false);
-    }
-  };
-
-  const handleBuyClick = () => {
-    setShowEmailForm(true);
-  };
-
-  const handleBuySubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email.trim()) return;
-    await handlePurchase(area.slug, email.trim());
-  };
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   return (
     <div className="relative bg-white border border-stone-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-100 overflow-hidden">
@@ -146,88 +96,27 @@ export function ReportCTA({ area }: ReportCTAProps) {
 
             {/* Right: CTA Button */}
             <div className="flex-shrink-0">
-              <AnimatePresence mode="wait">
-                {!showEmailForm ? (
-                  <motion.button
-                    key="buy-button"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    onClick={handleBuyClick}
-                    whileHover={{ scale: 1.01 }}
-                    whileTap={{ scale: 0.99 }}
-                    className="group relative px-6 py-3 bg-stone-900 text-white font-semibold text-sm rounded-xl hover:bg-stone-800 transition-all duration-100 shadow-sm hover:shadow-md flex items-center gap-2"
-                  >
-                    <span>Purchase Report</span>
-                    <svg
-                      className="w-4 h-4 transition-transform duration-100 group-hover:translate-x-0.5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M13 7l5 5m0 0l-5 5m5-5H6"
-                      />
-                    </svg>
-                  </motion.button>
-                ) : (
-                  <motion.form
-                    key="email-form"
-                    initial={{ opacity: 0, y: -5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -5 }}
-                    onSubmit={handleBuySubmit}
-                    className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto"
-                  >
-                    <input
-                      type="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="your@email.com"
-                      required
-                      autoFocus
-                      className="px-3 py-2.5 rounded-lg text-stone-900 placeholder-stone-400 bg-white border border-stone-300 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all duration-100 text-sm min-w-[200px]"
-                    />
-                    <div className="flex gap-2">
-                      <button
-                        type="submit"
-                        disabled={isSubmitting || !email.trim()}
-                        className="px-5 py-2.5 bg-stone-900 text-white font-semibold rounded-lg hover:bg-stone-800 transition-all duration-100 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 shadow-sm hover:shadow-md whitespace-nowrap text-sm"
-                      >
-                        {isSubmitting ? (
-                          <>
-                            <motion.div
-                              animate={{ rotate: 360 }}
-                              transition={{
-                                duration: 1,
-                                repeat: Infinity,
-                                ease: "linear",
-                              }}
-                              className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full"
-                            />
-                            <span>Processing...</span>
-                          </>
-                        ) : (
-                          `Pay ${REPORT_PRICE_DISPLAY}`
-                        )}
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setShowEmailForm(false);
-                          setEmail("");
-                        }}
-                        className="px-3 py-2.5 text-stone-600 hover:text-stone-900 hover:bg-stone-50 rounded-lg transition-all duration-100 font-medium text-sm"
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </motion.form>
-                )}
-              </AnimatePresence>
+              <motion.button
+                onClick={() => setIsModalOpen(true)}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.99 }}
+                className="group relative px-6 py-3 bg-stone-900 text-white font-semibold text-sm rounded-xl hover:bg-stone-800 transition-all duration-100 shadow-sm hover:shadow-md flex items-center gap-2"
+              >
+                <span>Buy Report</span>
+                <svg
+                  className="w-4 h-4 transition-transform duration-100 group-hover:translate-x-0.5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M13 7l5 5m0 0l-5 5m5-5H6"
+                  />
+                </svg>
+              </motion.button>
             </div>
           </div>
 
@@ -285,6 +174,13 @@ export function ReportCTA({ area }: ReportCTAProps) {
             </div>
           </div>
       </div>
+
+      {/* Purchase Modal */}
+      <PurchaseModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        area={area}
+      />
     </div>
   );
 }
