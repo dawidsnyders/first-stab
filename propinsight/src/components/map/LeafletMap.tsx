@@ -112,7 +112,7 @@ export function LeafletMap({
     if (!mapRef.current || mapInstanceRef.current) return;
 
     // Check if container already has a map instance
-    if ((mapRef.current as any)._leaflet_id) {
+    if ((mapRef.current as { _leaflet_id?: number })._leaflet_id) {
       return;
     }
 
