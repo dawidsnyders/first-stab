@@ -249,10 +249,10 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
     // For outperformance with dual lines, include both areaValue and nationalValue
     if (type === "outperformance") {
       const allValues = [
-        ...data
+        ...chartData
           .map((d) => d.areaValue)
           .filter((v) => typeof v === "number" && !isNaN(v)),
-        ...data
+        ...chartData
           .map((d) => d.nationalValue)
           .filter((v) => typeof v === "number" && !isNaN(v)),
       ];
