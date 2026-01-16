@@ -266,7 +266,9 @@ export function PurchaseModal({ isOpen, onClose, area }: PurchaseModalProps) {
                 {/* Payment Methods */}
                 <div className="mt-4 pt-3 border-t border-stone-100">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] text-stone-500">Payment methods:</span>
+                    <span className="text-[10px] text-stone-500">
+                      Payment methods:
+                    </span>
                     <div className="flex items-center gap-1.5">
                       {/* Visa */}
                       <div className="w-9 h-5 bg-white border border-stone-200 rounded flex items-center justify-center px-1">

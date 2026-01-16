@@ -124,7 +124,7 @@ export default async function AreaPage({ params }: PageProps) {
   return (
     <div className="min-h-screen bg-stone-50">
       {/* Floating Header - Raycast Style */}
-      <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-6xl">
+      <header className="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-full max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="bg-white/80 backdrop-blur-xl border border-stone-200/60 rounded-2xl shadow-lg">
           <div className="flex items-center justify-between px-6 py-3">
             {/* Logo - Left */}

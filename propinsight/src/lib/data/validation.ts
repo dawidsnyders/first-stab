@@ -268,7 +268,7 @@ export function validateData(
   // Run validation checks (some can be combined)
   issues.push(...validatePriceConsistency(properties));
   issues.push(...detectOutliers(properties));
-  
+
   // Combine missing data and date consistency checks in single pass
   const missingDataIssues = checkMissingData(properties);
   const dateIssues = validateDateConsistency(properties);

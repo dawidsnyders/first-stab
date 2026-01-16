@@ -19,7 +19,7 @@ export function StickyReportCTA({ area }: StickyReportCTAProps) {
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-        className="fixed bottom-6 left-4 right-4 z-50 max-w-7xl mx-auto"
+        className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-full max-w-7xl px-4 sm:px-6 lg:px-8"
       >
         {/* Floating container with rounded corners - fully clickable */}
         <motion.button

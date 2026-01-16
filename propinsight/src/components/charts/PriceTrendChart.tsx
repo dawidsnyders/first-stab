@@ -40,14 +40,15 @@ const PriceTooltip = ({
   if (active && payload && payload.length && data) {
     const value = payload[0].value;
     const currentIndex = data.findIndex((d) => d.label === label);
-    
+
     // Find value from 12 months ago (YoY comparison)
     let yoyChange = 0;
     if (currentIndex >= 12) {
       const valueOneYearAgo = data[currentIndex - 12].value;
-      yoyChange = valueOneYearAgo > 0 
-        ? ((value - valueOneYearAgo) / valueOneYearAgo) * 100 
-        : 0;
+      yoyChange =
+        valueOneYearAgo > 0
+          ? ((value - valueOneYearAgo) / valueOneYearAgo) * 100
+          : 0;
     }
 
     return (
@@ -73,8 +74,8 @@ const PriceTooltip = ({
                   yoyChange > 0 ? "text-green-600" : "text-red-600"
                 }`}
               >
-                {yoyChange > 0 ? "↑" : "↓"}{" "}
-                {Math.abs(yoyChange).toFixed(1)}% YoY
+                {yoyChange > 0 ? "↑" : "↓"} {Math.abs(yoyChange).toFixed(1)}%
+                YoY
               </p>
             </div>
           )}
@@ -126,7 +127,7 @@ export function PriceTrendChart({
 }) {
   const [internalTimePeriod, setInternalTimePeriod] = useState<TimePeriod>(5);
   const timePeriod = externalTimePeriod ?? internalTimePeriod;
-  
+
   const handleTimePeriodChange = (period: TimePeriod) => {
     if (onTimePeriodChange) {
       onTimePeriodChange(period);
@@ -148,7 +149,9 @@ export function PriceTrendChart({
 
   // Calculate dynamic Y-axis domain (50% coverage)
   const calculateYAxisDomain = () => {
-    const values = chartData.map((d) => d.value).filter((v) => typeof v === "number" && !isNaN(v));
+    const values = chartData
+      .map((d) => d.value)
+      .filter((v) => typeof v === "number" && !isNaN(v));
     if (values.length === 0) return [0, currentPrice * 2];
 
     const minValue = Math.min(...values);

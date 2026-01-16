@@ -42,9 +42,7 @@ interface AggregationStats {
   listings: number;
 }
 
-function calculateAllStats(
-  properties: NormalizedProperty[]
-): AggregationStats {
+function calculateAllStats(properties: NormalizedProperty[]): AggregationStats {
   const now = new Date();
   const oneYearAgo = new Date(
     now.getFullYear() - 1,
