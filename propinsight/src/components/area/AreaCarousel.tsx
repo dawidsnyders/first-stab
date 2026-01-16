@@ -28,6 +28,33 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
   );
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
+  // Pre-compute and memoize chart data for all areas to prevent regeneration on scroll
+  const chartDataCache = useMemo(() => {
+    const cache: Record<
+      string,
+      { priceTrend: any[]; pricePerSqm: any[] }
+    > = {};
+    areas.forEach((area) => {
+      if (area.stats) {
+        cache[area.id] = {
+          priceTrend: generateMedianPriceData(
+            area.stats.medianPrice,
+            area.stats.priceChangeYoY,
+            5
+          ),
+          pricePerSqm: area.stats.avgPricePerSqm
+            ? generatePricePerSqmData(
+                area.stats.avgPricePerSqm,
+                area.stats.priceChangeYoY,
+                5
+              )
+            : [],
+        };
+      }
+    });
+    return cache;
+  }, [areas.map((a) => `${a.id}-${a.stats?.medianPrice}-${a.stats?.priceChangeYoY}-${a.stats?.avgPricePerSqm}`).join(",")]);
+
   // Track which section is in view and scroll progress between sections
   useEffect(() => {
     let rafId: number | null = null;
@@ -239,25 +266,6 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
           const { stats } = area;
           const isPositive = stats && stats.priceChangeYoY >= 0;
 
-          // Memoize chart data to prevent regeneration on scroll
-          const priceTrendData = useMemo(() => {
-            if (!stats) return [];
-            return generateMedianPriceData(
-              stats.medianPrice,
-              stats.priceChangeYoY,
-              5
-            );
-          }, [area.id, stats?.medianPrice, stats?.priceChangeYoY]);
-
-          const pricePerSqmData = useMemo(() => {
-            if (!stats || !stats.avgPricePerSqm) return [];
-            return generatePricePerSqmData(
-              stats.avgPricePerSqm,
-              stats.priceChangeYoY,
-              5
-            );
-          }, [area.id, stats?.avgPricePerSqm, stats?.priceChangeYoY]);
-
           return (
             <section
               key={area.id}
@@ -354,7 +362,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                             <div className="h-20 w-full">
                               <ResponsiveContainer width="100%" height="100%">
                                 <LineChart
-                                  data={priceTrendData}
+                                  data={chartDataCache[area.id]?.priceTrend || []}
                                   margin={{
                                     top: 5,
                                     right: 5,
@@ -430,7 +438,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                               <div className="h-20 w-full">
                                 <ResponsiveContainer width="100%" height="100%">
                                   <LineChart
-                                    data={pricePerSqmData}
+                                    data={chartDataCache[area.id]?.pricePerSqm || []}
                                     margin={{
                                       top: 5,
                                       right: 5,
