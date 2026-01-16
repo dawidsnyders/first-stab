@@ -162,7 +162,7 @@ export async function fetchSuburbBoundaries(): Promise<
  * Get boundary for a specific area slug
  * Uses server-side API route to avoid CORS issues and ensure accurate data
  */
-let boundariesCache: Map<string, [number, number][]> = new Map();
+const boundariesCache: Map<string, [number, number][]> = new Map();
 
 export async function getBoundaryForArea(
   slug: string
