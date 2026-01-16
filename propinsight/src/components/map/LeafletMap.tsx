@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Area } from "@/types";
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/lib/constants";
-import { getAreaBoundary, hasBoundary } from "@/data/areaBoundaries";
+import { getAreaBoundaryPolygon } from "@/data/areaBoundaries";
 import "leaflet/dist/leaflet.css";
 
 // Coordinates for all Western Cape areas [lng, lat] format
@@ -38,33 +38,24 @@ function getAreaCoordinates(area: Area): [number, number] {
   );
 }
 
-/**
- * Get the boundary polygon for an area
- * Uses predefined boundaries if available, otherwise generates a fallback
- */
-function getAreaBoundaryPolygon(area: Area): [number, number][] {
-  // First, try to get predefined boundary from areaBoundaries
-  if (hasBoundary(area.slug)) {
-    const boundary = getAreaBoundary(area.slug);
-    if (boundary) {
-      return boundary;
-    }
+function getAreaBoundary(area: Area): [number, number][] {
+  // First try to get real boundary from boundaries data
+  const realBoundary = getAreaBoundaryPolygon(area.slug);
+  if (realBoundary) {
+    return realBoundary;
   }
 
-  // Fallback: generate a simple boundary if no predefined one exists
-  const coords = getAreaCoordinates(area); // [lng, lat]
+  // Fallback: Generate approximate polygon if no real boundary exists
+  const coords = getAreaCoordinates(area); // Returns [lng, lat]
   const [lng, lat] = coords;
   
-  // Generate a simple polygon based on area level
+  // Adjust size based on area level
   const size =
-    area.level === "province"
-      ? 2.0
-      : area.level === "city"
-      ? 0.4
-      : 0.05;
-
+    area.level === "province" ? 2.0 : area.level === "city" ? 0.4 : 0.05;
+  
+  // Generate simple polygon as fallback
   const points: [number, number][] = [];
-  const sides = 8; // More sides for smoother polygons
+  const sides = 6;
   for (let i = 0; i <= sides; i++) {
     const angle = (i * 2 * Math.PI) / sides;
     const radius = size;
@@ -133,7 +124,8 @@ export function LeafletMap({
 
       // Apply grey filter to map for desaturated look
       const mapContainer = mapRef.current!;
-      mapContainer.style.filter = "grayscale(100%) brightness(0.9) contrast(0.95)";
+      mapContainer.style.filter =
+        "grayscale(100%) brightness(0.9) contrast(0.95)";
 
       mapInstanceRef.current = map;
       setIsMapReady(true);
@@ -147,7 +139,7 @@ export function LeafletMap({
             mapInstanceRef.current.removeLayer(polygon);
           });
           polygonsRef.current.clear();
-          
+
           mapInstanceRef.current.remove();
           // Clear the leaflet ID from the container
           if (mapRef.current) {
@@ -175,45 +167,41 @@ export function LeafletMap({
     import("leaflet").then((L) => {
       // Add area polygons
       areas.forEach((area) => {
-        const boundary = getAreaBoundaryPolygon(area); // Returns [lat, lng] format
+        const boundary = getAreaBoundary(area); // Returns [lat, lng] format
         const coords = getAreaCoordinates(area); // Returns [lng, lat]
-        
-        // Skip if no boundary available
-        if (!boundary || boundary.length < 3) {
-          console.warn(`No boundary available for ${area.name}`);
-          return;
-        }
 
         const isSelected = selectedArea?.id === area.id;
         const isHovered = hoveredArea?.id === area.id;
 
-        // Determine polygon style - make boundaries clearly visible and Property24-like
-        let fillColor = "#5d7350"; // sage-600
-        let borderColor = "#4a5c3f"; // sage-700 - dark border for visibility
+        // Determine polygon style - make boundaries clearly visible and prominent
+        let fillColor = "#5d7350"; // sage-600 solid color
+        let borderColor = "#4a5c3f"; // sage-700 - very visible dark border
         let borderWidth = 2.5;
-        let fillOpacity = 0.3; // More visible fill
+        let fillOpacity = 0.3; // Clearly visible
 
         if (isSelected) {
           fillColor = "#7d9470"; // sage-500 brighter when selected
-          borderColor = "#5d7350"; // sage-600
+          borderColor = "#3d4d33"; // sage-700 darker border
           borderWidth = 4;
           fillOpacity = 0.5;
         } else if (isHovered) {
           fillColor = "#6f8464"; // sage-500 lighter on hover
-          borderColor = "#5d7350"; // sage-600
+          borderColor = "#4a5c3f"; // sage-700
           borderWidth = 3.5;
           fillOpacity = 0.4;
         }
 
-        const polygon = L.default.polygon(boundary, {
-          color: borderColor,
-          weight: borderWidth,
-          fillColor: fillColor,
-          fillOpacity: fillOpacity,
-          className: `area-polygon area-${area.id}`,
-          interactive: true,
-          bubblingMouseEvents: false,
-        }).addTo(mapInstanceRef.current);
+        const polygon = L.default
+          .polygon(boundary, {
+            color: borderColor,
+            weight: borderWidth,
+            fillColor: fillColor,
+            fillOpacity: fillOpacity,
+            className: `area-polygon area-${area.id}`,
+            interactive: true,
+            bubblingMouseEvents: false,
+          })
+          .addTo(mapInstanceRef.current);
 
         // Set cursor
         polygon.setStyle({ cursor: "pointer" });
@@ -236,8 +224,11 @@ export function LeafletMap({
         polygon.on("mouseout", () => {
           setHoveredArea(null);
           onAreaHoverRef.current?.(null);
+          // Restore original style based on selection state
           if (!isSelected) {
-            polygon.setStyle({ fillOpacity: 0.25 });
+            polygon.setStyle({ fillOpacity: 0.3 });
+          } else {
+            polygon.setStyle({ fillOpacity: 0.5 });
           }
         });
 
@@ -267,22 +258,22 @@ export function LeafletMap({
       const isSelected = selectedArea?.id === area.id;
       const isHovered = hoveredArea?.id === area.id;
 
-      // Determine polygon style
+      // Determine polygon style - match initial creation styles
       let fillColor = "#5d7350";
       let borderColor = "#4a5c3f";
-      let borderWidth = 3;
-      let fillOpacity = 0.25;
+      let borderWidth = 2.5;
+      let fillOpacity = 0.3;
 
       if (isSelected) {
         fillColor = "#7d9470";
-        borderColor = "#5d7350";
+        borderColor = "#3d4d33"; // Even darker for selected
         borderWidth = 4;
-        fillOpacity = 0.4;
+        fillOpacity = 0.5;
       } else if (isHovered) {
         fillColor = "#6f8464";
-        borderColor = "#5d7350";
+        borderColor = "#4a5c3f";
         borderWidth = 3.5;
-        fillOpacity = 0.35;
+        fillOpacity = 0.4;
       }
 
       polygon.setStyle({
