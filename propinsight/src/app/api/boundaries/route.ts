@@ -742,13 +742,26 @@ export async function GET(request: NextRequest) {
           console.log(
             `Querying ${apiName} (fallback) for "${suburbName}"`
           );
-          url.searchParams.append("where", "1=1"); // Get all, filter in code
-          url.searchParams.append("outFields", "*");
-          url.searchParams.append("returnGeometry", "true");
-          url.searchParams.append("f", "geojson");
-          url.searchParams.append("outSR", "4326");
-          url.searchParams.append("returnExceededLimitFeatures", "true");
-          url.searchParams.append("geometryPrecision", "8");
+          // Build query based on source type
+          if (source === "national") {
+            // National API - query all and filter in code
+            url.searchParams.append("where", "1=1");
+            url.searchParams.append("outFields", "*");
+            url.searchParams.append("returnGeometry", "true");
+            url.searchParams.append("f", "geojson");
+            url.searchParams.append("outSR", "4326");
+            url.searchParams.append("returnExceededLimitFeatures", "true");
+            url.searchParams.append("geometryPrecision", "8");
+          } else {
+            // Western Cape API
+            url.searchParams.append("where", "1=1"); // Get all, filter in code
+            url.searchParams.append("outFields", "*");
+            url.searchParams.append("returnGeometry", "true");
+            url.searchParams.append("f", "geojson");
+            url.searchParams.append("outSR", "4326");
+            url.searchParams.append("returnExceededLimitFeatures", "true");
+            url.searchParams.append("geometryPrecision", "8");
+          }
 
           const response = await fetch(url.toString(), {
             method: "GET",
@@ -790,9 +803,11 @@ export async function GET(request: NextRequest) {
                 props.MUNICIPALITY_NAME,
                 props.LOCAL_MUNICIPALITY,
                 props.name,
-                // For Paarl, also check municipality fields
+                // For National API (municipality boundaries) and Paarl
                 props.MUNIC_NAME,
                 props.ADMIN_NAME,
+                props.DISTRICT,
+                props.PROVINCE,
               ]
                 .filter(Boolean)
                 .map((n) => String(n).toLowerCase().trim());
@@ -803,7 +818,7 @@ export async function GET(request: NextRequest) {
               const allSearchTerms = [...searchTerms, suburbName].map((t) =>
                 t.toLowerCase().trim()
               );
-
+              
               // Check if any of the possible names match any search term
               return possibleNames.some((nameLower) =>
                 allSearchTerms.some((termLower) => {
