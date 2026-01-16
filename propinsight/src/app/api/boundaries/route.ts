@@ -109,9 +109,9 @@ export async function GET(request: NextRequest) {
         source: "westernCape",
         searchTerms: ["Stellenbosch"],
       },
-      dalsig: { name: "Dalsig", source: "stellenbosch" },
-      welgevonden: { name: "Welgevonden", source: "stellenbosch" },
-      mostertsdrift: { name: "Mostertsdrift", source: "stellenbosch" },
+      dalsig: { name: "Dalsig", source: "westernCape", searchTerms: ["Dalsig"] },
+      welgevonden: { name: "Welgevonden", source: "westernCape", searchTerms: ["Welgevonden"] },
+      mostertsdrift: { name: "Mostertsdrift", source: "westernCape", searchTerms: ["Mostertsdrift"] },
       // Stellenbosch Estates - use OpenStreetMap (not in municipal boundaries)
       "de-zalze": {
         name: "De Zalze",

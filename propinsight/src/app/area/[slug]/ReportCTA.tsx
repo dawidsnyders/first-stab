@@ -18,9 +18,9 @@ export function ReportCTA({ area }: ReportCTAProps) {
       {/* Subtle gradient accent */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sage-500 via-moss-500 to-sage-500"></div>
 
-      <div className="px-4 sm:px-6 lg:px-8 py-5 md:py-6">
+      <div className="px-4 sm:px-6 lg:px-8 py-7 md:py-8">
         {/* Compact Header */}
-        <div className="flex items-start justify-between mb-4">
+        <div className="flex items-start justify-between mb-5">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
               <div className="w-8 h-8 rounded-lg bg-sage-100 flex items-center justify-center flex-shrink-0">
@@ -53,7 +53,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
         </div>
 
         {/* Compact Features - Inline */}
-        <div className="mb-4">
+        <div className="mb-5">
           <div className="flex flex-wrap gap-x-3 gap-y-1.5 text-xs text-stone-600">
             {[
               "10-Year Analysis",
@@ -82,10 +82,10 @@ export function ReportCTA({ area }: ReportCTAProps) {
         </div>
 
         {/* Divider */}
-        <div className="border-t border-stone-200 my-4"></div>
+        <div className="border-t border-stone-200 my-5"></div>
 
         {/* Compact CTA Section */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-5">
           {/* Left: Pricing */}
           <div>
             <div className="text-xs text-stone-500 mb-0.5">
@@ -123,7 +123,7 @@ export function ReportCTA({ area }: ReportCTAProps) {
         </div>
 
         {/* Compact Trust indicators */}
-        <div className="mt-4 pt-3 border-t border-stone-100">
+        <div className="mt-5 pt-4 border-t border-stone-100">
           <div className="flex flex-wrap items-center gap-4 text-[10px] text-stone-500">
             <div className="flex items-center gap-1.5">
               <svg

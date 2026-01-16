@@ -153,15 +153,22 @@ export function generateOutperformanceData(
     // Use a gradual approach: past values start closer to national average and trend toward current
     // This simulates the area gradually outperforming over time
     const progressToCurrent = Math.min(yearsAgo / years, 1); // 0 = 3 years ago, 1 = now
-    const baseAreaGrowthRate = nationalBenchmark + (currentOutperformance * progressToCurrent);
+    const baseAreaGrowthRate =
+      nationalBenchmark + currentOutperformance * progressToCurrent;
 
     // Add realistic monthly variation (±0.3% for area, ±0.15% for national)
     const areaVariation = (Math.random() - 0.5) * 0.6; // ±0.3% variation
     const nationalVariation = (Math.random() - 0.5) * 0.3; // ±0.15% variation (less volatile)
 
     // Ensure values are reasonable (growth rates typically between -10% and +20%)
-    const finalAreaValue = Math.max(-10, Math.min(20, baseAreaGrowthRate + areaVariation));
-    const finalNationalValue = Math.max(-5, Math.min(10, nationalBenchmark + nationalVariation));
+    const finalAreaValue = Math.max(
+      -10,
+      Math.min(20, baseAreaGrowthRate + areaVariation)
+    );
+    const finalNationalValue = Math.max(
+      -5,
+      Math.min(10, nationalBenchmark + nationalVariation)
+    );
 
     data.push({
       date: date.toISOString().split("T")[0],
