@@ -791,6 +791,20 @@ export async function GET(request: NextRequest) {
           }
 
           const responseData: GeoJSONResponse = await response.json();
+          
+          // Debug logging for Paarl
+          if (suburbName === "Paarl" && source === "national") {
+            console.log(
+              `National API returned ${responseData.features?.length || 0} features for Paarl`
+            );
+            if (responseData.features && responseData.features.length > 0) {
+              const sampleFeature = responseData.features[0];
+              console.log(
+                `Sample feature properties:`,
+                JSON.stringify(sampleFeature.properties, null, 2)
+              );
+            }
+          }
 
           // Filter for polygons matching the suburb name
           // Try multiple field names and be flexible with matching
