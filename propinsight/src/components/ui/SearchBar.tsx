@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import { motion } from 'framer-motion';
 import { Area } from '@/types';
-import { searchAreas } from '@/data/areas';
+import { searchAreas, getAreasByLevel } from '@/data/areas';
 
 interface SearchBarProps {
   onMapClick?: () => void;
@@ -78,8 +79,34 @@ export function SearchBar({ onMapClick }: SearchBarProps) {
     );
   };
 
+  // Get popular areas for quick select
+  const popularAreas = getAreasByLevel("suburb")
+    .filter((area) => area.stats)
+    .slice(0, 4);
+
+  const handleQuickSelect = (area: Area) => {
+    router.push(`/area/${area.slug}`);
+  };
+
   return (
     <div className="relative w-full max-w-2xl">
+      {/* Quick Select Areas */}
+      <div className="mb-3">
+        <div className="flex flex-wrap gap-2">
+          {popularAreas.map((area) => (
+            <motion.button
+              key={area.id}
+              onClick={() => handleQuickSelect(area)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="group relative px-4 py-2 text-xs font-medium rounded-lg transition-all duration-100 bg-white text-stone-700 hover:text-stone-900 border border-stone-200 hover:border-sage-300 hover:shadow-sm"
+            >
+              {area.name}
+            </motion.button>
+          ))}
+        </div>
+      </div>
+
       <div className="relative flex items-center gap-2">
         <div className="relative flex-1">
           <input
@@ -90,7 +117,7 @@ export function SearchBar({ onMapClick }: SearchBarProps) {
             onFocus={() => query.length >= 2 && setIsOpen(results.length > 0)}
             onKeyDown={handleKeyDown}
             placeholder="Search suburbs, cities, or estates..."
-            className="w-full px-4 py-3 pl-12 pr-4 text-lg border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-400 focus:border-transparent shadow-sm transition-all duration-200 hover:border-stone-400"
+            className="w-full px-4 py-3 pl-12 pr-4 text-lg border border-stone-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-sage-400 focus:border-transparent shadow-sm transition-all duration-100 hover:border-stone-400"
           />
           <svg
             className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400"
@@ -109,12 +136,12 @@ export function SearchBar({ onMapClick }: SearchBarProps) {
         {onMapClick && (
           <button
             onClick={onMapClick}
-            className="flex items-center justify-center w-12 h-12 border border-stone-300 rounded-xl bg-white hover:bg-stone-50 hover:border-sage-400 transition-all duration-200 shadow-sm hover:shadow-md group"
+            className="flex items-center justify-center w-12 h-12 border border-stone-300 rounded-xl bg-white hover:bg-stone-50 hover:border-sage-400 transition-all duration-100 shadow-sm hover:shadow-md group"
             aria-label="Open map view"
             title="Open interactive map"
           >
             <svg
-              className="w-5 h-5 text-stone-600 group-hover:text-sage-600 transition-colors duration-200"
+              className="w-5 h-5 text-stone-600 group-hover:text-sage-600 transition-colors duration-100"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -139,7 +166,7 @@ export function SearchBar({ onMapClick }: SearchBarProps) {
             <button
               key={area.id}
               onClick={() => handleSelect(area)}
-              className={`w-full px-4 py-3 text-left flex items-center justify-between transition-colors duration-200 ${
+              className={`w-full px-4 py-3 text-left flex items-center justify-between transition-colors duration-100 ${
                 index === selectedIndex 
                   ? 'bg-sage-50 hover:bg-sage-100' 
                   : 'hover:bg-stone-50'

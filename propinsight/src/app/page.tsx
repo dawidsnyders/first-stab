@@ -185,14 +185,17 @@ export default function Home() {
       </header>
 
       {/* Hero section - Left-aligned title, right-aligned search */}
-      <section className="relative bg-white text-stone-900 flex flex-col overflow-hidden z-20" style={{ minHeight: '60vh' }}>
+      <section
+        className="relative bg-white text-stone-900 flex flex-col overflow-hidden z-20"
+        style={{ minHeight: "60vh" }}
+      >
         {/* Subtle background decoration */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-br from-sage-100/30 to-transparent rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-gradient-to-tr from-moss-100/20 to-transparent rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 pb-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full" style={{ paddingTop: '20vh', paddingBottom: '8vh' }}>
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: Title and Subtitle */}
             <div className="space-y-6">
@@ -564,7 +567,10 @@ export default function Home() {
       </section>
 
       {/* Professional Market Analysis - Redesigned */}
-      <section id="pricing" className="relative bg-gradient-to-b from-sand-50 to-white py-16 md:py-20">
+      <section
+        id="pricing"
+        className="relative bg-gradient-to-b from-sand-50 to-white py-16 md:py-20"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative bg-white border border-stone-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-100 overflow-hidden">
             {/* Subtle gradient accent with earthy tones */}
@@ -685,7 +691,9 @@ export default function Home() {
                         searchQuery.length >= 2 &&
                         setIsSearchOpen(searchResults.length > 0)
                       }
-                      placeholder={selectedArea ? selectedArea.name : "Search area..."}
+                      placeholder={
+                        selectedArea ? selectedArea.name : "Search area..."
+                      }
                       className="w-full px-3 py-2 pl-9 pr-3 text-sm border border-stone-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-sage-500/50 focus:border-sage-500 transition-all duration-100 text-stone-900 placeholder-stone-400 shadow-sm hover:shadow-md hover:border-stone-400"
                     />
                     <svg
