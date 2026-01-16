@@ -499,26 +499,6 @@ export function StatChart({ data, type, areaName }: StatChartProps) {
             />
           </ComposedChart>
         ) : (
-              <Area
-                type="monotone"
-                dataKey="value"
-                stroke={colors.main}
-                strokeWidth={3}
-                fill={`url(#gradient-${type})`}
-                dot={false}
-                activeDot={{
-                  r: 6,
-                  fill: colors.main,
-                  strokeWidth: 3,
-                  stroke: "#fff",
-                  style: { filter: "drop-shadow(0 2px 4px rgba(0,0,0,0.1))" },
-                }}
-                animationDuration={1000}
-                animationBegin={0}
-              />
-            )}
-          </ComposedChart>
-        ) : (
           <AreaChart
             data={chartData}
             margin={{ top: 20, right: 30, left: 20, bottom: 70 }}
