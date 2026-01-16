@@ -103,14 +103,14 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
         const map = L.default.map(mapRef.current!, {
           center: [coords[1], coords[0]], // [lat, lng] for Leaflet
           zoom: zoom,
-          zoomControl: true,
+          zoomControl: false,
           attributionControl: false,
-          dragging: true,
-          touchZoom: true,
-          doubleClickZoom: true,
-          scrollWheelZoom: true,
-          boxZoom: true,
-          keyboard: true,
+          dragging: false,
+          touchZoom: false,
+          doubleClickZoom: false,
+          scrollWheelZoom: false,
+          boxZoom: false,
+          keyboard: false,
         });
 
         // Add OpenStreetMap tile layer (full color, no grayscale)
@@ -156,8 +156,8 @@ export function AreaLocationMap({ area }: AreaLocationMapProps) {
   }, [area]);
 
   return (
-    <div className="relative w-full h-64 rounded-xl overflow-hidden border border-stone-200 bg-stone-50">
-      <div ref={mapRef} className="w-full h-full" />
+    <div className="relative w-full h-64 rounded-xl overflow-hidden border border-stone-200 bg-stone-50 pointer-events-none">
+      <div ref={mapRef} className="w-full h-full pointer-events-none" />
 
       {/* Custom CSS for map styling - matching main map */}
       <style jsx global>{`

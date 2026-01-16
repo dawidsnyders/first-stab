@@ -638,8 +638,33 @@ export default function Home() {
 
               {/* Search and Pricing Section */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                {/* Left: Compact Search Bar */}
+                {/* Left: Quick Select + Search Bar */}
                 <div className="flex-1 min-w-0 max-w-md">
+                  {/* Quick Select Areas */}
+                  <div className="mb-3">
+                    <div className="flex flex-wrap gap-2">
+                      {getAreasByLevel("suburb")
+                        .filter((area) => area.stats)
+                        .slice(0, 4)
+                        .map((area) => (
+                          <motion.button
+                            key={area.id}
+                            onClick={() => handleAreaSelect(area)}
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            className={`px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-100 ${
+                              selectedArea?.id === area.id
+                                ? "bg-sage-600 text-white shadow-md"
+                                : "bg-stone-100 text-stone-700 hover:bg-stone-200 border border-stone-200"
+                            }`}
+                          >
+                            {area.name}
+                          </motion.button>
+                        ))}
+                    </div>
+                  </div>
+
+                  {/* Search Bar */}
                   <div className="relative">
                     <input
                       ref={searchInputRef}
