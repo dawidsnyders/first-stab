@@ -585,17 +585,21 @@ export async function GET(request: NextRequest) {
             );
           }
         } else {
-          // For Cape Town API, use first feature (should be exact match)
-          matchingFeature = responseData.features?.[0];
-          if (matchingFeature) {
+          // For Cape Town API, filter for Polygon/MultiPolygon only (reject Points)
+          const polygonFeatures = responseData.features?.filter((f) => {
+            return f.geometry && (f.geometry.type === "Polygon" || f.geometry.type === "MultiPolygon");
+          }) || [];
+          
+          if (polygonFeatures.length > 0) {
+            matchingFeature = polygonFeatures[0];
             console.log(
-              `Found feature for "${suburbName}" from Cape Town API: ${
-                matchingFeature.geometry?.type || "unknown type"
-              }`
+              `Found polygon feature for "${suburbName}" from Cape Town API: ${matchingFeature.geometry?.type || "unknown type"}`
             );
           } else {
+            const allFeatures = responseData.features || [];
+            const pointFeatures = allFeatures.filter((f) => f.geometry?.type === "Point");
             console.warn(
-              `No features returned from Cape Town API for "${suburbName}"`
+              `No polygon features returned from Cape Town API for "${suburbName}" (found ${allFeatures.length} total features, ${pointFeatures.length} are Points)`
             );
           }
         }
