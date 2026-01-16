@@ -390,9 +390,9 @@ export async function GET(request: NextRequest) {
                       // Calculate approximate bounding box area to filter out overly large polygons
                       let coords: number[][] = [];
                       if (feature.geometry.type === "Polygon") {
-                        coords = feature.geometry.coordinates[0] as number[][];
+                        coords = feature.geometry.coordinates[0] as unknown as number[][];
                       } else {
-                        coords = feature.geometry.coordinates[0][0] as number[][];
+                        coords = (feature.geometry.coordinates[0] as number[][][])[0] as number[][];
                       }
                       
                       if (coords && coords.length > 0) {
@@ -501,9 +501,9 @@ export async function GET(request: NextRequest) {
             if (candidate.geometry && (candidate.geometry.type === "Polygon" || candidate.geometry.type === "MultiPolygon")) {
               let coords: number[][] = [];
               if (candidate.geometry.type === "Polygon") {
-                coords = candidate.geometry.coordinates[0] as number[][];
+                coords = candidate.geometry.coordinates[0] as unknown as number[][];
               } else {
-                coords = candidate.geometry.coordinates[0][0] as number[][];
+                coords = (candidate.geometry.coordinates[0] as number[][][])[0] as number[][];
               }
               
               if (coords && coords.length > 0) {
