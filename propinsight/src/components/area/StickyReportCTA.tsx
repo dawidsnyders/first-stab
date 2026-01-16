@@ -1,23 +1,33 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { Area } from "@/types";
 import { REPORT_PRICE_DISPLAY } from "@/lib/constants";
+import { PurchaseModal } from "./PurchaseModal";
 
 interface StickyReportCTAProps {
   area: Area;
 }
 
 export function StickyReportCTA({ area }: StickyReportCTAProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    <motion.div
-      initial={{ y: 100, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
-      className="fixed bottom-6 left-4 right-4 z-50 max-w-7xl mx-auto"
-    >
-      {/* Floating container with rounded corners */}
-      <div className="relative bg-white/90 backdrop-blur-xl border border-stone-200/60 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden max-h-[100px]">
+    <>
+      <motion.div
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1], delay: 0.3 }}
+        className="fixed bottom-6 left-4 right-4 z-50 max-w-7xl mx-auto"
+      >
+        {/* Floating container with rounded corners - fully clickable */}
+        <motion.button
+          onClick={() => setIsModalOpen(true)}
+          whileHover={{ scale: 1.01, y: -2 }}
+          whileTap={{ scale: 0.99 }}
+          className="w-full relative bg-white/90 backdrop-blur-xl border border-stone-200/60 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.12)] overflow-hidden max-h-[100px] hover:shadow-[0_12px_40px_rgba(0,0,0,0.15)] hover:border-sage-300/60 hover:bg-white transition-all duration-200 cursor-pointer group text-left"
+        >
         <div className="px-4 sm:px-6 py-3">
           <div className="flex items-center justify-between gap-4">
             {/* Left: Content */}
@@ -108,10 +118,7 @@ export function StickyReportCTA({ area }: StickyReportCTAProps) {
               </div>
 
               {/* CTA Button */}
-              <a
-                href="#report"
-                className="group relative px-5 py-2.5 bg-gradient-to-r from-sage-600 to-moss-600 text-white font-semibold text-sm rounded-lg hover:from-sage-700 hover:to-moss-700 transition-all duration-200 shadow-md hover:shadow-lg hover:scale-[1.02] active:scale-[0.98] whitespace-nowrap flex items-center gap-1.5 overflow-hidden"
-              >
+              <div className="relative px-5 py-2.5 bg-gradient-to-r from-sage-600 to-moss-600 text-white font-semibold text-sm rounded-lg shadow-md group-hover:shadow-lg group-hover:from-sage-700 group-hover:to-moss-700 transition-all duration-200 whitespace-nowrap flex items-center gap-1.5 overflow-hidden pointer-events-none">
                 {/* Shine effect on hover */}
                 <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
 
@@ -129,11 +136,18 @@ export function StickyReportCTA({ area }: StickyReportCTAProps) {
                     d="M13 7l5 5m0 0l-5 5m5-5H6"
                   />
                 </svg>
-              </a>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </motion.div>
+        </motion.button>
+      </motion.div>
+
+      {/* Purchase Modal */}
+      <PurchaseModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        area={area}
+      />
+    </>
   );
 }

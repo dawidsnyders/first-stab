@@ -126,36 +126,38 @@ function DevelopmentCard({ development }: DevelopmentCardProps) {
         <div className="flex-shrink-0">{getStatusBadge()}</div>
       </div>
 
-      {/* Development Name */}
-      <h4 className="text-sm font-bold text-stone-900 mb-1.5 group-hover:text-sage-600 transition-colors duration-200 line-clamp-1 flex-shrink-0">
-        {development.name}
-      </h4>
-
-      {/* Details - Compact layout */}
-      <div className="flex items-center justify-between gap-3 mb-2 flex-grow min-h-0">
-        <div className="flex items-center gap-1.5 text-xs text-stone-600 min-w-0 flex-1">
-          <CalendarIcon className="w-3 h-3 flex-shrink-0" />
-          <span className="truncate">
-            {isPastDue
-              ? "Past due"
-              : daysUntilCompletion <= 90
-              ? `${daysUntilCompletion} days`
-              : completionDate.toLocaleDateString("en-ZA", {
-                  month: "short",
-                  year: "numeric",
-                })}
-          </span>
-        </div>
+      {/* Development Name and Price - Aligned */}
+      <div className="flex items-center justify-between gap-3 mb-2 flex-shrink-0">
+        <h4 className="text-sm font-bold text-stone-900 group-hover:text-sage-600 transition-colors duration-200 line-clamp-1 flex-1 min-w-0">
+          {development.name}
+        </h4>
         <div className="text-right flex-shrink-0">
-          <p className="text-[10px] text-stone-500 leading-tight">Avg Price</p>
+          <p className="text-[10px] text-stone-500 leading-tight mb-0.5">
+            Avg Price
+          </p>
           <p className="text-sm font-bold text-stone-900 leading-tight">
             {formatPrice(development.averageApartmentPrice)}
           </p>
         </div>
       </div>
 
+      {/* Completion Date */}
+      <div className="flex items-center gap-1.5 text-xs text-stone-600 mb-3 flex-grow min-h-0 pb-1">
+        <CalendarIcon className="w-3 h-3 flex-shrink-0" />
+        <span className="truncate">
+          {isPastDue
+            ? "Past due"
+            : daysUntilCompletion <= 90
+            ? `Est. completion: ${daysUntilCompletion} days`
+            : `Est. completion: ${completionDate.toLocaleDateString("en-ZA", {
+                month: "short",
+                year: "numeric",
+              })}`}
+        </span>
+      </div>
+
       {/* View Link */}
-      <div className="flex items-center gap-1.5 text-xs text-sage-600 font-medium pt-1.5 border-t border-stone-100 group-hover:gap-2 transition-all duration-200 flex-shrink-0">
+      <div className="flex items-center gap-1.5 text-xs text-sage-600 font-medium pt-2.5 border-t border-stone-100 group-hover:gap-2 transition-all duration-200 flex-shrink-0">
         <span>View Development</span>
         <ArrowTopRightOnSquareIcon className="w-3 h-3" />
       </div>
