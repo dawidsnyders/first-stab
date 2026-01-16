@@ -156,7 +156,11 @@ export async function GET(request: NextRequest) {
       franschhoek: {
         name: "Franschhoek",
         source: "openstreetmap",
-        searchTerms: ["Franschhoek", "Franschhoek, Western Cape", "Franschhoek town"],
+        searchTerms: [
+          "Franschhoek",
+          "Franschhoek, Western Cape",
+          "Franschhoek town",
+        ],
       },
     };
 
@@ -180,7 +184,9 @@ export async function GET(request: NextRequest) {
 
     // If Cape Town API fails, fallback to Western Cape API for Cape Town suburbs
     // If OpenStreetMap fails for Paarl (only returns Point), fallback to Western Cape API
-    const shouldTryFallback = source === "capeTown" || (source === "openstreetmap" && suburbName === "Paarl");
+    const shouldTryFallback =
+      source === "capeTown" ||
+      (source === "openstreetmap" && suburbName === "Paarl");
     const fallbackEndpoints = shouldTryFallback
       ? API_ENDPOINTS.westernCape
       : [];
@@ -272,18 +278,37 @@ export async function GET(request: NextRequest) {
                   console.log(
                     `OpenStreetMap returned ${osmData.features.length} features for "${searchTerm}"`
                   );
-                  // Try all features and pick the smallest/most specific one
+                  
+                  // Filter out Point geometries first - we only want polygons
+                  const polygonFeatures = osmData.features.filter(
+                    (f) =>
+                      f.geometry &&
+                      (f.geometry.type === "Polygon" ||
+                        f.geometry.type === "MultiPolygon") &&
+                      f.geometry.coordinates
+                  );
+                  
+                  if (polygonFeatures.length === 0) {
+                    const geometryTypes = osmData.features
+                      .map((f) => f.geometry?.type)
+                      .filter(Boolean);
+                    console.warn(
+                      `OpenStreetMap returned ${osmData.features.length} features for "${searchTerm}", but none are polygons (types: ${[...new Set(geometryTypes)].join(", ")})`
+                    );
+                    // For Paarl, this means we need to use the fallback
+                    if (suburbName === "Paarl") {
+                      console.log(
+                        `Paarl: OpenStreetMap only returned Point geometries, will try Western Cape API fallback`
+                      );
+                    }
+                    continue; // Try next search term
+                  }
+                  
+                  // Try all polygon features and pick the smallest/most specific one
                   let bestFeature = null;
                   let smallestArea = Infinity;
 
-                  for (const feature of osmData.features) {
-                    // Check if it has a proper polygon geometry (not just a point)
-                    if (
-                      feature.geometry &&
-                      (feature.geometry.type === "Polygon" ||
-                        feature.geometry.type === "MultiPolygon") &&
-                      feature.geometry.coordinates
-                    ) {
+                  for (const feature of polygonFeatures) {
                       // Calculate approximate bounding box area to filter out overly large polygons
                       let coords: number[][] = [];
                       if (feature.geometry.type === "Polygon") {
@@ -385,18 +410,13 @@ export async function GET(request: NextRequest) {
                     break;
                   } else {
                     console.warn(
-                      `No suitable polygon found in OpenStreetMap results for "${searchTerm}" - tried ${osmData.features.length} features, all were rejected (too large, outside WC, or wrong type)`
-                    );
-                    // Log what types we got
-                    const geometryTypes = osmData.features
-                      .map((f) => f.geometry?.type)
-                      .filter(Boolean);
-                    console.warn(
-                      `  Geometry types found: ${[
-                        ...new Set(geometryTypes),
-                      ].join(", ")}`
+                      `No suitable polygon found in OpenStreetMap results for "${searchTerm}" - tried ${polygonFeatures.length} polygon features, all were rejected (too large, outside WC, or wrong type)`
                     );
                   }
+                } else {
+                  console.warn(
+                    `OpenStreetMap returned no features for "${searchTerm}"`
+                  );
                 }
               } else {
                 console.warn(
@@ -703,9 +723,10 @@ export async function GET(request: NextRequest) {
 
     // If primary source failed and we have a fallback, try it
     if (!data && shouldTryFallback && fallbackEndpoints.length > 0) {
-      const fallbackReason = source === "capeTown" 
-        ? "Cape Town API failed" 
-        : "OpenStreetMap only returned Point geometries";
+      const fallbackReason =
+        source === "capeTown"
+          ? "Cape Town API failed"
+          : "OpenStreetMap only returned Point geometries";
       console.log(
         `${fallbackReason} for "${suburbName}", trying Western Cape API as fallback...`
       );
