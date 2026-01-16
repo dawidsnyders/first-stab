@@ -52,66 +52,6 @@ const API_ENDPOINTS = {
  * These boundaries are automatically extracted from OpenStreetMap Overpass API
  * Format: [lng, lat] coordinates in GeoJSON format
  * 
- * Last updated: 2026-01-16T18:48:39.136Z
- * Total areas: 6
- */
-/**
- * Hardcoded boundaries from OpenStreetMap (EXACT coordinates)
- * These boundaries are automatically extracted from OpenStreetMap Overpass API
- * Format: [lng, lat] coordinates in GeoJSON format
- * 
- * Last updated: 2026-01-16T18:50:31.231Z
- * Total areas: 11
- */
-/**
- * Hardcoded boundaries from OpenStreetMap (EXACT coordinates)
- * These boundaries are automatically extracted from OpenStreetMap Overpass API
- * Format: [lng, lat] coordinates in GeoJSON format
- * 
- * Last updated: 2026-01-16T18:53:10.905Z
- * Total areas: 12
- */
-/**
- * Hardcoded boundaries from OpenStreetMap (EXACT coordinates)
- * These boundaries are automatically extracted from OpenStreetMap Overpass API
- * Format: [lng, lat] coordinates in GeoJSON format
- * 
- * Last updated: 2026-01-16T18:55:59.910Z
- * Total areas: 13
- */
-
-/**
- * Hardcoded boundaries from OpenStreetMap (EXACT coordinates)
- * These boundaries are automatically extracted from OpenStreetMap Overpass API
- * Format: [lng, lat] coordinates in GeoJSON format
- * 
- * Last updated: 2026-01-16T19:16:37.822Z
- * Total areas: 14
- */
-
-/**
- * Hardcoded boundaries from OpenStreetMap (EXACT coordinates)
- * These boundaries are automatically extracted from OpenStreetMap Overpass API
- * Format: [lng, lat] coordinates in GeoJSON format
- * 
- * Last updated: 2026-01-16T19:19:38.582Z
- * Total areas: 14
- */
-
-/**
- * Hardcoded boundaries from OpenStreetMap (EXACT coordinates)
- * These boundaries are automatically extracted from OpenStreetMap Overpass API
- * Format: [lng, lat] coordinates in GeoJSON format
- * 
- * Last updated: 2026-01-16T20:11:37.273Z
- * Total areas: 15
- */
-
-/**
- * Hardcoded boundaries from OpenStreetMap (EXACT coordinates)
- * These boundaries are automatically extracted from OpenStreetMap Overpass API
- * Format: [lng, lat] coordinates in GeoJSON format
- * 
  * Last updated: 2026-01-16T20:15:50.466Z
  * Total areas: 18
  */
