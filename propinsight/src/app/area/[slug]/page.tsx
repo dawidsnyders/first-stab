@@ -117,7 +117,7 @@ export default async function AreaPage({ params }: PageProps) {
       label: "Growth Trend",
       value: formatPriceChange(stats.priceChangeYoY),
       subtitle: growthTrend,
-      Icon: TrendingUpIcon,
+      Icon: ArrowTrendingUpIcon,
       color: stats.priceChangeYoY > 7 ? "green" : stats.priceChangeYoY > 0 ? "sage" : "red",
     });
 
