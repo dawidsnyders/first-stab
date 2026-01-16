@@ -335,73 +335,48 @@ ${boundariesCode}
   );
   const currentFile = fs.readFileSync(boundariesPath, "utf-8");
 
-  // Find and replace the HARDCODED_BOUNDARIES constant
-  // Look for the pattern: const HARDCODED_BOUNDARIES: Record<...> = { ... };
-  const startMarker = /const HARDCODED_BOUNDARIES: Record</;
-  const startMatch = currentFile.match(startMarker);
-  
-  if (!startMatch || !startMatch.index) {
+  // Find the FIRST occurrence of HARDCODED_BOUNDARIES
+  const firstBoundariesIndex = currentFile.indexOf("const HARDCODED_BOUNDARIES: Record<");
+  if (firstBoundariesIndex === -1) {
     console.error("Could not find HARDCODED_BOUNDARIES in file");
     process.exit(1);
   }
 
-  const startIndex = startMatch.index;
-  
-  // Find the end of the HARDCODED_BOUNDARIES constant
-  // Look for the closing }; that matches the const declaration
-  let braceCount = 0;
-  let foundOpening = false;
-  let endIndex = startIndex;
-  
-  for (let i = startIndex; i < currentFile.length; i++) {
-    const char = currentFile[i];
-    if (char === "{") {
-      braceCount++;
-      foundOpening = true;
-    } else if (char === "}") {
-      braceCount--;
-      if (foundOpening && braceCount === 0) {
-        // Found the closing brace, now find the semicolon
-        for (let j = i + 1; j < currentFile.length; j++) {
-          if (currentFile[j] === ";") {
-            endIndex = j + 1;
-            break;
-          }
-          if (currentFile[j] !== " " && currentFile[j] !== "\n" && currentFile[j] !== "\r") {
-            break;
-          }
-        }
-        break;
-      }
-    }
+  // Find where the GET function starts (this should be after all boundaries and duplicates)
+  const getFunctionIndex = currentFile.indexOf("export async function GET", firstBoundariesIndex);
+  if (getFunctionIndex === -1) {
+    console.error("Could not find GET function after HARDCODED_BOUNDARIES");
+    process.exit(1);
   }
 
-  // Also remove any duplicate comment blocks before HARDCODED_BOUNDARIES
-  // Look backwards from startIndex to find the start of the comment/doc block
-  let commentStart = startIndex;
-  for (let i = startIndex - 1; i >= 0; i--) {
+  // Find the start of comments before the first HARDCODED_BOUNDARIES
+  let commentStart = firstBoundariesIndex;
+  for (let i = firstBoundariesIndex - 1; i >= 0; i--) {
     if (currentFile.substring(i, i + 3) === "/**") {
-      // Find the end of this comment block
-      const commentEnd = currentFile.indexOf("*/", i);
-      if (commentEnd !== -1) {
-        commentStart = i;
-        // Check if there are multiple comment blocks
-        const beforeComment = currentFile.substring(0, i).trimEnd();
-        const afterComment = currentFile.substring(commentEnd + 2).trimStart();
-        // If there's another /** right before, include it in removal
-        const prevCommentStart = beforeComment.lastIndexOf("/**");
-        if (prevCommentStart !== -1 && beforeComment.substring(prevCommentStart).includes("HARDCODED_BOUNDARIES")) {
+      commentStart = i;
+      // Check for multiple comment blocks
+      const beforeComment = currentFile.substring(0, i);
+      const prevCommentStart = beforeComment.lastIndexOf("/**");
+      if (prevCommentStart !== -1) {
+        const prevCommentText = currentFile.substring(prevCommentStart, i);
+        if (prevCommentText.includes("HARDCODED_BOUNDARIES") || prevCommentText.includes("boundaries")) {
           commentStart = prevCommentStart;
         }
       }
       break;
     }
+    // Stop if we hit non-whitespace content that's not a comment
+    if (currentFile[i] !== " " && currentFile[i] !== "\n" && currentFile[i] !== "\r" && currentFile[i] !== "\t") {
+      if (currentFile.substring(i - 1, i + 2) !== "//" && currentFile.substring(i, i + 2) !== "//") {
+        break;
+      }
+    }
   }
 
-  // Replace the boundaries section (including duplicate comments)
+  // Replace everything from commentStart to getFunctionIndex with the new boundaries
   const before = currentFile.substring(0, commentStart).trimEnd();
-  const after = currentFile.substring(endIndex).trimStart();
-  const newFile = before + "\n\n" + fullCode + "\n" + after;
+  const after = currentFile.substring(getFunctionIndex);
+  const newFile = before + "\n\n" + fullCode + "\n\n" + after;
 
   // Write the updated file
   fs.writeFileSync(boundariesPath, newFile, "utf-8");
