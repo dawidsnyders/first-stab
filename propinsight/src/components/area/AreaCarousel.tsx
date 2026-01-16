@@ -12,35 +12,69 @@ interface AreaCarouselProps {
 
 export function AreaCarousel({ areas }: AreaCarouselProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [scrollProgress, setScrollProgress] = useState<number[]>(
+    new Array(areas.length - 1).fill(0)
+  );
   const sectionRefs = useRef<(HTMLDivElement | null)[]>([]);
 
-  // Track which section is in view using Intersection Observer
+  // Track which section is in view and scroll progress between sections
   useEffect(() => {
-    const observers: IntersectionObserver[] = [];
+    const updateScrollProgress = () => {
+      const newProgress: number[] = new Array(areas.length - 1).fill(0);
+      let newActiveIndex = 0;
 
-    sectionRefs.current.forEach((ref, index) => {
-      if (!ref) return;
+      sectionRefs.current.forEach((ref, index) => {
+        if (!ref) return;
 
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
-              setActiveIndex(index);
-            }
-          });
-        },
-        {
-          threshold: [0, 0.5, 1],
-          rootMargin: "-20% 0px -20% 0px", // Trigger when section is in middle 60% of viewport
+        const rect = ref.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        const headerOffset = 100;
+
+        // Calculate if section is in view
+        const sectionTop = rect.top - headerOffset;
+        const sectionBottom = rect.bottom - headerOffset;
+        const sectionHeight = rect.height;
+
+        // Check if section is more than 50% visible
+        const visibleHeight = Math.min(viewportHeight, sectionBottom) - Math.max(0, sectionTop);
+        const visibilityRatio = visibleHeight / sectionHeight;
+
+        if (visibilityRatio > 0.5) {
+          newActiveIndex = index;
         }
-      );
 
-      observer.observe(ref);
-      observers.push(observer);
-    });
+        // Calculate progress for line between this section and next
+        if (index < areas.length - 1) {
+          const nextRef = sectionRefs.current[index + 1];
+          if (nextRef) {
+            const nextRect = nextRef.getBoundingClientRect();
+            const gap = nextRect.top - rect.bottom;
+            const currentScroll = window.scrollY + headerOffset;
+            const sectionEnd = rect.bottom + window.scrollY;
+            const nextStart = nextRect.top + window.scrollY;
+
+            // Calculate progress: 0 when current section is in view, 1 when next is fully in view
+            if (currentScroll >= sectionEnd && currentScroll <= nextStart) {
+              const progress = (currentScroll - sectionEnd) / gap;
+              newProgress[index] = Math.min(1, Math.max(0, progress));
+            } else if (currentScroll > nextStart) {
+              newProgress[index] = 1;
+            }
+          }
+        }
+      });
+
+      setActiveIndex(newActiveIndex);
+      setScrollProgress(newProgress);
+    };
+
+    updateScrollProgress();
+    window.addEventListener("scroll", updateScrollProgress, { passive: true });
+    window.addEventListener("resize", updateScrollProgress);
 
     return () => {
-      observers.forEach((observer) => observer.disconnect());
+      window.removeEventListener("scroll", updateScrollProgress);
+      window.removeEventListener("resize", updateScrollProgress);
     };
   }, [areas]);
 
@@ -61,38 +95,60 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
 
   return (
     <div className="flex gap-8">
-      {/* Left Sidebar - Area Names with Dots (Canopy Style) */}
+      {/* Left Sidebar - Area Names with Dots and Progress Lines (Canopy Style) */}
       <div className="w-64 flex-shrink-0 sticky top-24 self-start">
-        <nav className="space-y-1">
+        <nav className="relative">
           {areas.map((area, index) => {
             const isActive = index === activeIndex;
+            const isNextActive = index === activeIndex + 1;
+            const lineProgress = scrollProgress[index] || 0;
+            const showLine = index < areas.length - 1;
+
             return (
-              <button
-                key={area.id}
-                onClick={() => scrollToSection(index)}
-                className={`w-full text-left px-3 py-2.5 transition-all duration-200 flex items-center gap-3 group ${
-                  isActive
-                    ? "text-stone-900 font-medium"
-                    : "text-stone-500 hover:text-stone-700"
-                }`}
-              >
-                {/* Dot indicator - Always visible, changes color when active */}
-                <div
-                  className={`w-2 h-2 rounded-full flex-shrink-0 transition-all duration-200 ${
-                    isActive
-                      ? "bg-blue-600"
-                      : "bg-stone-300 group-hover:bg-stone-400"
+              <div key={area.id} className="relative">
+                <button
+                  onClick={() => scrollToSection(index)}
+                  className={`w-full text-left px-3 py-2.5 transition-all duration-200 flex items-center gap-3 group relative z-10 ${
+                    isActive || isNextActive
+                      ? "text-stone-900 font-medium"
+                      : "text-stone-500 hover:text-stone-700"
                   }`}
-                />
-                <span className="text-sm leading-relaxed">{area.name}</span>
-              </button>
+                >
+                  {/* Dot indicator - Always visible, changes color when active or next */}
+                  <div className="relative flex-shrink-0">
+                    <div
+                      className={`w-2 h-2 rounded-full transition-all duration-200 ${
+                        isActive || (isNextActive && lineProgress > 0.5)
+                          ? "bg-sage-600"
+                          : "bg-stone-300 group-hover:bg-stone-400"
+                      }`}
+                    />
+                  </div>
+                  <span className="text-sm leading-relaxed">{area.name}</span>
+                </button>
+
+                {/* Progress line between items */}
+                {showLine && (
+                  <div className="absolute left-[11px] top-10 w-0.5 h-8 -translate-x-1/2">
+                    {/* Background line (grey) */}
+                    <div className="absolute inset-0 bg-stone-200" />
+                    {/* Progress line (sage) */}
+                    <div
+                      className="absolute bottom-0 left-0 right-0 bg-sage-600 transition-all duration-100 ease-out"
+                      style={{
+                        height: `${lineProgress * 100}%`,
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
             );
           })}
         </nav>
       </div>
 
       {/* Right Side - Scrollable Sections */}
-      <div className="flex-1">
+      <div className="flex-1 space-y-3">
         {areas.map((area, index) => {
           const { stats } = area;
           const isPositive = stats && stats.priceChangeYoY >= 0;
@@ -103,7 +159,7 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
               ref={(el) => {
                 sectionRefs.current[index] = el;
               }}
-              className="min-h-screen flex items-center py-16 mb-0"
+              className="h-[600px] flex items-center"
             >
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
