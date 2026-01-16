@@ -564,21 +564,18 @@ export default function Home() {
       </section>
 
       {/* Professional Market Analysis - Redesigned */}
-      <section
-        id="pricing"
-        className="relative bg-white py-16 md:py-20"
-      >
+      <section id="pricing" className="relative bg-gradient-to-b from-sand-50 to-white py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative bg-white border border-stone-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-100 overflow-hidden">
-            {/* Subtle gradient accent */}
-            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sage-500 via-moss-500 to-sage-500"></div>
+            {/* Subtle gradient accent with earthy tones */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sage-500 via-sand-500 to-moss-500"></div>
 
             <div className="px-4 sm:px-6 lg:px-8 py-5 md:py-6">
               {/* Compact Header */}
               <div className="flex items-start justify-between mb-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-2">
-                    <div className="w-8 h-8 rounded-lg bg-sage-100 flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-sage-100 to-sand-100 flex items-center justify-center flex-shrink-0 border border-sage-200/50">
                       <svg
                         className="w-4 h-4 text-sage-600"
                         fill="none"
@@ -601,8 +598,8 @@ export default function Home() {
                     Professional Market Analysis
                   </h3>
                   <p className="text-sm text-stone-600 leading-snug">
-                    Comprehensive 10-15 page analysis with historical data, growth
-                    drivers, and actionable insights
+                    Comprehensive 10-15 page analysis with historical data,
+                    growth drivers, and actionable insights
                   </p>
                 </div>
               </div>
@@ -641,11 +638,8 @@ export default function Home() {
 
               {/* Search and Pricing Section */}
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                {/* Left: Search Bar */}
-                <div className="flex-1 min-w-0">
-                  <label className="block text-xs font-medium text-stone-700 mb-1.5">
-                    Search for an area
-                  </label>
+                {/* Left: Compact Search Bar */}
+                <div className="flex-1 min-w-0 max-w-md">
                   <div className="relative">
                     <input
                       ref={searchInputRef}
@@ -656,11 +650,11 @@ export default function Home() {
                         searchQuery.length >= 2 &&
                         setIsSearchOpen(searchResults.length > 0)
                       }
-                      placeholder="Type area name..."
-                      className="w-full px-3 py-2.5 pl-10 pr-4 text-sm border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all duration-100 text-stone-900 placeholder-stone-400"
+                      placeholder={selectedArea ? selectedArea.name : "Search area..."}
+                      className="w-full px-3 py-2 pl-9 pr-3 text-sm border border-stone-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-sage-500/50 focus:border-sage-500 transition-all duration-100 text-stone-900 placeholder-stone-400 shadow-sm hover:shadow-md hover:border-stone-400"
                     />
                     <svg
-                      className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
+                      className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-stone-400"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -672,32 +666,56 @@ export default function Home() {
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
                       />
                     </svg>
+                    {selectedArea && (
+                      <button
+                        onClick={() => {
+                          setSelectedArea(null);
+                          setSearchQuery("");
+                        }}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 p-0.5 rounded hover:bg-stone-100 transition-colors duration-100"
+                        aria-label="Clear selection"
+                      >
+                        <svg
+                          className="w-3 h-3 text-stone-400"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M6 18L18 6M6 6l12 12"
+                          />
+                        </svg>
+                      </button>
+                    )}
 
-                    {/* Search Results Dropdown */}
+                    {/* Search Results Dropdown - Compact */}
                     <AnimatePresence>
                       {isSearchOpen && searchResults.length > 0 && (
                         <motion.div
                           ref={searchResultsRef}
-                          initial={{ opacity: 0, y: -10 }}
+                          initial={{ opacity: 0, y: -5 }}
                           animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
+                          exit={{ opacity: 0, y: -5 }}
                           transition={{ duration: 0.1 }}
-                          className="absolute z-50 w-full mt-2 bg-white border border-stone-200 rounded-lg shadow-xl overflow-hidden"
+                          className="absolute z-50 w-full mt-1.5 bg-white border border-stone-200 rounded-lg shadow-lg overflow-hidden"
                         >
                           {searchResults.map((area) => (
                             <button
                               key={area.id}
                               onClick={() => handleAreaSelect(area)}
-                              className="w-full flex items-center justify-between px-4 py-3 hover:bg-stone-50 transition-colors duration-100 text-left border-b border-stone-100 last:border-b-0"
+                              className="w-full flex items-center justify-between px-3 py-2 hover:bg-sand-50 transition-colors duration-100 text-left border-b border-stone-100 last:border-b-0 group"
                             >
-                              <div className="flex items-center gap-3 flex-1 min-w-0">
-                                <span className="font-medium text-stone-900 truncate">
+                              <div className="flex items-center gap-2 flex-1 min-w-0">
+                                <span className="font-medium text-sm text-stone-900 truncate">
                                   {area.name}
                                 </span>
                                 {getLevelBadge(area.level)}
                               </div>
                               <svg
-                                className="w-4 h-4 text-stone-400 flex-shrink-0"
+                                className="w-3.5 h-3.5 text-stone-400 group-hover:text-sage-600 flex-shrink-0 transition-colors duration-100"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -720,7 +738,9 @@ export default function Home() {
                 {/* Right: Pricing and CTA */}
                 <div className="flex-shrink-0 flex flex-col sm:items-end gap-3">
                   <div>
-                    <div className="text-xs text-stone-500 mb-0.5">One-time payment</div>
+                    <div className="text-xs text-stone-500 mb-0.5">
+                      One-time payment
+                    </div>
                     <div className="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">
                       {REPORT_PRICE_DISPLAY}
                     </div>
