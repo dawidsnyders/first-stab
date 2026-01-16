@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   ChartBarIcon,
@@ -17,7 +17,10 @@ import { MapModal } from "@/components/ui/MapModal";
 import { MapView } from "@/components/map/MapView";
 import { AreaCard } from "@/components/area/AreaCard";
 import { AreaPreviewCard } from "@/components/area/AreaPreviewCard";
-import { getAreasByLevel } from "@/data/areas";
+import { getAreasByLevel, searchAreas } from "@/data/areas";
+import { PurchaseModal } from "@/components/area/PurchaseModal";
+import { Area } from "@/types";
+import { AnimatePresence } from "framer-motion";
 import {
   APP_NAME,
   REPORT_PRICE_DISPLAY,
@@ -27,6 +30,13 @@ import { formatNumber } from "@/types";
 
 export default function Home() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+  const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
+  const [selectedArea, setSelectedArea] = useState<Area | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState<Area[]>([]);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const searchResultsRef = useRef<HTMLDivElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
   const featuredSuburbs = getAreasByLevel("suburb").slice(0, 6);
 
@@ -49,6 +59,64 @@ export default function Home() {
       (sum, area) => sum + (area.stats?.priceChangeYoY || 0),
       0
     ) / allSuburbs.length;
+
+  // Handle search query changes
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const query = e.target.value;
+    setSearchQuery(query);
+    if (query.length >= 2) {
+      const matches = searchAreas(query).slice(0, 8);
+      setSearchResults(matches);
+      setIsSearchOpen(matches.length > 0);
+    } else {
+      setSearchResults([]);
+      setIsSearchOpen(false);
+    }
+  };
+
+  // Handle area selection from search
+  const handleAreaSelect = (area: Area) => {
+    setSelectedArea(area);
+    setSearchQuery(area.name);
+    setIsSearchOpen(false);
+  };
+
+  // Handle buy click
+  const handleBuyClick = () => {
+    if (selectedArea) {
+      setIsPurchaseModalOpen(true);
+    }
+  };
+
+  // Close search on outside click
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        searchResultsRef.current &&
+        !searchResultsRef.current.contains(event.target as Node) &&
+        searchInputRef.current &&
+        !searchInputRef.current.contains(event.target as Node)
+      ) {
+        setIsSearchOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const getLevelBadge = (level: Area["level"]) => {
+    const styles = {
+      province: "bg-moss-100 text-moss-700",
+      city: "bg-sage-100 text-sage-700",
+      suburb: "bg-terracotta-100 text-terracotta-700",
+    };
+    return (
+      <span className={`text-xs px-2 py-0.5 rounded-full ${styles[level]}`}>
+        {level}
+      </span>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -117,7 +185,7 @@ export default function Home() {
       </header>
 
       {/* Hero section - Left-aligned title, right-aligned search */}
-      <section className="relative bg-white text-stone-900 flex flex-col overflow-hidden min-h-screen">
+      <section className="relative bg-white text-stone-900 flex flex-col overflow-hidden min-h-screen z-20">
         {/* Subtle background decoration */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-br from-sage-100/30 to-transparent rounded-full blur-3xl"></div>
@@ -194,7 +262,7 @@ export default function Home() {
       {/* Product Showcase - Ondo-Style Carousel */}
       <section
         id="features"
-        className="relative bg-gradient-to-b from-white to-stone-100 pt-0 pb-12 md:pb-16 overflow-visible -mt-[85vh] z-10"
+        className="relative bg-gradient-to-b from-white to-stone-100 pt-0 pb-12 md:pb-16 overflow-visible -mt-[85vh] z-0"
       >
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_1px_1px,rgba(0,0,0,0.03)_1px,transparent_0)] bg-[size:32px_32px]"></div>
@@ -495,70 +563,262 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Report preview */}
+      {/* Professional Market Analysis - Redesigned */}
       <section
         id="pricing"
-        className="relative bg-gradient-to-br from-stone-900 via-stone-800 to-stone-900 text-white py-24 overflow-hidden"
+        className="relative bg-white py-16 md:py-20"
       >
-        {/* Decorative elements */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div className="absolute top-0 right-0 w-96 h-96 bg-sage-600/10 rounded-full blur-3xl"></div>
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-moss-600/10 rounded-full blur-3xl"></div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="relative bg-white border border-stone-200 rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-100 overflow-hidden">
+            {/* Subtle gradient accent */}
+            <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-sage-500 via-moss-500 to-sage-500"></div>
+
+            <div className="px-4 sm:px-6 lg:px-8 py-5 md:py-6">
+              {/* Compact Header */}
+              <div className="flex items-start justify-between mb-4">
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-2">
+                    <div className="w-8 h-8 rounded-lg bg-sage-100 flex items-center justify-center flex-shrink-0">
+                      <svg
+                        className="w-4 h-4 text-sage-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                        />
+                      </svg>
+                    </div>
+                    <span className="text-[10px] font-semibold text-sage-600 uppercase tracking-wider">
+                      Premium Report
+                    </span>
+                  </div>
+                  <h3 className="text-xl md:text-2xl font-bold text-stone-900 mb-1.5 tracking-tight">
+                    Professional Market Analysis
+                  </h3>
+                  <p className="text-sm text-stone-600 leading-snug">
+                    Comprehensive 10-15 page analysis with historical data, growth
+                    drivers, and actionable insights
+                  </p>
+                </div>
+              </div>
+
+              {/* Compact Features - Inline */}
+              <div className="mb-4">
+                <div className="flex flex-wrap gap-x-3 gap-y-1.5 text-xs text-stone-600">
+                  {[
+                    "10-Year Analysis",
+                    "CAGR",
+                    "Benchmarks",
+                    "Risk Assessment",
+                    "Investment Outlook",
+                    "PDF Download",
+                  ].map((feature) => (
+                    <div key={feature} className="flex items-center gap-1">
+                      <svg
+                        className="w-3 h-3 text-sage-600 flex-shrink-0"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          fillRule="evenodd"
+                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                          clipRule="evenodd"
+                        />
+                      </svg>
+                      <span>{feature}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Divider */}
+              <div className="border-t border-stone-200 my-4"></div>
+
+              {/* Search and Pricing Section */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                {/* Left: Search Bar */}
+                <div className="flex-1 min-w-0">
+                  <label className="block text-xs font-medium text-stone-700 mb-1.5">
+                    Search for an area
+                  </label>
+                  <div className="relative">
+                    <input
+                      ref={searchInputRef}
+                      type="text"
+                      value={searchQuery}
+                      onChange={handleSearchChange}
+                      onFocus={() =>
+                        searchQuery.length >= 2 &&
+                        setIsSearchOpen(searchResults.length > 0)
+                      }
+                      placeholder="Type area name..."
+                      className="w-full px-3 py-2.5 pl-10 pr-4 text-sm border border-stone-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all duration-100 text-stone-900 placeholder-stone-400"
+                    />
+                    <svg
+                      className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                      />
+                    </svg>
+
+                    {/* Search Results Dropdown */}
+                    <AnimatePresence>
+                      {isSearchOpen && searchResults.length > 0 && (
+                        <motion.div
+                          ref={searchResultsRef}
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          transition={{ duration: 0.1 }}
+                          className="absolute z-50 w-full mt-2 bg-white border border-stone-200 rounded-lg shadow-xl overflow-hidden"
+                        >
+                          {searchResults.map((area) => (
+                            <button
+                              key={area.id}
+                              onClick={() => handleAreaSelect(area)}
+                              className="w-full flex items-center justify-between px-4 py-3 hover:bg-stone-50 transition-colors duration-100 text-left border-b border-stone-100 last:border-b-0"
+                            >
+                              <div className="flex items-center gap-3 flex-1 min-w-0">
+                                <span className="font-medium text-stone-900 truncate">
+                                  {area.name}
+                                </span>
+                                {getLevelBadge(area.level)}
+                              </div>
+                              <svg
+                                className="w-4 h-4 text-stone-400 flex-shrink-0"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 5l7 7-7 7"
+                                />
+                              </svg>
+                            </button>
+                          ))}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </div>
+
+                {/* Right: Pricing and CTA */}
+                <div className="flex-shrink-0 flex flex-col sm:items-end gap-3">
+                  <div>
+                    <div className="text-xs text-stone-500 mb-0.5">One-time payment</div>
+                    <div className="text-3xl md:text-4xl font-bold text-stone-900 tracking-tight">
+                      {REPORT_PRICE_DISPLAY}
+                    </div>
+                  </div>
+                  <motion.button
+                    onClick={handleBuyClick}
+                    disabled={!selectedArea}
+                    whileHover={{ scale: selectedArea ? 1.01 : 1 }}
+                    whileTap={{ scale: selectedArea ? 0.99 : 1 }}
+                    className="group relative px-6 py-3 bg-stone-900 text-white font-semibold text-sm rounded-xl hover:bg-stone-800 transition-all duration-100 shadow-sm hover:shadow-md flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <span>Buy Report</span>
+                    <svg
+                      className="w-4 h-4 transition-transform duration-100 group-hover:translate-x-0.5"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 7l5 5m0 0l-5 5m5-5H6"
+                      />
+                    </svg>
+                  </motion.button>
+                </div>
+              </div>
+
+              {/* Compact Trust indicators */}
+              <div className="mt-4 pt-3 border-t border-stone-100">
+                <div className="flex flex-wrap items-center gap-4 text-[10px] text-stone-500">
+                  <div className="flex items-center gap-1.5">
+                    <svg
+                      className="w-3 h-3 text-sage-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
+                    <span>Secure payment</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <svg
+                      className="w-3 h-3 text-sage-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                    <span>Instant delivery</span>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <svg
+                      className="w-3 h-3 text-sage-600"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span>AI-powered</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="max-w-4xl mx-auto text-center mb-12">
-            <h3 className="text-4xl md:text-5xl font-bold mb-4">
-              Professional Market Analysis
-            </h3>
-            <p className="text-stone-300 text-xl mb-2">
-              Comprehensive reports with actionable insights
-            </p>
-            <p className="text-stone-400">
-              Each report includes 10-15 pages of in-depth analysis, charts, and
-              market intelligence
-            </p>
-          </div>
-          <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-12 text-left shadow-2xl">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-              <ReportFeature
-                title="10-Year Price Analysis"
-                description="Year-by-year breakdown with CAGR calculations and trend analysis"
-              />
-              <ReportFeature
-                title="National Benchmarks"
-                description="Compare performance to South African property market averages"
-              />
-              <ReportFeature
-                title="Growth Drivers"
-                description="Understand what factors are driving property prices in the area"
-              />
-              <ReportFeature
-                title="Investment Outlook"
-                description="Forward-looking scenarios and strategic recommendations"
-              />
-              <ReportFeature
-                title="Comparable Areas"
-                description="See how the area stacks up against neighboring suburbs"
-              />
-              <ReportFeature
-                title="Risk Assessment"
-                description="Identify factors that could affect property values and returns"
-              />
-            </div>
-            <div className="mt-12 pt-8 border-t border-white/10 text-center">
-              <div className="mb-4">
-                <span className="text-5xl md:text-6xl font-bold">
-                  {REPORT_PRICE_DISPLAY}
-                </span>
-                <span className="text-stone-400 ml-3 text-lg">per report</span>
-              </div>
-              <p className="text-stone-400 text-sm">
-                Instant delivery via email • PDF download included
-              </p>
-            </div>
-          </div>
-        </div>
+        {/* Purchase Modal */}
+        {selectedArea && (
+          <PurchaseModal
+            isOpen={isPurchaseModalOpen}
+            onClose={() => {
+              setIsPurchaseModalOpen(false);
+              setSelectedArea(null);
+              setSearchQuery("");
+            }}
+            area={selectedArea}
+          />
+        )}
       </section>
 
       {/* Footer */}
