@@ -3,12 +3,8 @@ import Link from "next/link";
 import { CalendarIcon, BoltIcon, CurrencyDollarIcon, SparklesIcon, ChartBarIcon, ArrowTrendingUpIcon, HomeIcon, BuildingOfficeIcon } from "@heroicons/react/24/outline";
 import { getAreaBySlug, getChildAreas, sampleAreas } from "@/data/areas";
 import { getDevelopmentsByArea } from "@/data/developments";
-import { formatPrice, formatPriceChange, formatNumber, Area } from "@/types";
-import {
-  APP_NAME,
-  REPORT_PRICE_DISPLAY,
-  NATIONAL_BENCHMARKS,
-} from "@/lib/constants";
+import { formatPrice, formatPriceChange } from "@/types";
+import { NATIONAL_BENCHMARKS } from "@/lib/constants";
 import { AreaCard } from "@/components/area/AreaCard";
 import { StatsGrid } from "@/components/area/StatsGrid";
 import { PriceTrendChartSection } from "@/components/charts/PriceTrendChartSection";
@@ -39,7 +35,6 @@ export default async function AreaPage({ params }: PageProps) {
   const { stats } = area;
   const childAreas = getChildAreas(area.id);
   const developments = getDevelopmentsByArea(area.id);
-  const isPositive = stats && stats.priceChangeYoY >= 0;
 
   // Calculate outperformance vs national benchmark
   const outperformance = stats

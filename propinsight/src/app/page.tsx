@@ -51,15 +51,6 @@ export default function Home() {
     }
   };
   const allSuburbs = getAreasByLevel("suburb");
-  const totalSales = allSuburbs.reduce(
-    (sum, area) => sum + (area.stats?.salesCount || 0),
-    0
-  );
-  const avgPriceGrowth =
-    allSuburbs.reduce(
-      (sum, area) => sum + (area.stats?.priceChangeYoY || 0),
-      0
-    ) / allSuburbs.length;
 
   // Handle search query changes
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -911,24 +902,6 @@ export default function Home() {
       >
         <MapView initialLevel="suburb" />
       </MapModal>
-    </div>
-  );
-}
-
-interface StatBoxProps {
-  value: string;
-  label: string;
-  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-}
-
-function StatBox({ value, label, Icon }: StatBoxProps) {
-  return (
-    <div className="bg-white/80 backdrop-blur-sm border border-stone-200 rounded-xl p-4 md:p-5 shadow-sm hover:shadow-md transition-shadow duration-200">
-      <Icon className="w-6 h-6 text-sage-600 mb-3" />
-      <div className="text-2xl md:text-3xl font-bold text-stone-900 mb-1">
-        {value}
-      </div>
-      <div className="text-sm text-stone-600">{label}</div>
     </div>
   );
 }

@@ -6,7 +6,6 @@ import {
   runScheduledTasks,
   refreshAreaIfNeeded,
   getSchedulerStatus,
-  startScheduler,
 } from "@/lib/data/scheduler";
 
 /**

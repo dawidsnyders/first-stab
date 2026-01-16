@@ -239,8 +239,6 @@ export function LeafletMap({
           return;
         }
 
-        const coords = getAreaCoordinates(area); // Returns [lng, lat]
-
         const isSelected = selectedArea?.id === area.id;
         // Don't check hoveredArea here - hover is handled only in event handlers
         // This prevents re-renders and flashing when hovering
