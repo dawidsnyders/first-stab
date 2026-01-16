@@ -262,6 +262,59 @@ export function PurchaseModal({ isOpen, onClose, area }: PurchaseModalProps) {
                     </button>
                   </form>
                 </div>
+
+                {/* Payment Methods */}
+                <div className="mt-4 pt-3 border-t border-stone-100">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] text-stone-500">Payment methods:</span>
+                    <div className="flex items-center gap-1.5">
+                      {/* Visa */}
+                      <div className="w-9 h-5 bg-white border border-stone-200 rounded flex items-center justify-center px-1">
+                        <svg
+                          className="w-full h-3"
+                          viewBox="0 0 84 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <path
+                            d="M36.4 4.8h-5.6l-3.5 14.4h5.6l3.5-14.4z"
+                            fill="#1434CB"
+                          />
+                          <path
+                            d="M53.2 5.6c-1.4 0-2.4.8-3.1 2.2l-11.2 12h6.3l1.4-3.8h8l.7 3.8h5.6l-3.8-14.2h-2.1zm-4.5 11.2l3.1-8.8 1.8 8.8h-4.9z"
+                            fill="#1434CB"
+                          />
+                          <path
+                            d="M26.6 5.6l-4.5 13.2-2.1-9c-.4-1.2-1-1.8-2.1-2.1l-3.5-.8-2.1 15.6h5.6l1.4-7.7 1 7.7h4.9l2.8-15.9h-2.1z"
+                            fill="#1434CB"
+                          />
+                        </svg>
+                      </div>
+                      {/* Mastercard */}
+                      <div className="w-9 h-5 bg-white border border-stone-200 rounded flex items-center justify-center px-1">
+                        <svg
+                          className="w-full h-3"
+                          viewBox="0 0 42 24"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle cx="15.75" cy="12" r="8.75" fill="#EB001B" />
+                          <circle cx="26.25" cy="12" r="8.75" fill="#F79E1B" />
+                          <path
+                            d="M21 6.75c2.1 2.625 3.5 6.125 3.5 10.5s-1.4 7.875-3.5 10.5c-2.1-2.625-3.5-6.125-3.5-10.5s1.4-7.875 3.5-10.5z"
+                            fill="#FF5F00"
+                          />
+                        </svg>
+                      </div>
+                      {/* PayFast */}
+                      <div className="w-9 h-5 bg-white border border-stone-200 rounded flex items-center justify-center px-1">
+                        <span className="text-[7px] font-bold text-stone-700 tracking-tight">
+                          PayFast
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </motion.div>
           </div>
