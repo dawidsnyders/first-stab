@@ -34,6 +34,26 @@ const AREAS: Area[] = [
   { slug: "de-zalze", name: "De Zalze", query: "De Zalze Golf Estate, Stellenbosch" },
 ];
 
+// Manual boundaries for areas not found in OSM (fallback)
+const MANUAL_BOUNDARIES: Record<string, number[][]> = {
+  "de-zalze": [
+    // De Zalze Golf Estate - approximate boundary based on known location
+    // Center: 18.8667, -34.0167
+    [18.86, -34.02],
+    [18.87, -34.02],
+    [18.875, -34.018],
+    [18.88, -34.016],
+    [18.88, -34.014],
+    [18.875, -34.012],
+    [18.87, -34.01],
+    [18.865, -34.01],
+    [18.86, -34.012],
+    [18.855, -34.014],
+    [18.855, -34.018],
+    [18.86, -34.02],
+  ],
+};
+
 /**
  * Fetch boundary from OpenStreetMap Overpass API (most accurate)
  */
@@ -250,17 +270,25 @@ async function main() {
 
   for (const area of AREAS) {
     console.log(`Fetching boundary for ${area.name}...`);
-    const boundary = await fetchBoundaryWithFallback(area);
+    let boundary = await fetchBoundaryWithFallback(area);
     
-    if (boundary && boundary.length > 0) {
-      boundaries[area.slug] = {
-        type: "Polygon",
-        coordinates: [boundary],
-      };
-      console.log(`✅ ${area.name}: ${boundary.length} points\n`);
+    // Fallback to manual boundary if not found
+    if (!boundary || boundary.length === 0) {
+      if (MANUAL_BOUNDARIES[area.slug]) {
+        boundary = MANUAL_BOUNDARIES[area.slug];
+        console.log(`⚠️  ${area.name}: Using manual boundary (${boundary.length} points)\n`);
+      } else {
+        console.log(`❌ ${area.name}: No boundary found\n`);
+        continue;
+      }
     } else {
-      console.log(`❌ ${area.name}: No boundary found\n`);
+      console.log(`✅ ${area.name}: ${boundary.length} points\n`);
     }
+    
+    boundaries[area.slug] = {
+      type: "Polygon",
+      coordinates: [boundary],
+    };
 
     // Rate limiting - be respectful to OSM servers
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -305,38 +333,73 @@ ${boundariesCode}
   );
   const currentFile = fs.readFileSync(boundariesPath, "utf-8");
 
-  // Replace the HARDCODED_BOUNDARIES constant
-  const startMarker = "const HARDCODED_BOUNDARIES: Record<";
-  const endMarker = "};";
+  // Find and replace the HARDCODED_BOUNDARIES constant
+  // Look for the pattern: const HARDCODED_BOUNDARIES: Record<...> = { ... };
+  const startMarker = /const HARDCODED_BOUNDARIES: Record</;
+  const startMatch = currentFile.match(startMarker);
   
-  const startIndex = currentFile.indexOf(startMarker);
-  if (startIndex === -1) {
+  if (!startMatch || !startMatch.index) {
     console.error("Could not find HARDCODED_BOUNDARIES in file");
     process.exit(1);
   }
 
-  // Find the end of the HARDCODED_BOUNDARIES constant (look for the closing brace after the object)
+  const startIndex = startMatch.index;
+  
+  // Find the end of the HARDCODED_BOUNDARIES constant
+  // Look for the closing }; that matches the const declaration
   let braceCount = 0;
-  let inObject = false;
+  let foundOpening = false;
   let endIndex = startIndex;
   
   for (let i = startIndex; i < currentFile.length; i++) {
-    if (currentFile[i] === "{") {
+    const char = currentFile[i];
+    if (char === "{") {
       braceCount++;
-      inObject = true;
-    } else if (currentFile[i] === "}") {
+      foundOpening = true;
+    } else if (char === "}") {
       braceCount--;
-      if (inObject && braceCount === 0) {
-        endIndex = i + 1;
+      if (foundOpening && braceCount === 0) {
+        // Found the closing brace, now find the semicolon
+        for (let j = i + 1; j < currentFile.length; j++) {
+          if (currentFile[j] === ";") {
+            endIndex = j + 1;
+            break;
+          }
+          if (currentFile[j] !== " " && currentFile[j] !== "\n" && currentFile[j] !== "\r") {
+            break;
+          }
+        }
         break;
       }
     }
   }
 
-  // Replace the boundaries section
-  const before = currentFile.substring(0, startIndex);
-  const after = currentFile.substring(endIndex);
-  const newFile = before + fullCode + "\n\n" + after;
+  // Also remove any duplicate comment blocks before HARDCODED_BOUNDARIES
+  // Look backwards from startIndex to find the start of the comment/doc block
+  let commentStart = startIndex;
+  for (let i = startIndex - 1; i >= 0; i--) {
+    if (currentFile.substring(i, i + 3) === "/**") {
+      // Find the end of this comment block
+      const commentEnd = currentFile.indexOf("*/", i);
+      if (commentEnd !== -1) {
+        commentStart = i;
+        // Check if there are multiple comment blocks
+        const beforeComment = currentFile.substring(0, i).trimEnd();
+        const afterComment = currentFile.substring(commentEnd + 2).trimStart();
+        // If there's another /** right before, include it in removal
+        const prevCommentStart = beforeComment.lastIndexOf("/**");
+        if (prevCommentStart !== -1 && beforeComment.substring(prevCommentStart).includes("HARDCODED_BOUNDARIES")) {
+          commentStart = prevCommentStart;
+        }
+      }
+      break;
+    }
+  }
+
+  // Replace the boundaries section (including duplicate comments)
+  const before = currentFile.substring(0, commentStart).trimEnd();
+  const after = currentFile.substring(endIndex).trimStart();
+  const newFile = before + "\n\n" + fullCode + "\n" + after;
 
   // Write the updated file
   fs.writeFileSync(boundariesPath, newFile, "utf-8");
