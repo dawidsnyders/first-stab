@@ -35,7 +35,19 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
 
         // Check if section center is closest to viewport center
         const distanceFromCenter = Math.abs(sectionCenter - viewportCenter);
-        if (index === 0 || distanceFromCenter < Math.abs(sectionRefs.current[newActiveIndex]?.getBoundingClientRect().top! + window.scrollY + (sectionRefs.current[newActiveIndex]?.getBoundingClientRect().height! / 2) - viewportCenter)) {
+        if (
+          index === 0 ||
+          distanceFromCenter <
+            Math.abs(
+              sectionRefs.current[newActiveIndex]?.getBoundingClientRect()
+                .top! +
+                window.scrollY +
+                sectionRefs.current[newActiveIndex]?.getBoundingClientRect()
+                  .height! /
+                  2 -
+                viewportCenter
+            )
+        ) {
           newActiveIndex = index;
         }
 
@@ -45,14 +57,17 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
           if (nextRef) {
             const nextRect = nextRef.getBoundingClientRect();
             const currentScrollTop = window.scrollY + headerOffset;
-            
+
             // Section boundaries
             const currentSectionBottom = rect.bottom + window.scrollY;
             const nextSectionTop = nextRect.top + window.scrollY;
             const gap = nextSectionTop - currentSectionBottom;
 
             // Calculate progress: 0 at current section bottom, 1 at next section top
-            if (currentScrollTop >= currentSectionBottom && currentScrollTop <= nextSectionTop) {
+            if (
+              currentScrollTop >= currentSectionBottom &&
+              currentScrollTop <= nextSectionTop
+            ) {
               const progress = (currentScrollTop - currentSectionBottom) / gap;
               newProgress[index] = Math.min(1, Math.max(0, progress));
             } else if (currentScrollTop > nextSectionTop) {
@@ -84,7 +99,8 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
     if (section) {
       const headerOffset = 100; // Account for fixed header
       const elementPosition = section.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+      const offsetPosition =
+        elementPosition + window.pageYOffset - headerOffset;
 
       window.scrollTo({
         top: offsetPosition,
@@ -100,12 +116,14 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
         <nav className="relative">
           {areas.map((area, index) => {
             const isActive = index === activeIndex;
-            const lineProgress = index < areas.length - 1 ? scrollProgress[index] || 0 : 0;
+            const lineProgress =
+              index < areas.length - 1 ? scrollProgress[index] || 0 : 0;
             const showLine = index < areas.length - 1;
             // Next dot is active when line is fully filled
             const isNextActive = index === activeIndex + 1 && lineProgress >= 1;
             // Current dot is active or next dot is becoming active
-            const dotActive = isActive || (index === activeIndex + 1 && lineProgress > 0);
+            const dotActive =
+              isActive || (index === activeIndex + 1 && lineProgress > 0);
 
             return (
               <div key={area.id} className="relative">
