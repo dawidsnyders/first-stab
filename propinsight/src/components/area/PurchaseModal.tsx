@@ -100,18 +100,18 @@ export function PurchaseModal({ isOpen, onClose, area }: PurchaseModalProps) {
                 stiffness: 300,
                 duration: 0.2,
               }}
-              className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-hidden pointer-events-auto"
+              className="bg-white rounded-2xl shadow-2xl max-w-lg w-full pointer-events-auto"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Header */}
-              <div className="relative bg-gradient-to-br from-sage-600 to-moss-600 p-6">
+              {/* Compact Header */}
+              <div className="relative border-b border-stone-200 p-5">
                 <button
                   onClick={onClose}
-                  className="absolute top-4 right-4 p-2 rounded-lg hover:bg-white/20 transition-colors duration-100 group"
+                  className="absolute top-4 right-4 p-1.5 rounded-lg hover:bg-stone-100 transition-colors duration-100 group"
                   aria-label="Close modal"
                 >
                   <svg
-                    className="w-5 h-5 text-white group-hover:text-sage-50 transition-colors duration-200"
+                    className="w-4 h-4 text-stone-500 group-hover:text-stone-900 transition-colors duration-100"
                     fill="none"
                     stroke="currentColor"
                     viewBox="0 0 24 24"
@@ -125,11 +125,11 @@ export function PurchaseModal({ isOpen, onClose, area }: PurchaseModalProps) {
                   </svg>
                 </button>
 
-                <div className="pr-12">
-                  <div className="flex items-center gap-3 mb-2">
-                    <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                <div className="pr-10">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-8 h-8 rounded-lg bg-sage-100 flex items-center justify-center flex-shrink-0">
                       <svg
-                        className="w-6 h-6 text-white"
+                        className="w-4 h-4 text-sage-600"
                         fill="none"
                         stroke="currentColor"
                         viewBox="0 0 24 24"
@@ -142,143 +142,126 @@ export function PurchaseModal({ isOpen, onClose, area }: PurchaseModalProps) {
                         />
                       </svg>
                     </div>
-                    <div>
-                      <h2 className="text-2xl font-bold text-white mb-1">
-                        Full Market Analysis Report
+                    <div className="min-w-0 flex-1">
+                      <h2 className="text-lg font-bold text-stone-900 truncate">
+                        Market Analysis Report
                       </h2>
-                      <p className="text-sage-50 text-sm">
-                        Comprehensive insights for {area.name}
+                      <p className="text-xs text-stone-500 truncate">
+                        {area.name}
                       </p>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="p-6 overflow-y-auto max-h-[calc(90vh-200px)]">
-                {/* Description */}
-                <p className="text-stone-600 mb-6 leading-relaxed">
-                  Get a comprehensive 10-15 page market analysis with historical
-                  data, growth drivers, investment outlook, and actionable
-                  insights tailored specifically for {area.name}.
-                </p>
-
-                {/* Features Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-                  {[
-                    "10-Year Price Analysis",
-                    "CAGR Calculations",
-                    "National Benchmarks",
-                    "Growth Driver Analysis",
-                    "Risk Assessment",
-                    "Investment Outlook",
-                    "Comparable Areas",
-                    "PDF Download",
-                  ].map((feature) => (
-                    <div
-                      key={feature}
-                      className="flex items-center gap-2 text-stone-700"
-                    >
-                      <svg
-                        className="w-4 h-4 text-sage-600 flex-shrink-0"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                          clipRule="evenodd"
-                        />
-                      </svg>
-                      <span className="text-sm">{feature}</span>
-                    </div>
-                  ))}
+              {/* Compact Content - No scrolling */}
+              <div className="p-5">
+                {/* Features - Compact inline */}
+                <div className="mb-4">
+                  <div className="flex flex-wrap gap-x-4 gap-y-2 text-xs text-stone-600">
+                    {[
+                      "10-Year Analysis",
+                      "CAGR",
+                      "Benchmarks",
+                      "Risk Assessment",
+                      "Investment Outlook",
+                      "PDF Download",
+                    ].map((feature, index) => (
+                      <div key={feature} className="flex items-center gap-1.5">
+                        <svg
+                          className="w-3 h-3 text-sage-600 flex-shrink-0"
+                          fill="currentColor"
+                          viewBox="0 0 20 20"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        <span>{feature}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Divider */}
-                <div className="border-t border-stone-200 my-6"></div>
+                <div className="border-t border-stone-200 my-4"></div>
 
-                {/* Pricing */}
-                <div className="flex items-center justify-between mb-6">
-                  <div>
-                    <p className="text-sm text-stone-500 mb-1">Total</p>
-                    <p className="text-3xl font-bold text-stone-900">
-                      {REPORT_PRICE_DISPLAY}
-                    </p>
-                    <p className="text-xs text-stone-500 mt-1">
-                      one-time payment
-                    </p>
+                {/* Pricing and Form - Side by side */}
+                <div className="space-y-4">
+                  {/* Pricing */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-xs text-stone-500 mb-0.5">Total</p>
+                      <p className="text-2xl font-bold text-stone-900">
+                        {REPORT_PRICE_DISPLAY}
+                      </p>
+                    </div>
+                    <div className="text-xs text-stone-500">one-time</div>
                   </div>
-                </div>
 
-                {/* Email Form */}
-                <form onSubmit={handlePurchase} className="space-y-4">
-                  <div>
-                    <label
-                      htmlFor="email"
-                      className="block text-sm font-medium text-stone-700 mb-2"
+                  {/* Email Form - Compact */}
+                  <form onSubmit={handlePurchase} className="space-y-3">
+                    <div>
+                      <label
+                        htmlFor="email"
+                        className="block text-xs font-medium text-stone-700 mb-1.5"
+                      >
+                        Email Address
+                      </label>
+                      <input
+                        type="email"
+                        id="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="your@email.com"
+                        required
+                        autoFocus
+                        className="w-full px-3 py-2.5 rounded-lg border border-stone-300 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-sage-500 transition-all duration-100 text-sm text-stone-900 placeholder-stone-400"
+                      />
+                    </div>
+
+                    {/* CTA Button */}
+                    <button
+                      type="submit"
+                      disabled={isSubmitting || !email.trim()}
+                      className="w-full group relative px-4 py-3 bg-stone-900 text-white font-semibold text-sm rounded-lg hover:bg-stone-800 transition-all duration-100 shadow-sm hover:shadow-md disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
-                      Email Address
-                    </label>
-                    <input
-                      type="email"
-                      id="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      placeholder="your@email.com"
-                      required
-                      autoFocus
-                      className="w-full px-4 py-3 rounded-xl border border-stone-300 focus:outline-none focus:ring-2 focus:ring-sage-500 focus:border-transparent transition-all duration-100 text-stone-900 placeholder-stone-400"
-                    />
-                    <p className="text-xs text-stone-500 mt-1.5">
-                      We'll send your report to this email address
-                    </p>
-                  </div>
-
-                  {/* CTA Button */}
-                  <button
-                    type="submit"
-                    disabled={isSubmitting || !email.trim()}
-                    className="w-full group relative px-6 py-4 bg-gradient-to-r from-sage-600 to-moss-600 text-white font-semibold rounded-xl hover:from-sage-700 hover:to-moss-700 transition-all duration-100 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 overflow-hidden"
-                  >
-                    {/* Shine effect on hover */}
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></div>
-
-                    {isSubmitting ? (
-                      <>
-                        <motion.div
-                          animate={{ rotate: 360 }}
-                          transition={{
-                            duration: 1,
-                            repeat: Infinity,
-                            ease: "linear",
-                          }}
-                          className="w-5 h-5 border-2 border-white border-t-transparent rounded-full"
-                        />
-                        <span className="relative">Processing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="relative">
-                          Purchase Report for {REPORT_PRICE_DISPLAY}
-                        </span>
-                        <svg
-                          className="w-5 h-5 relative transition-transform duration-100 group-hover:translate-x-0.5"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M13 7l5 5m0 0l-5 5m5-5H6"
+                      {isSubmitting ? (
+                        <>
+                          <motion.div
+                            animate={{ rotate: 360 }}
+                            transition={{
+                              duration: 1,
+                              repeat: Infinity,
+                              ease: "linear",
+                            }}
+                            className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
                           />
-                        </svg>
-                      </>
-                    )}
-                  </button>
-                </form>
+                          <span>Processing...</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Purchase Report</span>
+                          <svg
+                            className="w-4 h-4 transition-transform duration-100 group-hover:translate-x-0.5"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M13 7l5 5m0 0l-5 5m5-5H6"
+                            />
+                          </svg>
+                        </>
+                      )}
+                    </button>
+                  </form>
+                </div>
               </div>
             </motion.div>
           </div>
