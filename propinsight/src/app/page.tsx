@@ -26,7 +26,6 @@ import { formatNumber } from "@/types";
 
 export default function Home() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
   const featuredSuburbs = getAreasByLevel("suburb").slice(0, 6);
 
@@ -37,15 +36,6 @@ export default function Home() {
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
       });
-    }
-  };
-
-  const handleCarouselScroll = () => {
-    if (carouselRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
-      const maxScroll = scrollWidth - clientWidth;
-      const progress = maxScroll > 0 ? (scrollLeft / maxScroll) * 100 : 0;
-      setScrollProgress(progress);
     }
   };
   const allSuburbs = getAreasByLevel("suburb");
@@ -126,14 +116,14 @@ export default function Home() {
       </header>
 
       {/* Hero section - Left-aligned title, right-aligned search */}
-      <section className="relative bg-white text-stone-900 min-h-screen flex flex-col overflow-hidden">
+      <section className="relative bg-white text-stone-900 flex flex-col overflow-hidden">
         {/* Subtle background decoration */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           <div className="absolute top-1/4 right-0 w-[600px] h-[600px] bg-gradient-to-br from-sage-100/30 to-transparent rounded-full blur-3xl"></div>
           <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-gradient-to-tr from-moss-100/20 to-transparent rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative flex-1 flex flex-col justify-center max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-16">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-8">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: Title and Subtitle */}
             <div className="space-y-6">
@@ -145,7 +135,7 @@ export default function Home() {
                   ease: [0.16, 1, 0.3, 1],
                   delay: 0.1,
                 }}
-                className="text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight text-stone-900"
+                className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] tracking-tight text-stone-900"
               >
                 Property Intelligence
                 <br />
@@ -170,7 +160,7 @@ export default function Home() {
                   ease: [0.16, 1, 0.3, 1],
                   delay: 0.5,
                 }}
-                className="text-xl md:text-2xl text-stone-600 font-light leading-relaxed"
+                className="text-base md:text-lg text-stone-600 font-light leading-relaxed"
               >
                 Make informed property decisions with comprehensive market
                 insights and data-driven analysis across the Western Cape.
@@ -218,7 +208,6 @@ export default function Home() {
             {/* Scrollable Cards */}
             <div
               ref={carouselRef}
-              onScroll={handleCarouselScroll}
               className="flex items-stretch gap-4 overflow-x-auto scrollbar-hide scroll-smooth px-4 md:px-6 lg:px-12 pb-4"
             >
               {/* Card 1: Market Data */}
@@ -366,59 +355,47 @@ export default function Home() {
             </div>
           </div>
           
-          {/* Controls: Navigation + Progress */}
+          {/* Navigation Arrows - Left aligned */}
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-6">
-            <div className="flex items-center gap-6">
-              {/* Navigation Arrows - Left aligned */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => scrollCarousel("left")}
-                  className="w-10 h-10 rounded-full bg-white border border-stone-200 flex items-center justify-center hover:bg-stone-50 hover:border-stone-300 transition-all duration-200 shadow-sm hover:shadow group"
-                  aria-label="Previous"
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => scrollCarousel("left")}
+                className="w-10 h-10 rounded-full bg-white border border-stone-200 flex items-center justify-center hover:bg-stone-50 hover:border-stone-300 transition-all duration-200 shadow-sm hover:shadow group"
+                aria-label="Previous"
+              >
+                <svg
+                  className="w-4 h-4 text-stone-600 group-hover:text-stone-900 transition-colors"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    className="w-4 h-4 text-stone-600 group-hover:text-stone-900 transition-colors"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 19l-7-7 7-7"
-                    />
-                  </svg>
-                </button>
-                <button
-                  onClick={() => scrollCarousel("right")}
-                  className="w-10 h-10 rounded-full bg-stone-900 flex items-center justify-center hover:bg-stone-800 transition-all duration-200 shadow-sm hover:shadow group"
-                  aria-label="Next"
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 19l-7-7 7-7"
+                  />
+                </svg>
+              </button>
+              <button
+                onClick={() => scrollCarousel("right")}
+                className="w-10 h-10 rounded-full bg-stone-900 flex items-center justify-center hover:bg-stone-800 transition-all duration-200 shadow-sm hover:shadow group"
+                aria-label="Next"
+              >
+                <svg
+                  className="w-4 h-4 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
                 >
-                  <svg
-                    className="w-4 h-4 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5l7 7-7 7"
-                    />
-                  </svg>
-                </button>
-              </div>
-              
-              {/* Scroll track with fixed-size thumb */}
-              <div className="flex-1 h-1.5 bg-stone-200 rounded-full relative">
-                <motion.div
-                  className="absolute top-0 h-full w-16 bg-stone-900 rounded-full"
-                  style={{ left: `calc(${scrollProgress}% - ${scrollProgress * 0.16}%)` }}
-                  transition={{ duration: 0.15, ease: "easeOut" }}
-                />
-              </div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
             </div>
           </div>
         </div>
