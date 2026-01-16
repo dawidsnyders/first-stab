@@ -91,17 +91,18 @@ export function SearchBar({ onMapClick }: SearchBarProps) {
   return (
     <div className="relative w-full max-w-2xl">
       {/* Quick Select Areas */}
-      <div className="mb-3">
-        <div className="flex flex-wrap gap-2">
+      <div className="mb-4">
+        <div className="flex flex-wrap gap-3">
           {popularAreas.map((area) => (
             <motion.button
               key={area.id}
               onClick={() => handleQuickSelect(area)}
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.02, y: -1 }}
               whileTap={{ scale: 0.98 }}
-              className="group relative px-4 py-2 text-xs font-medium rounded-lg transition-all duration-100 bg-white text-stone-700 hover:text-stone-900 border border-stone-200 hover:border-sage-300 hover:shadow-sm"
+              className="group relative px-6 py-3.5 text-sm font-semibold rounded-xl transition-all duration-100 bg-white text-stone-900 border border-stone-200/80 hover:border-sage-300/60 hover:shadow-lg hover:shadow-sage-100/50 active:shadow-md"
             >
-              {area.name}
+              <span className="relative z-10">{area.name}</span>
+              <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-white to-stone-50/50 opacity-0 group-hover:opacity-100 transition-opacity duration-100" />
             </motion.button>
           ))}
         </div>

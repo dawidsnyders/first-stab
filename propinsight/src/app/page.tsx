@@ -195,7 +195,10 @@ export default function Home() {
           <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-gradient-to-tr from-moss-100/20 to-transparent rounded-full blur-3xl"></div>
         </div>
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full" style={{ paddingTop: '20vh', paddingBottom: '8vh' }}>
+        <div
+          className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full"
+          style={{ paddingTop: "35vh", paddingBottom: "4vh" }}
+        >
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left: Title and Subtitle */}
             <div className="space-y-6">
