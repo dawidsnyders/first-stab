@@ -173,7 +173,9 @@ export async function GET(request: NextRequest) {
           // Query all features and filter in code (field names vary by endpoint)
           // This is more reliable than guessing field names in WHERE clause
           console.log(
-            `Querying Western Cape API for "${suburbName}" (search terms: ${searchTerms.join(", ")})`
+            `Querying Western Cape API for "${suburbName}" (search terms: ${searchTerms.join(
+              ", "
+            )})`
           );
           url.searchParams.append("where", "1=1"); // Get all, filter in code
           url.searchParams.append("outFields", "*");
@@ -374,7 +376,7 @@ export async function GET(request: NextRequest) {
               ) {
                 return false; // Skip Point, LineString, etc.
               }
-              
+
               const props = f.properties;
               // Western Cape Spatial Data Warehouse uses SUBURB, NAME, or SUBURB_NAME fields
               const nameField = String(
@@ -394,8 +396,14 @@ export async function GET(request: NextRequest) {
                 );
               });
             }) || [];
-          
-          console.log(`Found ${candidates.length} polygon candidates for "${suburbName}" (filtered from ${responseData.features?.length || 0} total features)`);
+
+          console.log(
+            `Found ${
+              candidates.length
+            } polygon candidates for "${suburbName}" (filtered from ${
+              responseData.features?.length || 0
+            } total features)`
+          );
 
           // Pick the smallest polygon (most specific boundary) that matches search terms
           let smallestArea = Infinity;
@@ -443,7 +451,9 @@ export async function GET(request: NextRequest) {
                   smallestArea = area;
                 } else if (area >= maxArea) {
                   console.warn(
-                    `Rejecting overly large polygon for "${suburbName}": ${area.toFixed(2)} km² (max ${maxArea} km²)`
+                    `Rejecting overly large polygon for "${suburbName}": ${area.toFixed(
+                      2
+                    )} km² (max ${maxArea} km²)`
                   );
                 }
               }
@@ -454,7 +464,11 @@ export async function GET(request: NextRequest) {
           if (!matchingFeature && candidates.length > 0) {
             matchingFeature = candidates[0];
             console.warn(
-              `Using first match for ${suburbName} without size validation`
+              `Using first polygon match for ${suburbName} without size validation (${candidates.length} candidates available)`
+            );
+          } else if (!matchingFeature && candidates.length === 0) {
+            console.warn(
+              `No polygon features found for "${suburbName}" - only Point/LineString geometries may be available`
             );
           }
         } else {
