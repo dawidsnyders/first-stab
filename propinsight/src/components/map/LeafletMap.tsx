@@ -4,7 +4,10 @@ import { useEffect, useRef, useState } from "react";
 import { Area } from "@/types";
 import { DEFAULT_MAP_CENTER, DEFAULT_MAP_ZOOM } from "@/lib/constants";
 import { getAreaBoundaryPolygon } from "@/data/areaBoundaries";
-import { getBoundaryForArea, prefetchBoundaries } from "@/lib/geojson-boundaries";
+import {
+  getBoundaryForArea,
+  prefetchBoundaries,
+} from "@/lib/geojson-boundaries";
 import "leaflet/dist/leaflet.css";
 
 // Coordinates for all Western Cape areas [lng, lat] format
@@ -40,9 +43,7 @@ function getAreaCoordinates(area: Area): [number, number] {
 }
 
 // This function will be async - boundaries are loaded dynamically
-async function getAreaBoundaryAsync(
-  area: Area
-): Promise<[number, number][]> {
+async function getAreaBoundaryAsync(area: Area): Promise<[number, number][]> {
   // First try to get real boundary from City of Cape Town GeoJSON API
   if (area.level === "suburb") {
     const geoJSONBoundary = await getBoundaryForArea(area.slug);
@@ -60,11 +61,11 @@ async function getAreaBoundaryAsync(
   // Last resort: Generate approximate polygon if no real boundary exists
   const coords = getAreaCoordinates(area); // Returns [lng, lat]
   const [lng, lat] = coords;
-  
+
   // Adjust size based on area level
   const size =
     area.level === "province" ? 2.0 : area.level === "city" ? 0.4 : 0.05;
-  
+
   // Generate simple polygon as fallback
   const points: [number, number][] = [];
   const sides = 6;
@@ -236,7 +237,7 @@ export function LeafletMap({
             text-align: center;
           ">${area.name}</div>
         `;
-        
+
         polygon.bindTooltip(tooltipContent, {
           permanent: false,
           direction: "auto",
@@ -300,9 +301,9 @@ export function LeafletMap({
         });
       }
     });
-  }, [areas, isMapReady, selectedArea, hoveredArea]); // Re-run when areas change or map becomes ready
+  }, [areas, isMapReady, selectedArea]); // Re-run when areas change or map becomes ready (removed hoveredArea to prevent flashing)
 
-  // Update polygon styles when selection changes
+  // Update polygon styles when selection changes (NOT on hover - hover is handled in event handlers)
   useEffect(() => {
     if (!mapInstanceRef.current || !isMapReady) return;
 
@@ -311,7 +312,8 @@ export function LeafletMap({
       if (!area) return;
 
       const isSelected = selectedArea?.id === area.id;
-      const isHovered = hoveredArea?.id === area.id;
+      // Don't check hoveredArea here - hover styles are handled in mouseover/mouseout handlers
+      // This prevents all polygons from flashing when hovering
 
       // Determine polygon style - match initial creation styles
       // Default state - subtle green tint
@@ -326,13 +328,9 @@ export function LeafletMap({
         borderColor = "#4a5c3f"; // sage-600 - solid green border (brand)
         borderWidth = 3.5;
         fillOpacity = 0.6; // Nice visible green tint
-      } else if (isHovered) {
-        // Hover state - medium green tint
-        fillColor = "#d1d9cc"; // sage-200
-        borderColor = "#5d7350"; // sage-500
-        borderWidth = 2.5;
-        fillOpacity = 0.3;
       }
+      // Note: Hover state is NOT handled here - it's handled in mouseover/mouseout handlers
+      // to prevent all polygons from updating when hovering
 
       polygon.setStyle({
         color: borderColor,
@@ -351,7 +349,7 @@ export function LeafletMap({
         });
       }
     });
-  }, [selectedArea, hoveredArea, isMapReady, areas]);
+  }, [selectedArea, isMapReady, areas]); // Removed hoveredArea to prevent flashing - hover is handled in event handlers
 
   return (
     <div className="relative w-full h-full">

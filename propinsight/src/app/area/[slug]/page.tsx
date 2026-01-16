@@ -16,7 +16,7 @@ import { PriceTrendChart } from "@/components/charts/PriceTrendChart";
 import { PropertyTypeBreakdown } from "@/components/area/PropertyTypeBreakdown";
 import { DevelopmentsSection } from "@/components/area/DevelopmentsSection";
 import { generateMedianPriceData } from "@/lib/chartData";
-import { AreaLocationMap } from "@/components/map/AreaLocationMap";
+import { AreaMapWithButton } from "@/components/area/AreaMapWithButton";
 import { StickyReportCTA } from "@/components/area/StickyReportCTA";
 
 interface PageProps {
@@ -270,7 +270,7 @@ export default async function AreaPage({ params }: PageProps) {
             {stats && (
               <div className="lg:col-span-1 space-y-6">
                 {/* Location Map */}
-                <AreaLocationMap area={area} />
+                <AreaMapWithButton area={area} />
 
                 {/* Market Activity */}
                 {interestingInfo.length > 0 && (

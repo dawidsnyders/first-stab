@@ -139,8 +139,9 @@ function StatCard({ label, value, highlight, onClick }: StatCardProps) {
     <motion.div
       whileHover={{ scale: 1.02, y: -2 }}
       whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.2, ease: "easeOut" }}
       onClick={onClick}
-      className={`p-4 rounded-xl cursor-pointer transition-all duration-100 ${
+      className={`p-4 rounded-xl cursor-pointer transition-all duration-200 ease-out ${
         highlight
           ? "bg-green-50 border border-green-200 hover:bg-green-100 hover:border-green-300 hover:shadow-md"
           : "bg-white border border-gray-200 hover:bg-gray-50 hover:border-gray-300 hover:shadow-md"

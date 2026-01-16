@@ -246,14 +246,14 @@ function AreaInfoContent({ area }: { area: Area }) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.5, duration: 0.2 }}
-                className="h-40 bg-stone-50 rounded-lg border border-stone-200"
+                className="h-40 bg-stone-50 rounded-lg border border-stone-200 flex flex-col"
               >
-                <div className="text-xs text-stone-500 mb-2 font-medium px-3 pt-3">Price trend (3 years)</div>
-                <ResponsiveContainer width="100%" height="calc(100% - 24px)">
-                  <AreaChart
-                    data={chartData}
-                    margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-                  >
+                <div className="text-xs text-stone-500 font-medium px-3 pt-3 pb-1 flex-shrink-0">Price trend (3 years)</div>
+                <ResponsiveContainer width="100%" height={116}>
+                    <AreaChart
+                      data={chartData}
+                      margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                    >
                     <defs>
                       <linearGradient id={`miniPriceGradient-${area.id}`} x1="0" y1="0" x2="0" y2="1">
                         <stop offset="5%" stopColor="#5d7350" stopOpacity={0.3} />
@@ -299,8 +299,8 @@ function AreaInfoContent({ area }: { area: Area }) {
                       formatter={(value: number) => formatPrice(value)}
                       labelStyle={{ fontSize: "11px", color: "#78716c" }}
                     />
-                  </AreaChart>
-                </ResponsiveContainer>
+                    </AreaChart>
+                  </ResponsiveContainer>
               </motion.div>
             );
           })()}
