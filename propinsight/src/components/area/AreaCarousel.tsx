@@ -180,105 +180,108 @@ export function AreaCarousel({ areas }: AreaCarouselProps) {
                 sectionRefs.current[index] = el as HTMLDivElement | null;
               }}
               className="mb-3 last:mb-0"
-              style={{ height: '450px' }}
+              style={{ height: "450px" }}
             >
-              <div className="w-full h-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden flex flex-col">
-                {/* Area Name Header - Large, Dark Gray */}
-                <div className="px-6 py-4 border-b border-stone-200 flex-shrink-0">
-                  <h2 className="text-2xl font-bold text-stone-900 mb-1">
-                    {area.name}
-                  </h2>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs text-stone-500 capitalize">
-                      {area.level}
-                    </span>
-                    {stats && (
-                      <>
-                        <span className="text-stone-300">•</span>
-                        <span
-                          className={`text-xs font-semibold ${
-                            isPositive ? "text-green-600" : "text-red-600"
-                          }`}
-                        >
-                          {formatPriceChange(stats.priceChangeYoY)} YoY
-                        </span>
-                      </>
-                    )}
+              <div className="w-full h-full bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden flex">
+                {/* Left Side - Title and Info */}
+                <div className="flex-1 flex flex-col px-6 py-4">
+                  {/* Area Name Header */}
+                  <div className="mb-4">
+                    <h2 className="text-2xl font-bold text-stone-900 mb-1">
+                      {area.name}
+                    </h2>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-stone-500 capitalize">
+                        {area.level}
+                      </span>
+                      {stats && (
+                        <>
+                          <span className="text-stone-300">•</span>
+                          <span
+                            className={`text-xs font-semibold ${
+                              isPositive ? "text-green-600" : "text-red-600"
+                            }`}
+                          >
+                            {formatPriceChange(stats.priceChangeYoY)} YoY
+                          </span>
+                        </>
+                      )}
+                    </div>
                   </div>
+
+                  {/* Key Info - Grid Below Title */}
+                  {stats && (
+                    <div className="flex-1 flex flex-col">
+                      <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
+                            Average Price
+                          </div>
+                          <div className="text-lg font-bold text-stone-900">
+                            {formatPrice(stats.avgPrice)}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
+                            Sales (12mo)
+                          </div>
+                          <div className="text-lg font-bold text-stone-900">
+                            {formatNumber(stats.salesCount)}
+                          </div>
+                        </div>
+                        {stats.avgPricePerSqm ? (
+                          <div>
+                            <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
+                              Price per m²
+                            </div>
+                            <div className="text-lg font-bold text-stone-900">
+                              {formatPrice(stats.avgPricePerSqm)}
+                            </div>
+                          </div>
+                        ) : (
+                          <div>
+                            <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
+                              Median Price
+                            </div>
+                            <div className="text-lg font-bold text-stone-900">
+                              {formatPrice(stats.medianPrice)}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* CTA Link */}
+                      <div className="mt-auto pt-4 border-t border-stone-200">
+                        <Link
+                          href={`/area/${area.slug}`}
+                          className="inline-flex items-center gap-2 text-sage-600 hover:text-sage-700 font-semibold text-xs transition-colors duration-200 group"
+                        >
+                          <span>View Full Market Analysis</span>
+                          <svg
+                            className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-1"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M9 5l7 7-7 7"
+                            />
+                          </svg>
+                        </Link>
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {/* Map View - Takes significant space */}
-                <div className="px-6 py-4 border-b border-stone-200 flex-shrink-0">
-                  <div className="h-[280px] rounded-lg overflow-hidden bg-stone-50">
+                {/* Right Side - Map (30% width, full height) */}
+                <div className="w-[30%] border-l border-stone-200">
+                  <div className="w-full h-full">
                     <AreaLocationMap area={area} />
                   </div>
                 </div>
-
-                {/* Key Info - Clean Grid Below Map */}
-                {stats && (
-                  <div className="px-6 py-4 bg-stone-50/30 flex-1 flex flex-col">
-                    <div className="grid grid-cols-3 gap-4 flex-shrink-0">
-                      <div>
-                        <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
-                          Average Price
-                        </div>
-                        <div className="text-lg font-bold text-stone-900">
-                          {formatPrice(stats.avgPrice)}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
-                          Sales (12mo)
-                        </div>
-                        <div className="text-lg font-bold text-stone-900">
-                          {formatNumber(stats.salesCount)}
-                        </div>
-                      </div>
-                      {stats.avgPricePerSqm ? (
-                        <div>
-                          <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
-                            Price per m²
-                          </div>
-                          <div className="text-lg font-bold text-stone-900">
-                            {formatPrice(stats.avgPricePerSqm)}
-                          </div>
-                        </div>
-                      ) : (
-                        <div>
-                          <div className="text-[10px] text-stone-500 uppercase tracking-wider mb-1 font-medium">
-                            Median Price
-                          </div>
-                          <div className="text-lg font-bold text-stone-900">
-                            {formatPrice(stats.medianPrice)}
-                          </div>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* CTA Link */}
-                    <div className="mt-auto pt-3 border-t border-stone-200 flex-shrink-0">
-                      <Link
-                        href={`/area/${area.slug}`}
-                        className="inline-flex items-center gap-2 text-sage-600 hover:text-sage-700 font-semibold text-xs transition-colors duration-200 group"
-                      >
-                        <span>View Full Market Analysis</span>
-                        <svg
-                          className="w-3 h-3 transition-transform duration-200 group-hover:translate-x-1"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </Link>
-                    </div>
-                  </div>
-                )}
               </div>
             </section>
           );
