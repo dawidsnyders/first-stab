@@ -98,9 +98,40 @@
 - Collapsed/hidden by default — curators can expand to customize
 - Parameters TBD — document each advanced setting with its default value and implications
 
-### 2.5 First Loss Capital Vault
-- Specialized vault type (parameters and flow TBD — deferred for future documentation)
-- Placeholder section for when this is finalized
+### 2.5 First Loss Capital
+
+#### 2.5.1 What is First Loss Capital?
+First Loss Capital is a trust mechanism that allows vault managers to put their own capital at risk before depositors bear any losses. The manager deposits assets into a dedicated farm buffer — if the vault incurs bad debt (e.g., from a borrower default or liquidation shortfall in an underlying reserve), the shortfall is first absorbed by the First Loss Capital buffer. Depositors only begin incurring losses if and when the shortfall exceeds the entire First Loss Capital buffer.
+
+This is one of the highest-trust features a vault manager can offer, signaling direct skin-in-the-game alignment with depositors.
+
+#### 2.5.2 TradFi Equivalents
+First Loss Capital maps directly to well-established mechanisms in traditional finance:
+
+- **Equity/First Loss Tranche (Structured Finance)**: In CLOs and CDOs, the equity tranche (also called the "first loss piece") absorbs losses before any senior tranche is impacted. The vault manager's First Loss Capital functions identically — they hold the junior position.
+- **GP Commitment (Private Equity / Hedge Funds)**: General Partners typically commit 1–5% of fund capital alongside LPs. This co-investment ensures the GP's incentives are aligned with investors. First Loss Capital serves the same alignment purpose.
+- **Risk Retention Rules (Dodd-Frank §941)**: Post-2008 regulations require securitization sponsors to retain at least 5% of credit risk, often in a first-loss position. This regulatory principle — that originators should have skin in the game — is the same principle First Loss Capital implements on-chain.
+- **Subordinated Debt**: In banking, subordinated debt holders absorb losses before senior creditors. The First Loss Capital buffer is subordinated to all depositor claims.
+
+#### 2.5.3 How It Works — Overview
+1. **Farm Setup**: The vault must have a farm created (see §3.1.4)
+2. **Configure Parameters**: Set the First Loss Capital parameters (token, lockup period)
+3. **Deposit**: Manager deposits the chosen asset into the First Loss Capital farm
+4. **Protection Active**: The buffer is now live — any bad debt the vault incurs is absorbed by this buffer first
+5. **Loss Waterfall**: Shortfall → First Loss Capital buffer absorbs → only if buffer is fully depleted do depositors incur loss
+
+#### 2.5.4 Parameters
+
+| Parameter | Description |
+|-----------|-------------|
+| **Token** | The asset deposited as First Loss Capital. Selected by the vault manager. |
+| **Lockup Period** | Duration for which the First Loss Capital is locked and cannot be withdrawn. Provides depositors with certainty that the buffer will remain in place for at least this period. |
+
+#### 2.5.5 Trust Signal & Depositor Impact
+- Vaults with First Loss Capital provide a stronger safety guarantee to depositors
+- The lockup period is critical — a longer lockup gives depositors more confidence that the buffer won't be pulled at the first sign of trouble
+- Documentation should clearly communicate to curators how this feature is surfaced to depositors (badge, indicator, or detail on the vault page)
+- Curators should understand the trade-off: locking capital reduces their liquidity but increases vault attractiveness and depositor trust
 
 ---
 
@@ -191,7 +222,33 @@ Fees that go to the vault manager/curator:
 - Same flow as other settings changes (simulate → sign for multisig)
 - Transaction creates the farm, sets it to the vault, and transfers farm authority
 - After creation: farm address is displayed, "Create Farm" button disappears
-- **No further admin actions** available on the farm once created — read-only display of the farm address
+- Farm address is displayed as read-only after creation
+
+##### First Loss Capital Configuration
+Once the farm is created, the vault manager can configure and fund a First Loss Capital buffer through the farm.
+
+**Setup Flow:**
+1. Select the **token** to deposit as First Loss Capital
+2. Set the **lockup period** — duration the capital is locked and cannot be withdrawn
+3. Deposit the asset into the First Loss Capital farm
+4. Same transaction flow as other vault settings (simulate → sign/execute)
+
+**Parameters:**
+
+| Parameter | Description |
+|-----------|-------------|
+| **Token** | The asset to deposit as the first loss buffer |
+| **Lockup Period** | How long the capital is locked — cannot be withdrawn during this period |
+
+**Post-Setup Display:**
+- First Loss Capital status and amount visible on the vault settings page
+- Lockup period and remaining lockup time displayed
+- Deposited token and amount shown
+
+**Loss Absorption Mechanism:**
+- If the vault incurs bad debt (e.g., borrower default, liquidation shortfall in an underlying reserve), the First Loss Capital buffer absorbs the loss first
+- Depositors only incur loss if the shortfall exceeds the entire First Loss Capital buffer
+- See §2.5 for full conceptual explanation and TradFi parallels
 
 ---
 
@@ -377,6 +434,9 @@ Every vault management action follows a consistent pattern:
 | AUM Fee | Fee on total assets under management, paid to the manager |
 | Withdrawal Penalty | Fee on withdrawals, returned to the vault (not the manager) |
 | Farm | Rewards distribution mechanism attached to a vault |
+| First Loss Capital | Manager-deposited buffer that absorbs bad debt before depositors incur any loss |
+| Lockup Period | Duration for which First Loss Capital is locked and cannot be withdrawn |
+| Bad Debt | Shortfall from borrower defaults or liquidation failures in underlying reserves |
 | Squads | Multisig solution for Solana; used for multisig vault administration |
 
 ### B. Settings Quick Reference
@@ -401,6 +461,8 @@ Every vault management action follows a consistent pattern:
 | Admin Transfer | Vault Settings | Admin Management |
 | Withdrawal Penalty | Vault Settings | Fee Management |
 | Vault Farm | Vault Settings | Farm |
+| First Loss Capital Token | Vault Settings | Farm → First Loss Capital |
+| First Loss Capital Lockup Period | Vault Settings | Farm → First Loss Capital |
 | Reserve Weights | Allocation Settings | Weight Management |
 | Unallocated Weight | Allocation Settings | Liquidity Buffer |
 | Unallocated Cap | Allocation Settings | Liquidity Buffer |
@@ -409,7 +471,6 @@ Every vault management action follows a consistent pattern:
 | Reserve Verification | Allocation Settings | Add Reserve |
 
 ### C. Open Items / Deferred
-- First Loss Capital vault parameters and flow
 - Conditional allocation details for fixed rate reserves
 - Advanced settings complete parameter list and defaults
 - Vault Stats tab — full metrics definition
