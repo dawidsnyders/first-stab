@@ -1,35 +1,57 @@
 'use client';
 
+import { useState, useCallback } from 'react';
 import { announcements } from '@/data/announcements';
+import { Announcement } from '@/types';
+import { PromotionalCarousel } from '@/components/carousel/PromotionalCarousel';
 
 export default function Home() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalActiveItem, setModalActiveItem] = useState<string | null>(null);
+
+  const handleOpenModal = useCallback(() => {
+    setModalActiveItem(announcements[currentSlide].id);
+    setIsModalOpen(true);
+  }, [currentSlide]);
+
+  const handleSlideClick = useCallback((announcement: Announcement) => {
+    const { action } = announcement.cta;
+    if (action.type === 'modal') {
+      setModalActiveItem(action.target);
+      setIsModalOpen(true);
+    } else if (action.type === 'route') {
+      // In a real app: router.push(action.target)
+      console.log('Navigate to:', action.target);
+    } else if (action.type === 'external') {
+      window.open(action.target, '_blank', 'noopener,noreferrer');
+    }
+  }, []);
+
+  const handleCloseModal = useCallback(() => {
+    setIsModalOpen(false);
+    setModalActiveItem(null);
+  }, []);
+
   return (
     <div className="min-h-screen bg-bg-base">
-      <div className="mx-auto max-w-6xl px-6 py-8">
-        {/* Carousel will go here */}
-        <div className="rounded-xl border border-border-subtle bg-bg-card p-8">
-          <p className="text-text-secondary text-sm">
-            {announcements.length} announcements loaded
-          </p>
-          <div className="mt-4 space-y-3">
-            {announcements.map((a) => (
-              <div
-                key={a.id}
-                className="flex items-center gap-3 rounded-lg bg-bg-elevated px-4 py-3"
-              >
-                <div
-                  className="h-2 w-2 rounded-full"
-                  style={{ backgroundColor: a.accentColor }}
-                />
-                <span className="text-sm font-medium">{a.headline}</span>
-                <span className="ml-auto text-xs text-text-muted">
-                  {a.stat.value} {a.stat.label}
-                </span>
-              </div>
-            ))}
-          </div>
+      <div className="mx-auto max-w-5xl px-6 py-8">
+        <PromotionalCarousel
+          announcements={announcements}
+          isModalOpen={isModalOpen}
+          onOpenModal={handleOpenModal}
+          onSlideClick={handleSlideClick}
+          currentSlide={currentSlide}
+          onSlideChange={setCurrentSlide}
+        />
+
+        {/* Placeholder for rest of app */}
+        <div className="mt-12 rounded-xl border border-border-subtle bg-bg-card p-12 text-center">
+          <p className="text-text-muted text-sm">Your app content goes here</p>
         </div>
       </div>
+
+      {/* Modal will be wired in Phase 3 */}
     </div>
   );
 }
