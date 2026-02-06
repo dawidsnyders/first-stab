@@ -12,8 +12,8 @@ interface ModalSideNavProps {
 
 export function ModalSideNav({ announcements, activeId, onSelect }: ModalSideNavProps) {
   return (
-    <nav className="flex w-full flex-col gap-1 border-r border-border-subtle p-3 md:w-72 md:flex-shrink-0">
-      <h2 className="px-3 pb-2 pt-1 text-xs font-semibold uppercase tracking-wider text-text-muted">
+    <nav className="flex w-full flex-shrink-0 flex-row gap-1 overflow-x-auto border-b border-border-subtle p-2 md:w-72 md:flex-col md:overflow-x-visible md:overflow-y-auto md:border-b-0 md:border-r md:p-3">
+      <h2 className="hidden px-3 pb-2 pt-1 text-xs font-semibold uppercase tracking-wider text-text-muted md:block">
         What&apos;s New
       </h2>
       {announcements.map((item) => {
@@ -22,7 +22,7 @@ export function ModalSideNav({ announcements, activeId, onSelect }: ModalSideNav
           <motion.button
             key={item.id}
             onClick={() => onSelect(item.id)}
-            className={`relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-left transition-colors ${
+            className={`relative flex flex-shrink-0 items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors md:gap-3 md:py-2.5 ${
               isActive
                 ? 'text-text-primary'
                 : 'text-text-secondary hover:text-text-primary'
@@ -41,7 +41,7 @@ export function ModalSideNav({ announcements, activeId, onSelect }: ModalSideNav
                 transition={{ type: 'spring', stiffness: 400, damping: 30 }}
               />
             )}
-            <div className="relative flex items-center gap-3">
+            <div className="relative flex items-center gap-2 md:gap-3">
               <Image
                 src={item.logo}
                 alt=""
@@ -49,7 +49,9 @@ export function ModalSideNav({ announcements, activeId, onSelect }: ModalSideNav
                 height={20}
                 className="h-5 w-5 flex-shrink-0"
               />
-              <span className="truncate text-sm font-medium">{item.headline}</span>
+              <span className="whitespace-nowrap text-xs font-medium md:whitespace-normal md:text-sm">
+                {item.headline}
+              </span>
             </div>
           </motion.button>
         );
