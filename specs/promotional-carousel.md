@@ -25,9 +25,9 @@ A two-part promotional system for a fintech/DeFi web application: a dark-mode, S
 - [ ] **Entire slide is clickable** — configurable action per slide (open modal, in-app route, or external link)
 - [ ] **Auto-rotation** — 5-second interval timer
 - [ ] **Pause on modal open** — carousel stops rotating when the What's New modal is visible
-- [ ] **Dot navigation** — active dot uses slide accent color, inactive dots are muted
+- [ ] **Dot navigation** — active dot uses slide accent color, inactive dots are muted, clickable to jump to specific slide
 - [ ] **"See What's New" button** — minimal, right-aligned above the carousel, opens the modal
-- [ ] **What's New modal** — fade + scale-up entrance with backdrop blur
+- [ ] **What's New modal** — fade + scale-up entrance with backdrop blur, exit animation is the reverse (fade out + scale down)
 - [ ] **Modal side nav** — flat list of all announcements on the left
 - [ ] **Modal content panel** — right side, shows: 1-2 paragraphs of description, key stats, CTA button
 - [ ] **Content-dependent accent colors** — each slide/item has its own accent, base color is consistent across all
@@ -40,7 +40,7 @@ A two-part promotional system for a fintech/DeFi web application: a dark-mode, S
 - [ ] **Hover pause** — carousel pauses auto-rotation on mouse hover
 - [ ] **Keyboard navigation** — arrow keys to navigate slides, Escape to close modal
 - [ ] **Smooth slide transitions** — crossfade or slide animation between carousel items via Framer Motion AnimatePresence
-- [ ] **Active item sync** — clicking a carousel slide that opens the modal scrolls/selects that item in the side nav
+- [ ] **Active item sync** — opening the modal auto-selects the item matching the currently visible carousel slide; clicking a slide that opens the modal selects that item in the side nav
 
 ### Nice to Have (P2)
 
@@ -171,12 +171,12 @@ src/
 | 4 | Gauntlet RWA Lending Vault Live | Institutional-grade lending | $2.4M TVL | Amber |
 | 5 | Kamino Private Credit | BTC-Backed Institutional Yield | 7% Yield | Cyan |
 
-## Open Questions
+## Resolved Questions
 
-- Should dot indicators be clickable to jump to a specific slide?
-- Should the modal side-nav highlight which item corresponds to the currently visible carousel slide when opened via "See What's New"?
-- Should there be a close animation on the carousel when navigating away from the page?
+- **Dot indicators clickable?** Yes — clicking a dot jumps to that slide
+- **Modal side-nav syncs with carousel?** Yes — opening the modal auto-selects the item matching the currently visible carousel slide
+- **Close/exit animation?** Yes — reverse of the open animation (fade out + scale down 1→0.95)
 
 ## Approvals
 
-- [ ] User approved this specification
+- [x] User approved this specification
