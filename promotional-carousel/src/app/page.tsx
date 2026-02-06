@@ -4,6 +4,7 @@ import { useState, useCallback } from 'react';
 import { announcements } from '@/data/announcements';
 import { Announcement } from '@/types';
 import { PromotionalCarousel } from '@/components/carousel/PromotionalCarousel';
+import { WhatsNewModal } from '@/components/modal/WhatsNewModal';
 
 export default function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -51,7 +52,13 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Modal will be wired in Phase 3 */}
+      <WhatsNewModal
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        announcements={announcements}
+        activeItemId={modalActiveItem}
+        onSelectItem={setModalActiveItem}
+      />
     </div>
   );
 }
