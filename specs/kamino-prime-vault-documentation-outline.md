@@ -11,37 +11,107 @@
 ## Table of Contents
 
 1. [Introduction & Overview](#1-introduction--overview)
+   - 1.1 What is Kamino Prime?
+   - 1.2 What Are Vaults?
+   - 1.3 Why Vaults Exist
+   - 1.4 Vault Structure
+   - 1.5 Key Concepts
+   - 1.6 Architecture at a Glance
+   - 1.7 Allocation Management
+   - 1.8 Wallet & Signing Modes
 2. [Creating a Vault](#2-creating-a-vault)
+   - 2.1 Create Vault Flow
+   - 2.2 Required Parameters
+   - 2.3 Fee Configuration
+   - 2.4 Advanced Settings
+   - 2.5 First Loss Capital
 3. [Managing a Vault](#3-managing-a-vault)
-   - 3.1 Vault Settings Tab
+   - 3.1 Vault Settings Tab (Info, Admin, Fees, Farm)
    - 3.2 Allocation Settings Tab
+     - Allocation Overview & Reserve List
+     - Liquidity Buffer (Unallocated Weight & Cap)
+     - Weight Management & APY Simulation
+     - Add/Remove Reserves
+     - **Allocation Types: Standard & Conditional Liquidity**
+     - Sync Allocations
+     - Whitelisting
    - 3.3 Vault Stats Tab
 4. [Cross-cutting Concepts](#4-cross-cutting-concepts)
+   - 4.1 Transaction Flow
+   - 4.2 Multisig (Squads) Integration
+   - 4.3 Hot Wallet vs Multisig Admin
+   - 4.4 Reserve Types (Variable vs Fixed)
+   - 4.5 Vault Lifecycle
 
 ---
 
 ## 1. Introduction & Overview
 
 ### 1.1 What is Kamino Prime?
-- Platform for risk curators to create and manage lending vaults
-- Vaults accept a single deposit token and allocate across reserves inside lending markets
-- Curators control allocation strategy, fees, and vault parameters
+Kamino Prime is the platform for risk curators to create and manage lending vaults on Kamino. Curators use Kamino Prime to build professionally managed lending products — accepting deposits, allocating capital across reserves and markets, and actively optimizing yield and risk.
 
-### 1.2 Key Concepts
-- **Vault**: A smart contract that pools depositor funds and allocates them across lending reserves
-- **Deposit Token**: The single token the vault accepts (e.g., USDC)
-- **Receipt Token (kToken)**: Token depositors receive representing their share of the vault
-- **Reserve**: A specific lending pool inside a market (e.g., USDC floating rate in Market X)
-- **Market**: A lending market containing one or more reserves — allocations target reserves, NOT markets directly
-- **Weight**: A relative number controlling what proportion of the vault is allocated to each reserve
-- **Curator/Admin**: The wallet (hot wallet or multisig) that controls vault settings and allocations
+### 1.2 What Are Vaults?
 
-### 1.3 Architecture at a Glance
+Vaults are an established abstraction layer on Kamino that aggregate lender capital and manage allocation across reserves. They are heavily used and critical infrastructure.
+
+A vault is a single-token pool (e.g., a USDC vault) that:
+- Accepts deposits from lenders
+- Issues vault shares (receipt tokens) representing proportional ownership
+- Manages allocation across multiple reserves and markets
+- Handles rebalancing based on vault manager decisions
+
+### 1.3 Why Vaults Exist
+
+Without vaults, lenders would need to:
+- Manually select which reserves to deposit into across multiple markets
+- Monitor yields across dozens of reserves
+- Move capital between reserves as conditions change
+- Handle the complexity of managing multiple positions
+
+Vaults professionalize this. Lenders deposit once. Vault managers (risk curators) handle all allocation decisions. Active management replaces passive, fragmented lending.
+
+### 1.4 Vault Structure
+
+**Example: USDC Prime Vault**
+
+Lenders deposit USDC. The vault manager allocates:
+- 60% to Main Market USDC variable reserve
+- 30% to JLP Market USDC variable reserve
+- 10% to Altcoin Market USDC variable reserve
+
+Allocations are committed — capital physically moves into these reserves and earns whatever those reserves currently yield.
+
+### 1.5 Key Concepts
+
+| Concept | Definition |
+|---------|------------|
+| **Vault** | A single-token pool that aggregates lender capital and allocates across lending reserves |
+| **Deposit Token** | The single token a vault accepts (e.g., USDC). Set at creation, immutable. |
+| **Receipt Token (kToken)** | Token depositors receive representing their proportional share of the vault |
+| **Reserve** | A specific lending pool inside a market (e.g., USDC floating rate in Market X) |
+| **Market** | A lending market containing one or more reserves — allocations target reserves, NOT markets directly |
+| **Variable Rate Reserve** | A reserve where the interest rate floats based on supply/demand (utilisation) |
+| **Fixed Rate Reserve** | A reserve offering a fixed interest rate for a set duration (e.g., 5% for 3 months) |
+| **Weight** | A relative number controlling what proportion of the vault is allocated to each reserve |
+| **Curator / Admin** | The wallet (hot wallet or multisig) that controls vault settings and allocations |
+| **Conditional Liquidity** | Capital signaled as available to fixed-rate reserves while remaining deployed in variable-rate reserves (see §3.2.7) |
+
+### 1.6 Architecture at a Glance
 - One vault → one deposit token → many reserve allocations across many markets
 - A single market can have multiple reserves of the same token (e.g., USDC floating rate + USDC fixed rate 5% for 3 months)
+- Allocations target specific **reserves**, not markets
 - Vault management UI is organized into three tabs: Vault Settings, Allocation Settings, Vault Stats
 
-### 1.4 Wallet & Signing Modes
+### 1.7 Allocation Management
+
+Vault managers actively adjust allocations based on:
+- Relative yields across markets and reserves
+- Risk assessment of different collateral types in each market
+- Utilisation levels in different reserves
+- Overall market conditions
+- Fixed rate opportunities via Conditional Liquidity (see §3.2.7)
+
+### 1.8 Wallet & Signing Modes
 - **Hot wallet**: Direct transaction signing from a connected wallet
 - **Multisig (Squads)**: Transaction simulation produces a base58 encoded transaction for execution in Squads
 - All vault management actions support both modes
@@ -336,14 +406,93 @@ The liquidity buffer mechanism ensures the vault maintains available liquidity f
 
 #### 3.2.7 Allocation Types
 
-##### Standard Allocation
+##### Standard Allocation (Variable Rate Reserves)
 - Default allocation type for variable/floating rate reserves
+- Capital is physically deployed into the reserve and earns the current variable rate
+- Allocation is committed — capital moves on-chain into the reserve
+- Yield fluctuates based on reserve utilisation and market conditions
 
-##### Conditional Allocation
-- Available for **fixed rate reserves only**
-- Conditional parameters can be set on the allocation
-- Not yet available for variable rate reserves
-- Document what conditions can be set and how they affect allocation behavior
+##### Conditional Allocation (Fixed Rate Reserves) — Conditional Liquidity
+
+Conditional Liquidity is a core mechanism that allows vaults to participate in fixed-rate lending without sacrificing yield on idle capital. This section is critical for vault managers to understand thoroughly.
+
+###### The Problem Without Conditional Liquidity
+
+If vaults allocated capital directly to fixed-rate reserves, they would face two problems:
+
+1. **Opportunity cost**: Capital sitting in a fixed-rate reserve with no borrowers earns nothing. A vault allocating 20% to a 5.5% 3-month reserve would have that capital completely idle until someone borrows against it.
+
+2. **Liquidity fragmentation**: Capital split across many fixed-rate reserves (different rates, different durations, different markets) means small amounts in each, making it difficult for large borrowers to find sufficient liquidity at any single rate-duration pair.
+
+###### How Conditional Liquidity Works
+
+Vaults specify a percentage of their total capital as *conditionally available* to specific fixed-rate reserves. This capital **remains physically deployed in variable-rate reserves**, earning whatever those reserves currently yield.
+
+When a Borrow Order matches the conditional terms, the system **atomically**:
+1. Withdraws the required amount from variable-rate reserves
+2. Deposits it into the matched fixed-rate reserve
+3. Executes the loan to the borrower
+
+The vault's actual allocation only changes at the moment of match. Until then, the capital is productive in variable reserves.
+
+###### Multi-Reserve Placement
+
+A vault can place Conditional Liquidity on multiple fixed-rate reserves simultaneously **using the same underlying capital**. The capital is not reserved or partitioned — it remains fully deployed in variable reserves.
+
+**Example**: A vault with $100M deployed in variable reserves could signal:
+- $50M conditionally available at 5.0% for 3 months
+- $50M conditionally available at 5.5% for 3 months
+- $30M conditionally available at 6.0% for 6 months
+
+These overlap intentionally. Whichever Borrow Order arrives first and matches any of these conditions triggers the atomic transfer. Once $50M moves to fill a 5.0% 3-month order, the remaining $50M in variable reserves can still fill other conditional placements up to that remaining amount.
+
+###### Why Vaults Make Fixed Rates Viable
+
+- **Maturity mismatch management**: Fixed-rate loans lock capital for 3–6 months. Individual lenders typically want instant liquidity. A vault abstracts this away — only a portion of total vault capital is allocated to fixed rates, while the rest remains in variable reserves providing a liquidity buffer for depositors who want to exit. Pooling liquidity enables better maturity management.
+- **Complexity abstraction**: Allocating across fixed-rate terms (different rates, durations, markets) is a complex decision requiring active monitoring. Most lenders are not equipped for this. Vault managers absorb this complexity on behalf of depositors.
+
+###### Why Fixed Rates Enable Higher Vault Yields
+
+Fixed-rate reserves tend toward **100% utilisation** because Conditional Liquidity only commits capital when a borrower actually matches. Unlike variable reserves where idle liquidity dilutes returns, fixed-rate reserves have capital deployed only when borrowed. A 6% fixed-rate reserve at 100% utilisation pays lenders the full 6% — not the diluted rate that variable reserves with idle liquidity would produce.
+
+Additionally, longer lock-up periods command higher rates. The term structure creates yield premium opportunities that vault managers can capture through strategic allocation.
+
+###### Fill Priority
+
+When multiple vaults have Conditional Liquidity on the same reserve and a Borrow Order arrives, there is **no priority ordering**. The first vault whose `invest_to_fill_borrow_order()` instruction executes successfully fills the order. This is determined by transaction ordering on-chain, not by any queue or preference system.
+
+###### Modifying Conditional Liquidity
+
+Conditional Liquidity is **not a discrete order** that gets placed and cancelled. It is a configuration parameter on the vault — specifically, the allocation percentage set for each conditional (fixed-rate) reserve. Vault managers adjust Conditional Liquidity by changing these allocation percentages. Setting a conditional allocation to 0% removes the signal entirely.
+
+###### Worked Example: Conditional Liquidity in Action
+
+**Step 1 — Initial State:**
+| Allocation | Type | Amount |
+|-----------|------|--------|
+| Main Market USDC (Variable) | Standard | $80M |
+| JLP Market USDC (Variable) | Standard | $20M |
+| Main Market USDC 5%, 3 months (Fixed) | Conditional | $10M signaled |
+
+Capital status: $100M physically deployed in variable reserves. $10M conditionally available for fixed rate.
+
+**Step 2 — Borrow Order Matched (atomic):**
+A borrower places a Borrow Order for $10M at 5%, 3 months. The system atomically withdraws $10M from a variable reserve and deposits it into the fixed-rate reserve.
+
+| Allocation | Type | Amount |
+|-----------|------|--------|
+| Main Market USDC (Variable) | Standard | $70M |
+| JLP Market USDC (Variable) | Standard | $20M |
+| Main Market USDC 5%, 3 months (Fixed) | Committed | $10M |
+
+**Step 3 — Rebalancing (to restore target proportions):**
+The vault manager (or sync) rebalances the remaining variable allocations to maintain the intended 80/20 split.
+
+| Allocation | Type | Amount |
+|-----------|------|--------|
+| Main Market USDC (Variable) | Standard | $72M |
+| JLP Market USDC (Variable) | Standard | $18M |
+| Main Market USDC 5%, 3 months (Fixed) | Committed | $10M |
 
 #### 3.2.8 Sync Allocations
 
@@ -405,9 +554,31 @@ Every vault management action follows a consistent pattern:
 - Security considerations
 
 ### 4.4 Reserve Types
-- **Floating Rate Reserves**: Variable interest rate, standard allocation
-- **Fixed Rate Reserves**: Fixed interest rate for a set duration, supports conditional allocations
-- How reserve type affects allocation options and vault behavior
+
+#### Variable Rate Reserves
+- Interest rate floats dynamically based on supply and demand (utilisation curve)
+- Vaults allocate to these via **Standard Allocation** — capital is physically deployed
+- Capital can be withdrawn at any time (subject to utilisation — if reserve is fully borrowed, withdrawals queue)
+- Yield fluctuates continuously
+- This is where most vault capital lives day-to-day
+
+#### Fixed Rate Reserves
+- Offer a fixed interest rate for a defined duration (e.g., 5% for 3 months, 6% for 6 months)
+- Vaults allocate to these via **Conditional Liquidity** (see §3.2.7) — capital is signaled but not committed until a Borrow Order matches
+- Once matched, capital is locked for the duration of the fixed-rate term
+- Tend toward 100% utilisation (capital only enters when borrowed), producing higher effective yields than variable reserves with idle liquidity
+- Longer durations command higher rates (term premium)
+- A single market can contain both variable and fixed rate reserves for the same token
+
+#### How Reserve Type Affects Vault Management
+| Aspect | Variable Rate | Fixed Rate |
+|--------|--------------|------------|
+| Allocation type | Standard (committed) | Conditional (signaled until matched) |
+| Capital deployment | Immediate, physical | Atomic at match time |
+| Yield behavior | Floating, continuous | Fixed for loan duration |
+| Liquidity | Withdrawable (subject to utilisation) | Locked for term duration |
+| Utilisation | Varies (idle capital dilutes yield) | Tends to 100% (capital only when borrowed) |
+| Manager action | Set weight, rebalance | Set conditional %, adjust as orders fill |
 
 ### 4.5 Vault Lifecycle
 - Creation → initial allocation setup → ongoing management → (future: deprecation/closure)
@@ -437,6 +608,12 @@ Every vault management action follows a consistent pattern:
 | First Loss Capital | Manager-deposited buffer that absorbs bad debt before depositors incur any loss |
 | Lockup Period | Duration for which First Loss Capital is locked and cannot be withdrawn |
 | Bad Debt | Shortfall from borrower defaults or liquidation failures in underlying reserves |
+| Conditional Liquidity | Capital signaled as available to fixed-rate reserves while remaining deployed in variable-rate reserves; commits atomically when a Borrow Order matches |
+| Borrow Order | A borrower's request to borrow at a specific fixed rate and duration; triggers Conditional Liquidity when matched |
+| Variable Rate Reserve | A reserve where the interest rate floats based on utilisation |
+| Fixed Rate Reserve | A reserve offering a fixed interest rate for a set duration |
+| Term Premium | Higher rates commanded by longer lock-up durations in fixed-rate reserves |
+| Utilisation | The percentage of a reserve's deposited capital that is currently borrowed |
 | Squads | Multisig solution for Solana; used for multisig vault administration |
 
 ### B. Settings Quick Reference
@@ -468,10 +645,10 @@ Every vault management action follows a consistent pattern:
 | Unallocated Cap | Allocation Settings | Liquidity Buffer |
 | Allocation Whitelist | Allocation Settings | Whitelisting |
 | Invest Whitelist | Allocation Settings | Whitelisting |
+| Conditional Liquidity % | Allocation Settings | Allocation Types → Conditional |
 | Reserve Verification | Allocation Settings | Add Reserve |
 
 ### C. Open Items / Deferred
-- Conditional allocation details for fixed rate reserves
 - Advanced settings complete parameter list and defaults
 - Vault Stats tab — full metrics definition
 - Managed farms integration (separate from vault farm)
