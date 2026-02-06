@@ -1,0 +1,1783 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2868
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica-Bold;\f1\fswiss\fcharset0 Helvetica;\f2\froman\fcharset0 Times-Roman;
+\f3\froman\fcharset0 Times-Bold;}
+{\colortbl;\red255\green255\blue255;\red36\green36\blue36;\red0\green0\blue0;\red24\green24\blue24;
+}
+{\*\expandedcolortbl;;\cssrgb\c18824\c18824\c18824;\cssrgb\c0\c0\c0;\cssrgb\c12157\c12157\c12157;
+}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\deftab720
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f0\b\fs32 \cf2 \expnd0\expndtw0\kerning0
+\outl0\strokewidth0 \strokec2 Dawid Snyders:
+\f1\b0  There's no overlap between what's going on in vault settings and what's going on in allocation settings. Allocation settings only manages what which allocations this vault is allocating into and the settings for those allocations. That's it.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So it's it's two separate things. Not cuz I was thinking the the allocation is within the\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh yeah but the idea is here that we display stuff per reserve in allocation and that am and\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  vault.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  performance are like global vault things in general we can perceive it that there are two two big part like vault config and allocation config.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  A aum and performance AUM and performance. Pause. f****** hell. AUM and performance fee should not be here.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  H. No,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  It's the wrong It's the wrong arbitrary.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  it's not. I I know it's the it's the wrong uh\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  It's arbitrary. Yeah. So, please just add the This is the thing like we It's very difficult to review something when the right stuff isn't\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:07:10
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  allocation.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  here. So, just quickly add the right stuff so we understand what this looks like. Okay, there you go. and allocation cap right\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  But that's that's for what? And what what are those? Oh,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  it's you said\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  is uh yeah alloc unallocated.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  an unallocated weight and an allocated. Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Unallocated.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  yes\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  sorry.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah. Yeah. Okay. Okay. Allocated makes sense.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Sorry.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Um and and this one here as well unallocated cap as well,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  okay\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  right?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Um so\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  and this is in a this is in a token value.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Everything is token value everywhere.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  No, an allocated weight is weight. It's not it's not an allocated weight is not token value.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  What? Oh, yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  It's a weight.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah, that's Yeah, I mean no dollars.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:08:10
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah. Yeah. Okay. So,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  What I'm trying to say is if we add stuff now in the future,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  yeah. Yeah. Yeah. Go ahead.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  we're probably going to add some more settings, right? It just it's going to look off. So we'll have to rethink cuz now what I would try what I was trying to do is I was adding some more details of the the table so you can analyze a bit more at the same time so you can change stuff.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Mhm.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So, it's either we we go with like uh make it more uh what do you call it more setting like or we go with more analytic vibe. And right now I think I'm I'm mixing both which confuses me because this is more of an analytics than it is\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Oh.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  settings.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  M not really. I mean the total is very relevant in there in my opinion.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  It definitely is. Yeah, we just have to re organize so it doesn't look like it's uh right now it's a mix of\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:08:54
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  stuff.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Well, I don't understand what you mean by it's a mix of stuff.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Oh, basically. So, my main issue is literally just this. We we we have the settings here. If we add more stuff, it's going to look like this. And right now, the reason we have this one is to just just to tell you your allocation weight and how it's split. And then you have manage allocation and then you have this allocation where you can see uh some stats about the uh the overall allocation in general and then you can change those individually.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Uh so it's so what's happening right now is you come\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So, why is that an issue?\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  you see what's going on and then you want to change stuff right and I think\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Mhm.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  that's what's happening right now. So here it's purely setting here it's both. you can see stuff and you can change stuff at the same time. And the fact that we have all this spread out is just it's in general just uh it's not really scalable in the future if you're going to do that.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:10:02
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Um so we have to rethink the structure.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. So,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  What do we really want in this allocation settings? Do we want the setting to be settings to\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  we we need to we need the ability to see all the\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  be\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  allocation info, allow people to manage individual reserves, allow them to set unallocated weight and unallocated cup cap,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Mhm.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  and allow them to manage all allocations at the same time.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Mhm.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So, this page is achieving exactly what it needs to achieve right now. There's no need to rework this page.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I think one of the concern is that if we add more fields so I think it will this this is very\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So if we add more settings.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  tailored to two fields.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  it's going to look really really it's not scalable at\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  all.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Mhm.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  For example, the vault settings,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  this one here is super clear.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:11:01
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  You know what's going on. You know this is purely settings and you can do what you want to do. This one is also super clear. You know that this is analytics and you know, okay, this is how things going to look like. And if you want to change it, we definitely need the the action here. So you can click this one and it will list you. But uh this one is not super clear.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  But I I don't understand what you're saying is not super clear.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Basically this this part here uh this this part here is a bit off. We have to uh and we're going to have we will be adding analytics as well. Uh vault anal analytics. So in the tab it will be four tabs and\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Uh no, I think uh I think analytics analytics and um\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  um\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  and um\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  application.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  no image. Let me just quickly do this. What What are What are our current settings?\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:12:15
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  No, I think this this is actually the correct button. Um well, no, the the overview will um I think overview probably becomes analytics. I don't think we need four tabs here. Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Right.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I I I don't I don't think we need overview and analytics. I think there's going to be too much overlap.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah, I agree.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah. So,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  we should have allies in the same page as the\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  so yeah, I think that this what what you've done here basically fits into Vault Analytics.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  here.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  We just add more stuff basically.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  I agree. Um should we have like a subtab where you can click it's it's default by all and then you can click allocation or like\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  old in general then maybe can\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  No, I I don't think so. I think you can if if we want to we can we can like have sections on the page.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  uh\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:13:10
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So like add a you know add like a a type of add a header like the you know and then that indicates there's another section starting now. But um I I don't think we need subtabs.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I I think that's unnecessary.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Uh yeah,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um yeah,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  I guess we'll have to see how much we're going to put here. Anyways,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  but yeah,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  that's good.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  like you could just could just do um we just do like basically\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Just\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  this and you know allocation uh analytics whatever you know whatever um you you get my\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah, that's uh good.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  point. So I don't think we need tabs here. I I just think we we basically ex we keep building this page um adding more analytics,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  adding more data and then it's fine.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  perfect.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um regarding this uh so I mean the the the the\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  vault settings page um and that's the main reason for this call will will require\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:14:09
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Mhm.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  way more settings than we have right now. Um so we'll we'll need to expand that.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um this allocation settings are there are there other settings besides unallocated weight allocated cap silver?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  uh for cap for allocation specifically.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  No\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  What other global allocation settings are there besides this analoc app and allocate\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  the\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  weight?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  forations.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  admin.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Allocation admin is not relevant to allocation settings.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  think\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Different thing forget about\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  you can imagine allocations as a different part of the of the product.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  it.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Like allocation is more like the trading strategy and the other ones are just\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah. Yeah.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  configs.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  like P just because it has the word allocation in it does not mean it belongs in the allocation\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  page.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  got it. Got it.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh I think specifically for allocations these are everything we have at the\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:15:10
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  moment. We'll have one more extra thing which is uh on reserves. Are you aware David of the white listing mechanism?\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  the whitelisted reserves. Oh, I mean we'll we'll have whitelisted reserves.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah. So firstly in that list we should display if that reserve is whit listed or\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  not.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  can you quickly explain the white listed reserve?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh basically the like from a security point of view what you can do if\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  you if you manage to steal the pub key the private key of a of a manager you can create a David market add the random coin with a huge oracle like bitcoin oracle uh you can you are the owner of that coin so you can mint it uh make the vault allocate into it and you borrow what the vault allocates so you you steal all the Uh and in order to be able to prevent that we as the program admin have\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  a have a function that we can whitelist the reserves meaning if you want uh like they are verified.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:16:30
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  So we can so we whitelist only the reserve that we know like in the main market,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  prime market and so on. And the vault manager has will have a functionality that should work in this page where they can decide to use wide list whit listed reserves only and at that point u they are only able to invest in whit listed reserves.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  They can still disinvest on not wide listed uh if they still have any\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  allocation but they can uh just disinvest and decrease the weights and the caps for uh not whit\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. So,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  listed.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  pause there. Basically, and and we we determine which reserves are whit listed.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  We determine which reserves are white listed. Uh the managers say if the vault accepts only\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. We should we should definitely we should we should definitely call this verified reserves\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  white\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  rather than whitelisted reserves. I think that makes more sense. Uh but I'll I'll discuss that with Morris.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:17:33
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. So from a a from a allocation management point of view then um is it a sorry is it a like a a boolean toggle that says allocate to white whitel listed reserves only and then yes or no.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh yes. Let me see if there's one or two\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  fields.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I think then Abdi um what would make sense to me here is if we instead of having these side by side uh\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Mhm.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I I think this this solves solves what you what you want solved as well is we just we just do we just do this basically and we so we use the same um we use the same setting you\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Uh structure.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  yeah same structure as what you introduced here. Um, we just do the same thing.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  And obviously the manage allocation button doesn't have to be massive. It can just be right aligned here. Um,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Yeah, I like that idea.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  yeah,\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:18:39
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Let me Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I I think that works because then then it\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah, that is nice because that way we can also add more settings.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  scales. Yeah,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Nice.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I think that works much better.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Amazing. Um, quick question. Are are they able to see the uh whit listed um reserves or\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So yeah, no. So, so here's how here's how it works.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  is\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um, whenever a reserve is listed from now on,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Mhm.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  we need to indicate there needs to be like a little tag that says verified. Okay? So, every every reserve here, you can put on every reserve here,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  verified. Okay? Um and uh you can on one of them you can have an unverified tag. Okay. You can you can go and um maybe we do we still have this on top.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Let's see. Yeah. Just just just add a at a verified reserve thing.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:19:44
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um and you need it you need it here. you need just just one other thing. There's still lacking a a significant part of this flow which is adding reserves.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Oh yeah. Yeah. Um yes.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  You're aware of that.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Um let me uh do\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I think in the context that we have multiple reser we can have multiple for market now maybe we should call that\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  that.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  ad reserve instead of add\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Ships.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  it should say\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Can we quickly go through the the current uh at market and just see if what we need to change from that one\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  We we discussed this at at length in our initial walk through.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  if\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I'll just get from the transcript.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Basically\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  All good. Um we we I don't want to discuss it now. We we went through it in a lot of depth. Um I'll I'll see.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:20:41
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I actually a brief for this. Um,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  very quickly it's just that you'll pass the you copy paste the reserve address rather than market as it is\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  see\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  now. Uh and besides the existing fields you also have to say if it's conditional or not.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Um, I'll have to look into it properly. Yeah. Um, okay. Okay. Okay. Got lost in all the changes that was happening.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  All good. Um, here is the here's the flow. Um, hold on. Let's me add in linear. It's going to be easier. Uh, do you have a linear a linear ticket for this right now? Yes. Here we go. No, wait. Fix. No, you don't. Right. What do you\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Um let me share the one uh uh Anna shared with me.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  No, no.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Copy link.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I'm all what I'm asking is do you do you have a learning task for this right now?\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:21:58
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Do you have an issue for\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Uh no. Oh no. No.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  this?\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  I don't think I have\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  actually.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Let me check what you sent. Yeah. Okay. This is fine. Uh overview. I'm going to add a add add a brief for this here.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  nice.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um management page analytics um data um settings and tag. Hold settings. Uh, application application settings manage location settings. Okay. Hold on. Uh flow. f*** it. Let me just copy this section. Um location settings. Here we go. Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Appreciate it.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  panel. All right, I'm going to create an issue for this roll though. It's going to be easier. Okay. Uh, you say you don't have issues for this to be modified. Okay. No, you don't. Uh, let me quickly add an issue then.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:24:37
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  How do I add an issue from this page? That's crazy. Doesn't allow me. Okay. Uh location management What is the project called again? Sorry guys,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Huh?\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I'm going fault management.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Where is it?\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Manage.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  No, all good.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  All good. Uh,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  fault management. Okay. I added an allocation management um issue\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  very good.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  and\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  um and the context is in there. Um, you'll see 4.2.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Good stuff.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  4.2 two is the um is the one that you that is relevant to adding a market or reserve. We we don't need to discuss it now. Um I I think there should be enough enough context in there.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Uh but if you have any questions then you can just\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  p Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Lovely.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um all right. What the main thing I want to discuss for now is so you had a load of comments for stuff that needs to be added.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:26:09
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Minimum deposit amount. Yeah, let me let me copy that um so we can just see it without looking at the\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  comments here. Okay, let's um let's talk about these um unallocated weight unallocated cap is in allocation settings. That's fine. Okay, let's look at these. Can you just zoom in on that update? So, or S just S just go to the file.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Also\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um, that's going to be the\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah. Yeah, I think that would be best.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  easiest.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  You just follow us. Sure. We have\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  need to open.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  um\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yes,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  please.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah. Perfect.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  and then just click. Do you know how to follow people on Figma?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  No.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Uh so on the top right there's like icons of people.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So you can click on one of those.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  just just click on do just click on um my name up there and just quickly look at\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:27:19
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  it.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Orange\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Okay. Yes. Yes.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yes.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um so um say a lot of fields are missing.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  one.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  You say these can go into an advanced tab.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah, those are generally oneoff. I think lookup table I hate it and I think we should remove it. So don't use it at all and we should do do it on the back end side and not make managers care about it.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh mean deposit amount I think is the one of on vault create maybe you can ask it on\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  cool.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  vault creation and suggest some value there like 10 lamp ports or something like that. Basically that that's just a small security caution that if you find any s***** exploits with like stealing one lamp, you cannot do that with a very tiny amount and basically doubling your money in each step.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah. Okay. Uh, give me a sec.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Hello.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:28:55
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Hello. Can you hear me?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  It's not not great quality, but yes.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Oh,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  How about now?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Now it's\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. Um,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  better.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  so min deposit amount you say is just when um creating a new\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I think if they set it on creation,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  uh\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  they shouldn't update it ever unless they want something very specific like they want whales only. So they can set it to 1 million or anything like that.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. So, should we provide the option to adjust it or not?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  We should provide like an advanced option to update it and ask for it in uh on vault creation and suggest them on good value like 10 L ports or something like that. I can confirm the value.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. Okay. Need creation as well. Okay. Um, withdraw penalty. Uh, are we just going to set defaults for all of this?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I think we can\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:30:06
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I mean, I assume I assume these this will always be zero by\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  set uh we want\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  default.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  it to not be zero but be very something very very small like one beep or two beeps something like that.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  It's again it's mostly it's mostly a security thing because if again if you find like a very very\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  small exploit that make you steal some L ports at each iteration that should offset it and\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. Um, do we want them to set this? This is a this is a type of toggle where you can you can set the amount and then you select if it's lamp. You select if it's lamp port or BPS and then you set the amount. So, you don't need it's not too\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  No, you need you need both. There are two different fields. You set the lamp ports and the beeps and whenever a withdrawal happens the smart contract takes the max out of them. So if you want to take 10% let's say in bips or and 100% in L ports whichever is bigger on a specific withdrawal will be taken.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:31:11
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay, we we should mention that as well. Um, okay. So, first of all, you you are happy for all of these to be in an advanced settings view.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yes.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. Um round withdrawal penalty withdraw. Um that max is taken uh for between these two. Okay. min invest amount.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  as as it suggests.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  it's just the token\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  amount.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  like the if uh if there is less money than that to be invested in a single invest instruction. So let's say there's some random dust left over in the vault. If it's below than that, the invest won't work.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. Are we setting defaults for this as well?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh, generally I didn't I didn't want to bother curators to set it so it's zero for most of them or all of them, but it may be useful to have it non\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  zero.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So zero by default. Uh, first loss capital form.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:32:35
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  This is talking.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  and there is one more that I missed. Uh that's that's a special farm that uh it's not currently used. It's basically a farm where the manager can deposit and lock their funds into that farm so they prove that they have skin in the\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  game.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah. I I know that one. But are we do we need to add it here?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh the manager has to set it up. So we can we can do the same as the as for the normal farm I think uh like display that it's not set and have a button for them to set and when they press it it gets created.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. But they there needs to be a button for them to create it and there needs to be a button for them to and then they need to be able to deposit in it and they need to be able to see the balance of the farm.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I I guess.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So this is a three-step flow.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:33:39
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  This is a three-step flow. Basically,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Oh,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  you have you have one um uh setup form. Setup form.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  maybe in this in this part of like in this advanced settings they can just set it and then if\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  it's set we can display like a special tab or something like that where They can press and see details like how long it's left, how much they have and all of that. But I'm not good at UX stuff. I'm just suggesting\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  No, give me a sec.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Can we also just add the this is in talking about right just in every field. It would be nice if you could just add the uh the value type.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  the the unit if it beeps token SL ports all\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Sorry,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  that\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Uh yes, exactly. So I just wanted to sign I know kind of feel\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  everything it either beeps or lamp ports and we convert on the back\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay, there will be a separate tab for farms in general, right?\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:35:07
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  I need to understand what farms is actually.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I don't think for farm in general but for maybe for this first loss capital that's what I have in mind\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Uh, I was thinking of a a\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  but I'm\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I was muted.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  page.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Uh, this this is a completely this this form is completely separate from other forms.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  This is Yeah,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So, it's not.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  this is this is completely different.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Basically,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Got it.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  that is a farm that allow that makes the manager be skin in the game and lock their funds\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  there, but it's just for the manager.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  So, the users don't see details. They'll probably see something in the UI to make it visible, but not as complex as here for the manager.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  okay. But you what you you you say that they that you don't think it's necessary for them to be able to see\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:35:54
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  balances like the balance of the form,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I think I feel\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  how much money is in the form and manage manage the money in the form or\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  like setting it and managing it should be two different things.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  what?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  So this one this in this advanced part you can just press a button and it gets created and it's default and so on and then you have a special tab for it where you can see the term you can see how much money you have uh locked and all of that.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Uh but why what do\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  And also have a button to to lock more extend term and so\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  you Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Uh,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  on.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  But you you are saying a bunch of stuff that we don't know.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  so you can do more.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So you need to tell me and Abdi what are all the parameters that can be set and that needs to be displayed for first loss capital form. So for now, ignore this of the\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:36:54
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  uh you can just you can just have like display it and have a uh a button to set it up and then I\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  um\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  look at all the fields cuz they hide the detail I have to double check exactly I don't remember all the details\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  nice.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So what I'm saying is don't even add it in the UI for now. We can we can we can figure out what this flow looks like once we have a confirmation on what all the\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  parameters are.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  sounds\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. Uh, allow allocation only in whitelisted reserves.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  good.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Allow invest only in whitelist reserves. Okay. Um,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  allocation\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  these two from my point of view belongs in the in the um in the allocation page.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  time.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah. Uh, allocation tab. Yeah.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Let's do let's do this as well. advanced settings and then manage allocations. Yeah, this this is very much belongs in the allocation tab.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:37:51
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um minimum invest amount with penalty deposit needed. Okay. So basically update uh you need to add a a advanced\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Mhm.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  settings. Did did um did update cover all the all the necessary settings on this page? already or so so what you've commented till you are the only things that need to be added.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh yes, I think we've covered everything that has to be added.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay, good stuff.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  There was some feed settings by the way and I don't remember what it was but you guys told me there was two other feed settings that were supposed to be here more\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  M no.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  backend more\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Oh yeah,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  hidden.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  if if you want to put the withdrawal penalty there as setting as well, I guess, but it doesn't really make sense to be there because I think those fees are what managers are getting and those withdrawal penalties.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  That's why they're called penalties and los fees are what are really posted into the into the vault.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:38:57
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  So they get shared.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  in the\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I think I think it's I think it's as simple as um add a\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  advance\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  toggle here that says view all settings and then these ones are just below that toggle.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. In uh in its own separate like box here or do you want\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  No, no.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  it\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I think I think just just within the um Oh, I I I understand what you mean.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  there?\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  No, I think um I to be honest, let we can we can just add another box. Uh yeah,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  just just add another box and call it advanced settings and put all of this stuff in there.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  That's fine.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Okay. Let's do that.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah. Sounds\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. Um then uh the the the flow\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  good.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  for creating a new vault uh you still need to show what that looks like.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:40:09
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um, so from from the vault page,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Uh yeah, I'm going to add that as well. So the only thing that we wanted to add there add that add there was the uh the receipt token name as well.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  receame and minimum deposit\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Uh but I see yes that's the we'll add those two\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  amount.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  now.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  See perfect. So those two will be added there.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Um\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Are those the only Are those the only settings that they need to need to do\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I think I\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  nice\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  their\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  think we can add most of the advanced in there as well. Maybe also in an advanced tab and we set some reasonable defaults and if they don't want to explicitly update that they set it right at the first time and they it\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. And fe what about fees?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  remains\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Should they not also just set that right there? Should we not just have a proper create vault flow rather than like\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:41:04
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  like on boarding.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  like you set your you set your AUM fee, you set the performance fee, you set the vault info stuff, and then we we can have the advanced settings in there as well.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Enough.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  And once they create once they create vault, it directs them it like directs them to their vault page immediately. And um from here they can manage the admin stuff. It doesn't make more sense and manage manage admin and manage allocation.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Good stuff.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah. Yeah. Makes sense to to have them in\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  And they can also add uh able to add more history from there as\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah. Yeah. Yeah,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  there.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I think that I think I think that works.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  well.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Able to what? Add preserves.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Add add Yeah. reserves.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  No, no, no.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  No,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  We you it's just the vault settings.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  just Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Then then it lands them um on this page.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:42:05
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um and on this page, they can uh manage all their stuff.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  We could we once they land on this page,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  we can also prompt them to manage allocation settings, but it's pretty self-explanatory. Just keep in mind the these aren't um like it's not the first time these guys are using DeFi,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  right? So,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  keep keep the target audience in mind.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Nice.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So, having like a boarding for\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So uh for to-dos\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  that\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  then um let's start from the from the the first page which you need to add here.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Cool.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So you need to add the vault list page here and you need to create the um create vault flow um which is a nice and rich uh experience with with all the settings and stuff like that.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Uh just quickly go through that.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  um\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Uh so we'll have the the main things they want to change and then we allow them to change the advanced stuff as well\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:43:09
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  fees and advanc\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  but it's not uh okay so we need the mandatory fields\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  settings.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  and then we have some additional fields that they can uh change.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Uh yes.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So uh yeah should we uh Okay, got it.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So your man let's let's let's let we can we can type it out so it's easier. Um so for create vault\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  um okay create vault flow um vault name uh receipt token name Um minimum deposit. Uh what else is\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  I will check.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  see?\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  It's Yeah, basically looks like it's only those\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah, it's just V token obviously. Um okay. All token vault name C token name minimum deposit. Um say\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Do you want the picture thing or should we drop that for the receipt token?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  again\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Do you want to allow them to add a symbol for the vault receipt the receipt token? Okay, we'll\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  no\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  drop.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:44:48
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So, uh,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  that's what that's what that's what that's what receipt token name\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  let me just screenshot this one real quick. Okay. Uh, I saw this one from a long time ago. Uh, the initial flow, but we ended up removing some stuff from it. Uh, so here there's like a ticker and a name, the full name.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Why did we remove these?\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  I don't know. I was saw it from the initial designs.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So, yeah, I'm talking to Sie.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  so sorry. Can you repeat?\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Go look at what AB pasted in here. This was the initial thing. What we removed receipt to ticket and receipt token name.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah. What was the question?\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Why did we remove these things? They were initially there. Should we just add them back\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  uh when when we need them because it's the token that the\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  in?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  user that the user who are depositing are getting and if they if they are not set they see a random milk\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:45:48
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay, cool. Um,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  and also on these two we can suggest automatically some name like\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  it should be K USDC dash and then they may put something like\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Uh,\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I I think we should just hardcore hard code that part.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah, the thing is to to harm general they want to put their name. So they\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah, but I mean we should hardcode the first part.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  need\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So K deposit token symbol dash and then they can edit whatever comes after\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  that.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  so it's going to be prefix prefixed with K\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  You get it?\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  regardless.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  It's always going to repeat with K. Um, so hardcoded start is\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh let me check the existing ones so they are consistent.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  K.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I think the existing ones are KV on vault because we have also liquidity.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Is it KB?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  One second.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah, it's KB. So deposit token\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:47:03
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  symbol.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  And this they can change. Oh, no.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  No.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So hardcoded hardcoded start KV deposit token symbol.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  it's KV and KV dash.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah. So it's KV deposit token symbol dash and then it's editable.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  So\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Uh maybe after the after this this is pretty restrictive on the length.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  you\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  So maybe no dash after the after nothing just KV USDC blah blah blah because you can have more than Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  what I'm saying?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Okay. Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Oh. Oh, you don't want to dash there.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I don't want the dash because on the thick especially on the thicker uh you can have up to eight characters or something like that.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So they can change they can remove this and be\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  like\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  it'll they so that part is hardcoded and then there's this part is\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  okay okay and\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  editable.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  um so you can okay I see so we're not going to have the dash.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:48:17
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So it will basically it will look a bit weird\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Not by default. If they want to put a dash,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  though.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  they can put a\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah, that's fine.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  dash.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  That's fine.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Okay. Got it.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Got\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  it.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I think we should add the dash just so there's always consistency because if some people are going to have a dash,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  some people not, then that's weird.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah. I like the dash online, but I I can see what you mean by being uh we're taking one character away from them.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  don't have strong\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  ideas.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  we had the dash. We had the dash. Okay. Uh, so vault token,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Good.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  vault name, receipt token ticker, receipt token name. Uh, then you have fee settings, performance fee,\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  And\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  amum fee, then you have advanced settings, min deposit amount, withdraw, blah blah blah blah.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:49:14
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  for those I'll have to provide the default\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  And this is the yes and fee settings as\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  values.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  well.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um and then\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Well, for fees I think they should start they should start at\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  this\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  zero.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  yeah zero by default. Um uh sie to confirm defaults. Okay, good stuff. And then uh upon creation we redirect to vault page to newly created vault page.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Since there will be uh analytics maybe they open the allocation page straight away.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Allocation\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yes.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  setting.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  New vol page allocation settings tab. Okay, good stuff, man. Okay, so step one uh add this. So, so basically we we need to get to a point now where we have the flow where we can can\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  see the flow. Um so add this create vault.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Mhm.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um add the advanced settings stuff as we discussed here.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:50:33
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um um\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  All the changes in comments as well.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  um yeah\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  I'll go through them and fix that.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  the need you need to add the um verified settings thing.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Mhm.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  You need there's a few there's a few settings to be added to the allocation settings page as well. Um so it's verified and\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  uh say that again the unverified uh verified uh\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  unverified.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  reserves, right?\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yes.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um then there's allow allocation the the allow allocation only in whitelisted allow invest only in whit listed reserves. Both of those can go into the allocation page. Um we need a button on the allocation page to sync allocations. We don't know that. That's that's important. Um\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  sync applications. Yeah.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Um is that after you change the settings or you can do you can do that anytime.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  I\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  anytime anytime and any anyone any anyone can do it as well.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:51:34
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  can.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  I can I can go and sync allocations on\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Okay. This Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  right?\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Yeah, I know. Can I show this?\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Oh, sorry\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Okay. Um yeah so you can you can sync there needs to be a button to sync allocations.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  about\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um there's another there's another setting in the allocation tab that we need uh that I that I cannot Oh no, we we discussed it. Okay. Um All right. Uh I want to see the the Okay. Yeah. Then you can just look at all the other comments up and see if there's anything that was missed.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay, one thing um is the uh this comment here that you go both\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Um,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  of you said uh is the that we can have multiple different reserves and markets in here. I'm just trying to understand reserves I mean multiple\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  no the the thing. Yeah.\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:52:39
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\sa106\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah. So,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  reserves.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  basically it can be it can be this. It can be the same. This is wrong by the way. This this should be like main market for example. Um,\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  and there can be another main market that deploys into USC fix\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  rate, another\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  Basically now all the UIs assume that we have one reserve for a specific token per\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  reserve.\uc0\u8232 
+\f0\b Silviu Troscot:
+\f1\b0  market but this won't be true anymore. So when you say JLP market is not clear if it has five USDC reserves which one of them it is.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  That's why that's why it's very important for you to build and this is another priority build the ad reserve flow.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Yeah, I need to uh look into that one probably as well actually. Um uh uh I'm trying to understand.\uc0\u8232 
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\uc0\u8232 
+\f0\b Abdirahim Arrale:
+\f1\b0  So the um um so so the only the thing that that can be verified is the reserve and not the market or is it the opposite?\uc0\u8232 \'a0\u8232 \'a0
+\f2\fs24 \cf0 \strokec3 \
+\pard\pardeftab720\sa53\partightenfactor0
+
+\f1\fs42\fsmilli21333 \cf4 \strokec4 00:53:40
+\f3\b\fs28 \cf0 \strokec3 \
+\pard\pardeftab720\partightenfactor0
+
+\f1\b0\fs32 \cf2 \strokec2 \'a0\
+\pard\pardeftab720\partightenfactor0
+
+\f0\b \cf2 Dawid Snyders:
+\f1\b0  Yes. Yes.\
+
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay.\
+
+\f0\b Dawid Snyders:
+\f1\b0  Yes.\
+
+\f0\b Abdirahim Arrale:
+\f1\b0  So reserve can be verified but not the and we're going to if we have multiple reserve we're just going to split it as you did just as you did right now.\
+
+\f0\b Silviu Troscot:
+\f1\b0  Yes.\
+
+\f0\b Dawid Snyders:
+\f1\b0  Yes.\
+
+\f0\b Abdirahim Arrale:
+\f1\b0  So it's going to be markets and then it could be like multiple markets.\
+
+\f0\b Dawid Snyders:
+\f1\b0  Yes. Literally exactly what I did. Exactly what I did.\
+
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. Perfect.\
+
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\
+
+\f0\b Abdirahim Arrale:
+\f1\b0  Okay. That's good. That's good man. Good stuff. Good stuff. Okay. The ad reserve stuff. I'm going to look into the stuff we talked about previously,\
+
+\f0\b Dawid Snyders:
+\f1\b0  Yeah.\
+
+\f0\b Abdirahim Arrale:
+\f1\b0  but uh if I have some questions cuz last time I was overwhelmed with all this stuff. Um I'll uh let's go. I'll send you guys some uh\
+}
