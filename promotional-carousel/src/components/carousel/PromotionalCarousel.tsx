@@ -1,11 +1,12 @@
-'use client';
+"use client";
 
-import { useState, useEffect, useCallback } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Announcement } from '@/types';
-import { CarouselSlide } from './CarouselSlide';
-import { CarouselDots } from './CarouselDots';
-import { SeeWhatsNew } from './SeeWhatsNew';
+import { useState, useEffect, useCallback } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Minimize2 } from "lucide-react";
+import { Announcement } from "@/types";
+import { CarouselSlide } from "./CarouselSlide";
+import { CarouselDots } from "./CarouselDots";
+import { SeeWhatsNew } from "./SeeWhatsNew";
 
 interface PromotionalCarouselProps {
   announcements: Announcement[];
@@ -14,6 +15,7 @@ interface PromotionalCarouselProps {
   onSlideClick: (announcement: Announcement) => void;
   currentSlide: number;
   onSlideChange: (index: number) => void;
+  onMinimize?: () => void;
 }
 
 export function PromotionalCarousel({
@@ -23,6 +25,7 @@ export function PromotionalCarousel({
   onSlideClick,
   currentSlide,
   onSlideChange,
+  onMinimize,
 }: PromotionalCarouselProps) {
   const [isHovered, setIsHovered] = useState(false);
 
@@ -31,7 +34,9 @@ export function PromotionalCarousel({
   }, [currentSlide, announcements.length, onSlideChange]);
 
   const prevSlide = useCallback(() => {
-    onSlideChange((currentSlide - 1 + announcements.length) % announcements.length);
+    onSlideChange(
+      (currentSlide - 1 + announcements.length) % announcements.length,
+    );
   }, [currentSlide, announcements.length, onSlideChange]);
 
   // Auto-rotation: 5s timer, pauses on modal open or hover
@@ -47,23 +52,36 @@ export function PromotionalCarousel({
     if (isModalOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') nextSlide();
-      else if (e.key === 'ArrowLeft') prevSlide();
+      if (e.key === "ArrowRight") nextSlide();
+      else if (e.key === "ArrowLeft") prevSlide();
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [isModalOpen, nextSlide, prevSlide]);
 
   const activeAnnouncement = announcements[currentSlide];
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: 'easeOut' }}
-    >
-      <SeeWhatsNew onClick={onOpenModal} />
+    <div className="w-full">
+      <div className="flex items-center justify-between pb-1">
+        <SeeWhatsNew onClick={onOpenModal} />
+        {onMinimize ? (
+          <motion.button
+            type="button"
+            onClick={onMinimize}
+            className="flex h-8 w-8 items-center justify-center rounded-full text-text-muted transition-colors hover:bg-bg-elevated hover:text-text-primary focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--kamino-primary)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--kamino-bg-base)]"
+            style={{ borderRadius: "var(--kamino-radius-xl)" }}
+            aria-label="Minimize carousel"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            <Minimize2 size={16} aria-hidden />
+          </motion.button>
+        ) : (
+          <div />
+        )}
+      </div>
 
       <div
         className="relative"
@@ -82,9 +100,8 @@ export function PromotionalCarousel({
       <CarouselDots
         total={announcements.length}
         current={currentSlide}
-        accentColor={activeAnnouncement.accentColor}
         onDotClick={onSlideChange}
       />
-    </motion.div>
+    </div>
   );
 }

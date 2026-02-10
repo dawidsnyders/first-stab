@@ -3,11 +3,11 @@ import { Announcement } from '@/types';
 export const announcements: Announcement[] = [
   {
     id: 'sp500-exposure',
-    logo: '/logos/sp500.svg',
+    logo: 'https://cdn.kamino.com/assets/spyx.webp',
     headline: 'Get 2x S&P500 Exposure',
     subtitle: 'Leveraged index vaults now live',
     stat: { label: 'Leverage', value: '2x' },
-    accentColor: '#3b82f6',
+    accentColor: '#ef4444',
     cta: {
       label: 'Explore Vault',
       action: { type: 'modal', target: 'sp500-exposure' },
@@ -27,11 +27,11 @@ export const announcements: Announcement[] = [
   },
   {
     id: 'prime-boost',
-    logo: '/logos/prime.svg',
+    logo: 'https://cdn.kamino.com/assets/prime.webp',
     headline: 'Multiply PRIME for Boosted RWA Yield',
     subtitle: 'Stake and earn boosted rewards',
     stat: { label: 'APY', value: '12.5%' },
-    accentColor: '#10b981',
+    accentColor: '#8b5cf6',
     cta: {
       label: 'Stake Now',
       action: { type: 'modal', target: 'prime-boost' },
@@ -55,7 +55,7 @@ export const announcements: Announcement[] = [
     headline: 'Collateral Swap Now Live',
     subtitle: 'Swap collateral without closing positions',
     stat: { label: 'Downtime', value: '0' },
-    accentColor: '#8b5cf6',
+    accentColor: '#49AFE9',
     cta: {
       label: 'Try It',
       action: { type: 'modal', target: 'collateral-swap' },
@@ -75,11 +75,11 @@ export const announcements: Announcement[] = [
   },
   {
     id: 'gauntlet-vault',
-    logo: '/logos/gauntlet.svg',
+    logo: 'https://icons.llamao.fi/icons/protocols/gauntlet?w=48&h=48',
     headline: 'Gauntlet RWA Lending Vault Live',
     subtitle: 'Institutional-grade lending',
     stat: { label: 'TVL', value: '$2.4M' },
-    accentColor: '#f59e0b',
+    accentColor: '#8b5cf6',
     cta: {
       label: 'View Vault',
       action: { type: 'modal', target: 'gauntlet-vault' },
@@ -99,11 +99,11 @@ export const announcements: Announcement[] = [
   },
   {
     id: 'kamino-credit',
-    logo: '/logos/kamino.svg',
+    logo: 'https://assets.coingecko.com/coins/images/35801/standard/Kamino_200x200.png?1767944671',
     headline: 'Kamino Private Credit',
     subtitle: 'BTC-Backed Institutional Yield',
     stat: { label: 'Yield', value: '7%' },
-    accentColor: '#06b6d4',
+    accentColor: '#49AFE9',
     cta: {
       label: 'Learn More',
       action: { type: 'modal', target: 'kamino-credit' },

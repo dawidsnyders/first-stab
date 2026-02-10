@@ -1,39 +1,89 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   Kamino Design System (Feb '26) – design tokens
+   ========================================================================== */
 :root {
-  --bg-base: #0a0a0f;
-  --bg-card: #12141f;
-  --bg-elevated: #1a1d2e;
-  --text-primary: #f0f0f5;
-  --text-secondary: #8a8f9e;
-  --text-muted: #555a6e;
-  --border-subtle: #1e2132;
-  --accent-blue: #3b82f6;
-  --accent-green: #10b981;
-  --accent-purple: #8b5cf6;
-  --accent-amber: #f59e0b;
-  --accent-cyan: #06b6d4;
+  /* Background */
+  --kamino-bg-base: #091326;
+  --kamino-bg-card: #0B162A;
+  --kamino-bg-elevated: #0f1d35;
+  --kamino-bg-hover: #132238;
+
+  /* Text */
+  --kamino-text-primary: #f0f0f5;
+  --kamino-text-secondary: #8a8f9e;
+  --kamino-text-muted: #555a6e;
+  --kamino-text-inverse: #0b0d10;
+
+  /* Border */
+  --kamino-border-default: #252a33;
+  --kamino-border-subtle: #1e2132;
+  --kamino-border-strong: #2d333d;
+
+  /* Brand & semantic */
+  --kamino-primary: #49AFE9;
+  --kamino-primary-hover: #6bc0f0;
+  --kamino-primary-muted: rgba(73, 175, 233, 0.12);
+  --kamino-success: #10b981;
+  --kamino-success-muted: rgba(16, 185, 129, 0.12);
+  --kamino-warning: #f59e0b;
+  --kamino-warning-muted: rgba(245, 158, 11, 0.12);
+  --kamino-info: #3b82f6;
+  --kamino-info-muted: rgba(59, 130, 246, 0.12);
+  --kamino-purple: #8b5cf6;
+  --kamino-purple-muted: rgba(139, 92, 246, 0.12);
+
+  /* Radius (Kamino) */
+  --kamino-radius-sm: 6px;
+  --kamino-radius-md: 8px;
+  --kamino-radius-lg: 12px;
+  --kamino-radius-xl: 16px;
+
+  /* Spacing (optional semantic) */
+  --kamino-space-dots: 4px;
+  --kamino-space-dot-gap: 4px;
+
+  /* Legacy aliases for compatibility */
+  --bg-base: var(--kamino-bg-base);
+  --bg-card: var(--kamino-bg-card);
+  --bg-elevated: var(--kamino-bg-elevated);
+  --text-primary: var(--kamino-text-primary);
+  --text-secondary: var(--kamino-text-secondary);
+  --text-muted: var(--kamino-text-muted);
+  --border-subtle: var(--kamino-border-subtle);
+  --accent-blue: var(--kamino-info);
+  --accent-green: var(--kamino-success);
+  --accent-purple: var(--kamino-purple);
+  --accent-amber: var(--kamino-warning);
+  --accent-cyan: var(--kamino-primary);
 }
 
 @theme inline {
-  --color-bg-base: var(--bg-base);
-  --color-bg-card: var(--bg-card);
-  --color-bg-elevated: var(--bg-elevated);
-  --color-text-primary: var(--text-primary);
-  --color-text-secondary: var(--text-secondary);
-  --color-text-muted: var(--text-muted);
-  --color-border-subtle: var(--border-subtle);
-  --color-accent-blue: var(--accent-blue);
-  --color-accent-green: var(--accent-green);
-  --color-accent-purple: var(--accent-purple);
-  --color-accent-amber: var(--accent-amber);
-  --color-accent-cyan: var(--accent-cyan);
-  --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  --color-bg-base: var(--kamino-bg-base);
+  --color-bg-card: var(--kamino-bg-card);
+  --color-bg-elevated: var(--kamino-bg-elevated);
+  --color-text-primary: var(--kamino-text-primary);
+  --color-text-secondary: var(--kamino-text-secondary);
+  --color-text-muted: var(--kamino-text-muted);
+  --color-border-subtle: var(--kamino-border-subtle);
+  --color-accent-blue: var(--kamino-info);
+  --color-accent-green: var(--kamino-success);
+  --color-accent-purple: var(--kamino-purple);
+  --color-accent-amber: var(--kamino-warning);
+  --color-accent-cyan: var(--kamino-primary);
+  --color-kamino-primary: var(--kamino-primary);
+  --color-kamino-success: var(--kamino-success);
+  --font-sans: var(--font-kamino-sans), "IBM Plex Sans", system-ui, sans-serif;
   --font-mono: ui-monospace, "Cascadia Code", "Fira Code", monospace;
+  --radius-sm: var(--kamino-radius-sm);
+  --radius-md: var(--kamino-radius-md);
+  --radius-lg: var(--kamino-radius-lg);
+  --radius-xl: var(--kamino-radius-xl);
 }
 
 body {
-  background: var(--bg-base);
-  color: var(--text-primary);
+  background: var(--kamino-bg-base);
+  color: var(--kamino-text-primary);
   font-family: var(--font-sans), system-ui, -apple-system, sans-serif;
 }
