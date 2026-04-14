@@ -19,6 +19,7 @@ import { AreaCard } from "@/components/area/AreaCard";
 import { AreaCarousel } from "@/components/area/AreaCarousel";
 import { getAreasByLevel, searchAreas } from "@/data/areas";
 import { PurchaseModal } from "@/components/area/PurchaseModal";
+import { GrowthAnalyticsModal } from "@/components/ui/GrowthAnalyticsModal";
 import { Area } from "@/types";
 import { AnimatePresence } from "framer-motion";
 import {
@@ -31,6 +32,7 @@ import { handleSmoothScroll } from "@/lib/smoothScroll";
 
 export default function Home() {
   const [isMapModalOpen, setIsMapModalOpen] = useState(false);
+  const [isGrowthAnalyticsModalOpen, setIsGrowthAnalyticsModalOpen] = useState(false);
   const [isPurchaseModalOpen, setIsPurchaseModalOpen] = useState(false);
   const [selectedArea, setSelectedArea] = useState<Area | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
@@ -335,6 +337,7 @@ export default function Home() {
                 metric="10yr"
                 metricLabel="Price History"
                 description="Track growth trends and compare against national benchmarks"
+                onClick={() => setIsGrowthAnalyticsModalOpen(true)}
               />
 
               {/* Card 3: Reports */}
@@ -902,6 +905,12 @@ export default function Home() {
       >
         <MapView initialLevel="suburb" />
       </MapModal>
+
+      {/* Growth Analytics Modal */}
+      <GrowthAnalyticsModal
+        isOpen={isGrowthAnalyticsModalOpen}
+        onClose={() => setIsGrowthAnalyticsModalOpen(false)}
+      />
     </div>
   );
 }
@@ -969,6 +978,7 @@ interface ProductCardProps {
   metricLabel: string;
   description: string;
   textDark?: boolean;
+  onClick?: () => void;
 }
 
 function ProductCard({
@@ -981,6 +991,7 @@ function ProductCard({
   metricLabel,
   description,
   textDark = false,
+  onClick,
 }: ProductCardProps) {
   const textColor = textDark ? "text-stone-800" : "text-stone-900";
   const textMuted = textDark ? "text-stone-600" : "text-stone-700";
@@ -995,7 +1006,10 @@ function ProductCard({
       className="flex-shrink-0 w-[340px] md:w-[400px] lg:w-[440px] h-[420px] md:h-[480px]"
     >
       <div
-        className={`${bgColor} rounded-2xl p-6 md:p-8 h-full flex flex-col relative overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200/60`}
+        onClick={onClick}
+        className={`${bgColor} rounded-2xl p-6 md:p-8 h-full flex flex-col relative overflow-hidden group transition-all duration-300 hover:shadow-xl hover:-translate-y-1 border border-stone-200/60 ${
+          onClick ? "cursor-pointer" : ""
+        }`}
       >
         {/* Decorative circles */}
         <div className="absolute -right-16 -top-16 w-48 h-48 rounded-full bg-white/30"></div>

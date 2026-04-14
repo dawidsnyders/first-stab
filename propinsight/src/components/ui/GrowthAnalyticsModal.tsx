@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Area } from "@/types";
 import { NATIONAL_BENCHMARKS } from "@/lib/constants";
@@ -52,6 +52,25 @@ export function GrowthAnalyticsModal({
 
   // Use national data if no area selected, otherwise use area data
   const chartData = selectedArea && areaData ? areaData : nationalData;
+
+  // Handle Escape key and body scroll lock
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener("keydown", handleEscape);
+      document.body.style.overflow = "hidden";
+    }
+
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+      document.body.style.overflow = "unset";
+    };
+  }, [isOpen, onClose]);
 
   return (
     <AnimatePresence>
